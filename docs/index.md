@@ -12,6 +12,10 @@
 
 이런 문제를 완화하고, 컴퓨터를 항상 안정적인 상태로 유지할 수 있도록 도와주기 위하여 이 프로젝트를 시작하게 되었습니다.
 
+## 주의
+
+**식탁보를 사용 중 발생하는 개인, 기업, 기관의 금전손실, 세금신고 누락 등을 비롯한 어떠한 장애나 손해에 대해서는 사용자 본인에게 책임이 있습니다. 중요한 작업의 경우 반드시 실제 PC 환경에서 사용해야 합니다.**
+
 ## 주요 기능 소개
 
 - 호스트 USB 드라이브, 로컬 컴퓨터에 저장된 공인 인증서를 샌드박스 내의 `%userprofile%\AppData\LocalLow` 폴더에 자동으로 복사해주는 기능을 제공합니다.
@@ -27,6 +31,10 @@
 따라서 사이드 로딩 방식으로만 설치할 수 있는 MSIX 패키지를 대신 제공합니다. 개발자가 직접 만든 검증되지 않은 코드 서명 인증서를 설치하는 별도의 PowerShell 스크립트를 사용하여 설치를 진행해야 합니다. 이 방식으로 설치가 불가능하도록 기술적으로 막혀있거나, 혹은 정책 상 허용하지 않는 곳에서는 이번 릴리스를 사용할 수 없습니다.
 
 최신 버전은 [이곳](https://github.com/yourtablecloth/TableCloth/releases)에서 다운로드할 수 있습니다.
+
+### 시스템 요구 사항
+
+식탁보는 2021년 11월 현재 AMD64 아키텍처 기반의 Windows 10 Pro, Windows 10 Enterprise, Windows 10 Education, Windows 10 Pro for Workstation 및 Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation 운영 체제에서만 사용할 수 있는 Windows Sandbox 기능을 보조하는 유틸리티로, Windows Sandbox를 사용할 수 없는 환경에서는 식탁보 프로그램을 사용할 수 없습니다.
 
 ### 식탁보를 사용하기 앞서 알아두실 내용
 
