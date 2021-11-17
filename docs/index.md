@@ -24,14 +24,6 @@
 - [피로곰](https://www.youtube.com/channel/UC034aoKNX5oheqhL3w-oBOQ)님께서 개발하신 [모두의 프린터](https://modu-print.tistory.com/)를 다운로드하여 설치할 수 있도록 띄우는 기능을 제공합니다. 실물 프린터를 요구하는 일부 DRM 소프트웨어로 인해 빚어지는 불편함을 예방할 수 있습니다.
 - 마이크, 웹캠, 프린터를 샌드박스 안에서 공유해서 쓸 수 있도록 연결할 수 있습니다.
 
-## 사용 방법
-
-현재 식탁보는 정식 코드 서명 인증서를 적용할 수 없습니다. (정식 코드 서명 인증서는 국내외 모두 사업자 인증 및 사업 거점 인증이 필요합니다.)
-
-따라서 사이드 로딩 방식으로만 설치할 수 있는 MSIX 패키지를 대신 제공합니다. 개발자가 직접 만든 검증되지 않은 코드 서명 인증서를 설치하는 별도의 PowerShell 스크립트를 사용하여 설치를 진행해야 합니다. 이 방식으로 설치가 불가능하도록 기술적으로 막혀있거나, 혹은 정책 상 허용하지 않는 곳에서는 이번 릴리스를 사용할 수 없습니다.
-
-최신 버전은 [이곳](https://github.com/yourtablecloth/TableCloth/releases)에서 다운로드할 수 있습니다.
-
 ### 시스템 요구 사항
 
 식탁보는 2021년 11월 현재 AMD64 아키텍처 기반의 Windows 10 Pro, Windows 10 Enterprise, Windows 10 Education, Windows 10 Pro for Workstation 및 Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation 운영 체제에서만 사용할 수 있는 Windows Sandbox 기능을 보조하는 유틸리티로, Windows Sandbox를 사용할 수 없는 환경에서는 식탁보 프로그램을 사용할 수 없습니다.
