@@ -67,3 +67,7 @@
 Project emblem made by [Eucalyp](https://www.flaticon.com/authors/eucalyp) from [Flaticon](https://www.flaticon.com/).
 
 Photo by [Brooke Lark](https://unsplash.com/@brookelark?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/tablecloth?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
+
+## 개인 정보 보호 정책
+
+개인 정보 보호 정책은 [이 문서](privacy.md)에 상세하게 기술되어있습니다.
