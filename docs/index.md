@@ -49,11 +49,11 @@
 
 ## 라이선스
 
-본 프로젝트는 MIT 라이선스를 따릅니다.
+- 본 프로젝트는 [MIT 라이선스](https://github.com/yourtablecloth/TableCloth/blob/dev/LICENSE.txt)를 따릅니다.
 
-Project emblem made by [Eucalyp](https://www.flaticon.com/authors/eucalyp) from [Flaticon](https://www.flaticon.com/).
+- Project emblem made by [Eucalyp](https://www.flaticon.com/authors/eucalyp) from [Flaticon](https://www.flaticon.com/).
 
-Photo by [Brooke Lark](https://unsplash.com/@brookelark?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/tablecloth?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
+- Photo by [Brooke Lark](https://unsplash.com/@brookelark?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/tablecloth?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## 개인 정보 보호 정책
 
