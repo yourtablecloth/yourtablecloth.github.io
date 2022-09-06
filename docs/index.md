@@ -18,25 +18,32 @@
 
 ## 주요 기능 소개
 
-- 호스트 USB 드라이브, 로컬 컴퓨터에 저장된 공인 인증서를 샌드박스 내의 `%userprofile%\AppData\LocalLow` 폴더에 자동으로 복사해주는 기능을 제공합니다.
+- 호스트 USB 드라이브, 로컬 컴퓨터에 저장된 공동 인증서를 샌드박스 내의 `%userprofile%\AppData\LocalLow` 폴더에 자동으로 복사해주는 기능을 제공합니다. 샌드박스를 닫으면, 복사되었던 공동 인증서 사본은 자동으로 삭제됩니다.
 - [카탈로그 XML 파일](https://yourtablecloth.github.io/TableClothCatalog/Catalog.xml)에 기재된 각 사이트별 필요 소프트웨어를 확인하여 샌드박스 시작 시 자동으로 다운로드하고 설치를 대행합니다. 지원되는 경우에 한하여, 무인 설치 방식으로 설치를 시도합니다.
-- 호스트 컴퓨터에 Internet Explorer가 설치되어있다는 전제 하에서 샌드박스 내에서 IE 모드를 활성화하고 해당 뱅킹 사이트를 IE 브라우저로 띄울 수 있도록 IE 모드 정책 파일 구성합니다.
+- [호환성 목록 XML 파일](https://yourtablecloth.github.io/TableClothCatalog/sites.xml) 호스트 컴퓨터에 Internet Explorer가 설치되어있다는 전제 하에서 샌드박스 내에서 Microsoft Edge의 IE 모드를 활성화하고 해당 뱅킹 사이트를 IE 브라우저로 띄울 수 있게 설정합니다.
 - [피로곰](https://www.youtube.com/channel/UC034aoKNX5oheqhL3w-oBOQ)님께서 개발하신 [모두의 프린터](https://modu-print.tistory.com/)를 다운로드하여 설치할 수 있도록 띄우는 기능을 제공합니다. 실물 프린터를 요구하는 일부 DRM 소프트웨어로 인해 빚어지는 불편함을 예방할 수 있습니다.
+- 그 외에도 한글 문서를 읽고 인쇄할 수 있는 [한컴오피스 뷰어](https://www.hancom.com/cs_center/csDownload.do)와 PDF 변환 기능 처리를 목적으로 일부 인터넷 서비스에서 필요로 하는 [Adobe Reader](https://www.adobe.com/kr/acrobat/pdf-reader.html)를 다운로드하여 설치할 수 있도록 띄우는 기능을 제공합니다.
 - 마이크, 웹캠, 프린터를 샌드박스 안에서 공유해서 쓸 수 있도록 연결할 수 있습니다.
 
 ### 시스템 요구 사항
 
-식탁보는 2021년 11월 현재 AMD64 아키텍처 기반의 Windows 10 Pro, Windows 10 Enterprise, Windows 10 Education, Windows 10 Pro for Workstation 및 Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation 운영 체제에서만 사용할 수 있는 Windows Sandbox 기능을 보조하는 유틸리티로, Windows Sandbox를 사용할 수 없는 환경에서는 식탁보 프로그램을 사용할 수 없습니다.
+식탁보는 다음의 시스템에서 사용할 수 있습니다.
+
+- 인텔 및 AMD 프로세서를 사용하는 실제 데스크톱 또는 노트북
+  - Windows 10 Pro, Windows 10 Enterprise, Windows 10 Education, Windows 10 Pro for Workstation (버전 1909 이상)
+  - Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation
+- ARM 기반 프로세서를 사용하는 실제 데스크톱 또는 노트북 (애플 실리콘 제외)
+  - Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation (버전 22H2 이상)
 
 ### 식탁보를 사용하기 앞서 알아두실 내용
 
 - 식탁보는 기본적으로 윈도우 샌드박스를 사용하여 구동하므로, 별도의 가상 컴퓨터 설치가 필요하지 않습니다.
 
-- 그러나 윈도우 365, 혹은 윈도우 가상 데스크톱 (마이크로소프트 애저 기반), 혹은 버추얼 어플라이언스 상에서 식탁보를 추가로 이용하고자 할 경우, 해당 서비스 또는 가상 컴퓨터 인스턴스 내에서 추가로 가상화 (혹은 SLAT) 기능을 지원해야만 윈도우 샌드박스를 활성화할 수 있습니다.
+- 윈도우 365, 혹은 윈도우 가상 데스크톱 (마이크로소프트 애저 기반), 혹은 Hyper-V 같은 가상 컴퓨터 상에서 식탁보를 이용하고자 할 경우, 해당 서비스 또는 가상 컴퓨터 인스턴스 내에서 추가로 가상화 (혹은 Second Level Address Translation, SLAT) 기능을 지원해야만 윈도우 샌드박스를 활성화할 수 있습니다.
 
-  - 인텔 맥 기반에서는 기술적으로 중첩 가상화를 사용할 수 있는 VM웨어 퓨전, 패러렐즈 같은 가상화 소프트웨어가 존재하지만, 성능에 문제가 있어 추천하지 않으며, 대신 부트캠프 상에서 식탁보를 사용하는 것을 권장합니다.
+  - 인텔 맥 기반에서는 기술적으로 중첩 가상화를 사용할 수 있는 VM웨어 퓨전, 패러렐즈 같은 가상화 소프트웨어를 사용하여 맥을 벗어나지 않고 식탁보와 Windows Sandbox를 이용할 수는 있습니다. 그러나 실제로 사용하기에는 성능이 많이 떨어져 사용을 권하기 어렵습니다. 대신, 부트캠프 기능을 이용하여 Windows 10 또는 Windows 11로 부팅한 후 식탁보를 사용하는 것을 권장합니다.
 
-  - 애플 실리콘 기반의 맥에서는 식탁보가 필요로 하는 윈도우 샌드박스가 ARM 프로세서용으로 출시되지 않아 사용할 수 없습니다.
+  - 애플 실리콘 기반의 맥에서는 2022년 9월 현재 중첩 가상화를 지원하는 ARM용 가상 머신 소프트웨어가 없으므로, Windows 11 최신 버전에서 지원되는 Windows Sandbox를 사용할 수 없습니다.
 
 - 일부 보안 강화 및 에이전트 소프트웨어는 윈도우 샌드박스가 의존하는 원격 데스크톱 프로토콜 (RDP)을 해커에 의한 공격으로 취급하여 윈도우 샌드박스를 강제로 종료시킬 수 있습니다. 이 경우에는 식탁보나 윈도우 샌드박스가 지원하지 못하는 서비스임을 양해하여 주시기 바랍니다.
 
