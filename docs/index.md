@@ -63,4 +63,5 @@
 
 - [식탁보를 사용하기 앞서 알아두실 내용](need_to_know.md)
 - [Windows Sandbox 설치하기](howto_install_sandbox.md)
+- [식탁보 문제 해결](troubleshoot.md)
 - [개인 정보 보호 정책](privacy.md)
