@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: 홈
 permalink: /
 ---
@@ -62,11 +62,11 @@ permalink: /
 
 ## 개인 정보 보호 정책
 
-개인 정보 보호 정책은 [이 문서](privacy.md)에 상세하게 기술되어있습니다.
+개인 정보 보호 정책은 [이 문서](privacy)에 상세하게 기술되어있습니다.
 
 ## 같이 보세요
 
-- [식탁보를 사용하기 앞서 알아두실 내용](need_to_know.md)
-- [Windows Sandbox 설치하기](howto_install_sandbox.md)
-- [식탁보 문제 해결](troubleshoot.md)
-- [개인 정보 보호 정책](privacy.md)
+- [식탁보를 사용하기 앞서 알아두실 내용](need_to_know)
+- [Windows Sandbox 설치하기](howto_install_sandbox)
+- [식탁보 문제 해결](troubleshoot)
+- [개인 정보 보호 정책](privacy)
