@@ -62,7 +62,7 @@ nav ul li {
     border-radius: 10px;
 }
 
-nav ul a {
+nav ul a, header h1 a {
     text-decoration: none;
     color: black;
 }
