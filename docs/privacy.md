@@ -1,4 +1,8 @@
-# 식탁보 개인정보처리방침
+---
+layout: page
+title: 개인정보처리방침
+permalink: /privacy
+---
 
 ## 개인 정보 정책
 

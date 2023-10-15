@@ -1,5 +1,8 @@
-# 식탁보 문제 해결
-
+---
+layout: page
+title: 문제 해결
+permalink: /troubleshoot
+---
 ## 샌드박스가 닫히면서 "현재 연결은 원격 호스트에 의해 강제로 끊겼습니다" 오류 메시지가 나타납니다.
 
 Windows Sandbox는 사용자와 상호 작용하는 부분을 Remote Desktop Protocol (RDP)을 이용하여 구현했습니다. 그러나 일부 보안 소프트웨어들은 RDP를 통한 서비스 사용을 의도적으로 차단합니다.

@@ -1,4 +1,8 @@
-# 식탁보 (TableCloth) 프로젝트
+---
+layout: page
+title: 홈
+permalink: /
+---
 
 [![식탁보 최신 버전 다운로드 (GitHub 릴리스)](https://img.shields.io/github/downloads/yourtablecloth/TableCloth/total?label=%EC%8B%9D%ED%83%81%EB%B3%B4%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C)](https://github.com/yourtablecloth/TableCloth/releases)
 [![Microsoft Store 다운로드](https://img.shields.io/badge/Microsoft_Store-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-blue)](https://www.microsoft.com/store/productid/9N46Z3N6T2VR)
