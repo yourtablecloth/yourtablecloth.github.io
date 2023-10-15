@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        {% include head.html %}
+        <title>{{ page.title }} | {{ site.title }}</title>
+    </head>
+    <body>
+        <a href="#main_content" id="skip">본문으로 바로가기</a>
+        <div class="main_background">
+            {% include /components/header.html %}
+            <div class="main_layout">
+                <nav>
+                    <ul>
+                        {% assign page_list = site.pages | sort_natural: "url" %}
+                        {% for p in page_list %}
+                            {% if p.title %}
+                            <a href="{{ p.url }}">
+                                {% if p.title == page.title %}
+                                <li class="current_page">
+                                {% else %}
+                                <li>
+                                {% endif %}
+                                    {{ p.title }}
+                                </li>
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </nav>
+                <main id="main_content">
+                    {{ content }}
+                </main>    
+            </div>
+            {% include /components/footer.html %}    
+        </div>
+    </body>
+</html>
