@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: 문제 해결
 permalink: /troubleshoot
 ---
@@ -39,4 +39,4 @@ AST가 RDP를 강제 종료하지 않게 설정을 변경하려면 다음과 같
 
 ---
 
-[되돌아가기](index.md)
+[되돌아가기](/)

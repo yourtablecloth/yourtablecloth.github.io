@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: 개인정보처리방침
 permalink: /privacy
 ---
@@ -70,4 +70,4 @@ permalink: /privacy
 
 ---
 
-[되돌아가기](index.md)
+[되돌아가기](/)

@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: 사용하기 앞서 알아두실 내용
 permalink: /need-to-know
 ---
@@ -18,4 +18,4 @@ permalink: /need-to-know
 
 ---
 
-[되돌아가기](index.md)
+[되돌아가기](/)

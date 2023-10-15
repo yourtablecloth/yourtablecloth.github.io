@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Windows Sandbox 설치하기
 permalink: /howto_install_sandbox
 ---
@@ -18,4 +18,4 @@ permalink: /howto_install_sandbox
 
 ---
 
-[되돌아가기](index.md)
+[되돌아가기](/)
