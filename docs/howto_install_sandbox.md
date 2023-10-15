@@ -1,4 +1,8 @@
-# Windows Sandbox 설치하기
+---
+layout: page
+title: Windows Sandbox 설치하기
+permalink: /howto_install_sandbox
+---
 
 식탁보를 설치하기 전, 먼저 윈도우 샌드박스를 활성화해야 합니다.
 
