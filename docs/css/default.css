@@ -17,6 +17,7 @@ body {
     border-radius: 25px;
     background: #f8f8f8;
     color: #414141;
+    width: 100%;
     max-width: 80em;
     
     word-break: keep-all;
@@ -78,6 +79,10 @@ nav li:hover {
 
 .current_page::before {
     color: #4bafff;
+}
+
+main {
+    flex-grow: 1;
 }
 
 main a {
