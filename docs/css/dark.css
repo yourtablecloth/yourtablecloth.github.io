@@ -1,0 +1,23 @@
+@media screen and (prefers-color-scheme: dark) {
+    body {
+        background: black;
+    }
+    
+    .main_background {
+        background: #232323;
+        color: white;
+    }
+
+    nav ul a {
+        text-decoration: none;
+        color: white;
+    }
+
+    nav li:hover, code {
+        background: #525252;
+    }
+
+    .current_page::before {
+        color: #1e88e5;
+    }
+}
