@@ -1,9 +1,6 @@
 name: Generate Sponsors README
 on:
   push:
-    paths:
-    - '.github/workflows/sponsors.yml'
-    - 'README.md'
   workflow_dispatch:
   schedule:
     - cron: 30 15 * * 0-6
