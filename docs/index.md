@@ -51,6 +51,12 @@ permalink: /
   - 새로운 사이트를 추가할 때는 사이트의 대표 아이콘이나 엠블렘 이미지도 같이 포함해서 풀 리퀘스트를 보내주세요.
 - Internet Explorer 모드에 관련된 설정 변경이 필요하다면 `sites.xml` 파일에 대한 풀 리퀘스트를 보내주세요.
 
+## 스폰서
+
+GitHub Sponsorship을 통하여 후원해주시면 지속적으로 프로젝트를 진행하는데에 큰 도움이 됩니다. [프로젝트 후원하러 가기](https://github.com/sponsors/yourtablecloth)
+
+{% include_relative Sponsors.md %}
+
 ## 라이선스
 
 - 본 프로젝트는 [MIT 라이선스](https://github.com/yourtablecloth/TableCloth/blob/dev/LICENSE.txt)를 따릅니다.
