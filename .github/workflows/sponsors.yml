@@ -17,7 +17,7 @@ jobs:
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
-          token: ${{ secrets.TABLECLOTH_SPONSORSHIP_PAT }}
+          token: ${{ secrets.PAT }}
           organization: true
           file: 'docs/Sponsors.md'
 
