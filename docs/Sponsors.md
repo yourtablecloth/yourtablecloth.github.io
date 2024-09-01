@@ -1,1 +1,1 @@
-<!-- sponsors --><a href="https://github.com/134130"><img src="https://github.com/134130.png" width="60px" alt="오지환 (Cooper)" /></a><!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/134130"><img src="https:&#x2F;&#x2F;avatars.githubusercontent.com&#x2F;u&#x2F;50487467?u&#x3D;f907ef30da50411dc5dc3554664cecb7b319217f&amp;v&#x3D;4" width="60px" alt="오지환 (Cooper)" /></a><!-- sponsors -->
