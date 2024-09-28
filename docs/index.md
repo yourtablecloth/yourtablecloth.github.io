@@ -69,6 +69,12 @@ GitHub Sponsorship을 통하여 후원해주시면 지속적으로 프로젝트�
 
 개인 정보 보호 정책은 [이 문서](privacy)에 상세하게 기술되어있습니다.
 
+## 수상
+
+### 2024년 9월 - Disquiet
+
+[![Product of the Week, Recognized by disquiet.io](images/disquiet_product_of_the_week.jpeg)](https://disquiet.io/product/%EC%8B%9D%ED%83%81%EB%B3%B4)
+
 ## 같이 보세요
 
 - [식탁보를 사용하기 앞서 알아두실 내용](need_to_know)
