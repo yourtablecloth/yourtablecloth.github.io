@@ -94,6 +94,9 @@
             <a class="nav-link" href="#privacy">개인 정보 보호</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="https://lite.yourtablecloth.app/" target="_blank">식탁보 라이트</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="https://yourtablecloth.app/TableClothCatalog/" target="_blank">카탈로그</a>
           </li>
         </ul>
@@ -105,7 +108,7 @@
     <div id="markdown-content">
       <div id="loading-indicator" aria-hidden="true" class="d-none">
         <div class="spinner-border" role="status">
-          <span class="visually-hidden">로딩 중...</span>
+          <span class="visually-hidden">잠시만 기다려 주세요...</span>
         </div>
       </div>
     </div>
@@ -120,8 +123,9 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
   <script type="text/javascript">
-    const postfix = '식탁보';
+    const titlePostfix = '식탁보';
     const defaultPage = 'index';
+    const pathPrefix = 'docs/';
 
     // Non HTTPS에서 src에 가리킬 수 있는 신뢰할 수 있는 도메인 목록
     const trustedDomains = [
@@ -136,6 +140,14 @@
       'youtube.com',
       'github.io'
     ];
+
+    function getPathPrefix() {
+      var modifiedPrefix = pathPrefix.trim();
+      if (!modifiedPrefix.endsWith('/')) {
+        modifiedPrefix += '/';
+      }
+      return modifiedPrefix;
+    }
 
     function setActiveNav(hash) {
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -157,16 +169,16 @@
             e.preventDefault();
             window.location.hash = target;
           });
-        } else if (!href.startsWith('http') && !href.startsWith('docs/')) {
-          link.setAttribute('href', 'docs/' + href);
+        } else if (!href.startsWith('http') && !href.startsWith(getPathPrefix())) {
+          link.setAttribute('href', getPathPrefix() + href);
         }
       });
 
       container.querySelectorAll('img[src], video[src], audio[src], source[src], iframe[src], embed[src], object[data]').forEach(el => {
         const attr = el.hasAttribute('src') ? 'src' : 'data';
         const val = el.getAttribute(attr);
-        if (!val.startsWith('http') && !val.startsWith('docs/')) {
-          el.setAttribute(attr, 'docs/' + val);
+        if (!val.startsWith('http') && !val.startsWith(getPathPrefix())) {
+          el.setAttribute(attr, getPathPrefix() + val);
         }
       });
     }
@@ -291,7 +303,7 @@
         return;
       }
 
-      const file = `docs/${hash}.md`;
+      const file = getPathPrefix() + hash + '.md';
       const contentEl = document.getElementById("markdown-content");
       const loadingEl = document.getElementById("loading-indicator");
   
@@ -317,7 +329,7 @@
       
           // 캐시에 저장
           const h1 = clean.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1] || getPageTitle(hash);
-          const title = `${h1} - ${postfix}`;
+          const title = `${h1} - ${titlePostfix}`;
       
           markdownCache.set(hash, { html: clean, title });
       
@@ -344,7 +356,7 @@
       
           contentEl.innerHTML = errorMessage;
           contentEl.style.opacity = 1;
-          document.title = `오류 - ${postfix}`;
+          document.title = `오류 - ${titlePostfix}`;
         });
     }
 
