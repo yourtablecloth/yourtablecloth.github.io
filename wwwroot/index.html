@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>홈 - 식탁보</title>
+
+  <meta name="description" content="식탁보 - 마크다운 기반 문서 시스템" />
+  <meta name="keywords" content="식탁보, 인터넷뱅킹, 샌드박스, 가상PC" />
+  <meta name="author" content="rkttu" />
+
+  <meta property="og:title" content="홈 - 식탁보" />
+  <meta property="og:description" content="식탁보 - 마크다운 기반 문서 시스템" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourtablecloth.app" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="홈 - 식탁보" />
+  <meta name="twitter:description" content="식탁보 - 마크다운 기반 문서 시스템" />
+
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/marked/marked.min.js" as="script" />
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" as="script" />
+
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+  <link rel="dns-prefetch" href="//githubusercontent.com" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/simplex/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css" />
+  <style type="text/css">
+    body, html, p {
+        font-family: 'SUITE Variable', sans-serif;
+        line-height: 1.7;
+        letter-spacing: 0.02em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        line-height: 2;
+    }
+    pre, code {
+        font-family: monospace !important;
+        line-height: normal;
+        letter-spacing: normal;
+    }
+    #markdown-content {
+        transition: opacity 0.3s ease;
+    }
+    #markdown-content * {
+        max-width: 100% !important;
+        word-wrap: break-word !important;
+        overflow-x: auto !important;
+    }
+    .nav-link.active {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bs-body-bg: #212529;
+        --bs-body-color: #fff;
+      }
+    }
+    @media print {
+      .navbar, footer { display: none; }
+      #markdown-content { margin: 0; }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 15px; }
+      .navbar-brand { font-size: 1.1rem; }
+    }
+  </style>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2663279019983483" crossorigin="anonymous"></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#index">식탁보</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#need_to_know">사용 전 안내</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#howto_install_sandbox">설치 방법</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#troubleshoot">문제 해결</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#privacy">개인 정보 보호</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://yourtablecloth.app/TableClothCatalog/" target="_blank">카탈로그</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div id="markdown-content">
+      <div id="loading-indicator" aria-hidden="true" class="d-none">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">로딩 중...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-light text-center text-muted py-4 mt-5 border-top">
+    <div class="container">
+      <small>&copy; 2025 rkttu.com, All rights reserved. | <a href="#privacy" class="text-decoration-none">개인 정보 보호 정책</a></small>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
+  <script type="text/javascript">
+    const postfix = '식탁보';
+    const defaultPage = 'index';
+
+    // Non HTTPS에서 src에 가리킬 수 있는 신뢰할 수 있는 도메인 목록
+    const trustedDomains = [
+      'github.com',
+      'githubusercontent.com',
+      'imgur.com',
+      'unsplash.com',
+      'pexels.com',
+      'cdn.jsdelivr.net',
+      'raw.githubusercontent.com',
+      'yourtablecloth.app',
+      'youtube.com',
+      'github.io'
+    ];
+
+    function setActiveNav(hash) {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.getAttribute('href') === '#' + hash) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    function rewriteRelativeLinks(container) {
+      container.querySelectorAll('a[href]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href.startsWith('http') && !href.startsWith('#') && href.endsWith('.md')) {
+          const target = href.replace(/^docs\//, '').replace('.md', '');
+          link.setAttribute('href', '#' + target);
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.hash = target;
+          });
+        } else if (!href.startsWith('http') && !href.startsWith('docs/')) {
+          link.setAttribute('href', 'docs/' + href);
+        }
+      });
+
+      container.querySelectorAll('img[src], video[src], audio[src], source[src], iframe[src], embed[src], object[data]').forEach(el => {
+        const attr = el.hasAttribute('src') ? 'src' : 'data';
+        const val = el.getAttribute(attr);
+        if (!val.startsWith('http') && !val.startsWith('docs/')) {
+          el.setAttribute(attr, 'docs/' + val);
+        }
+      });
+    }
+
+    function isTrustedDomain(url) {
+      try {
+        const domain = new URL(url).hostname.toLowerCase();
+        return trustedDomains.some(trusted => 
+          domain === trusted || domain.endsWith('.' + trusted)
+        );
+      } catch {
+        return false;
+      }
+    }
+
+    // DOMPurify 설정 개선
+    function createSanitizeConfig() {
+      return {
+        // 허용할 태그들
+        ALLOWED_TAGS: [
+          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+          'p', 'br', 'hr', 'div', 'span',
+          'a', 'img', 'video', 'audio', 'source',
+          'ul', 'ol', 'li', 'dl', 'dt', 'dd',
+          'table', 'thead', 'tbody', 'tr', 'th', 'td',
+          'blockquote', 'code', 'pre',
+          'em', 'strong', 'i', 'b', 'u', 's',
+          'details', 'summary'
+        ],
+    
+        // 허용할 속성들
+        ALLOWED_ATTR: [
+          'href', 'src', 'alt', 'title', 'class', 'id',
+          'width', 'height', 'controls', 'autoplay', 'loop',
+          'target', 'rel', 'data-*'
+        ],
+    
+        // 외부 리소스 허용
+        ALLOW_DATA_ATTR: true,
+        ALLOW_UNKNOWN_PROTOCOLS: false,
+    
+        // URL 스키마 허용 목록
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|data):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+    
+        // 훅을 사용한 추가 처리
+        HOOKS: {
+          beforeSanitizeElements: function(node, data, config) {
+            // IFRAME, 멀티미디어 태그 특별 처리
+            if (node.tagName === 'IMG' || node.tagName === 'VIDEO' || node.tagName === 'AUDIO') {
+              const src = node.getAttribute('src');
+              if (src) {
+                if (src.startsWith('https://') || src.startsWith('http://')) {
+                  // 외부 이미지는 보안상 참조자 정보 제거
+                  node.setAttribute('referrerpolicy', 'no-referrer');
+                  // lazy loading 추가
+                  node.setAttribute('loading', 'lazy');
+                }
+                if (src.startsWith('data:image/')) {
+                  // Data URL은 허용 (base64 이미지)
+                  return;
+                } else if (src.startsWith('http')) {
+                  if (isTrustedDomain(src)) {
+                    // 신뢰할 수 있는 도메인
+                    node.setAttribute('referrerpolicy', 'no-referrer');
+                    node.setAttribute('loading', 'lazy');
+                  } else {
+                    // 신뢰할 수 없는 도메인은 플레이스홀더로 교체
+                    node.setAttribute('src', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuydtOuvuOyngCDrhoXsnbTsp4DrkJzsp4A8L3RleHQ+PC9zdmc+');
+                    node.setAttribute('alt', '외부 이미지 (보안상 차단됨)');
+                    node.setAttribute('title', `원본 URL: ${src}`);
+                  }
+                }
+              }
+            }
+            // 외부 링크 처리
+            if (node.tagName === 'A') {
+              const href = node.getAttribute('href');
+              if (href && (href.startsWith('https://') || href.startsWith('http://'))) {
+                // 외부 링크는 새 탭에서 열기
+                node.setAttribute('target', '_blank');
+                node.setAttribute('rel', 'noopener noreferrer');
+              }
+            }
+          }
+        }
+      };
+    }
+
+    // 개선된 sanitize 함수
+    function safeSanitize(html) {
+      const config = createSanitizeConfig();
+      return DOMPurify.sanitize(html, config);
+    }
+
+    function getPageTitle(hash) {
+      // 네비게이션에서 해당 링크의 텍스트를 찾기
+      const navLink = document.querySelector(`a[href="#${hash}"]`);
+      if (navLink) {
+        return navLink.textContent.trim();
+      }
+  
+      // 네비게이션에 없으면 해시를 정리해서 사용
+      return hash.replace(/_/g, ' ');
+    }
+
+    const markdownCache = new Map();
+    function renderCachedContent(hash) {
+      const contentEl = document.getElementById("markdown-content");
+      const cached = markdownCache.get(hash);
+  
+      contentEl.innerHTML = cached.html;
+      rewriteRelativeLinks(contentEl);
+      contentEl.style.opacity = 1;
+      document.title = cached.title;
+      setActiveNav(hash);
+    }
+    function loadMarkdownFromHash() {
+      const hash = window.location.hash.replace('#', '') || defaultPage;
+  
+      if (markdownCache.has(hash)) {
+        renderCachedContent(hash);
+        return;
+      }
+
+      const file = `docs/${hash}.md`;
+      const contentEl = document.getElementById("markdown-content");
+      const loadingEl = document.getElementById("loading-indicator");
+  
+      // 로딩 상태 표시
+      contentEl.style.opacity = 0.3;
+      loadingEl?.classList.remove('d-none');
+      setActiveNav(hash);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+
+      fetch(file, { signal: controller.signal })
+        .then(response => {
+          clearTimeout(timeoutId);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          return response.text();
+        })
+        .then(md => {
+          const dirty = marked.parse(md);
+          const clean = safeSanitize(dirty);
+      
+          // 캐시에 저장
+          const h1 = clean.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1] || getPageTitle(hash);
+          const title = `${h1} - ${postfix}`;
+      
+          markdownCache.set(hash, { html: clean, title });
+      
+          contentEl.innerHTML = clean;
+          rewriteRelativeLinks(contentEl);
+          document.title = title;
+      
+          // 로딩 완료
+          contentEl.style.opacity = 1;
+          loadingEl?.classList.add('d-none');
+        })
+        .catch(err => {
+          clearTimeout(timeoutId);
+          loadingEl?.classList.add('d-none');
+      
+          let errorMessage;
+          if (err.name === 'AbortError') {
+            errorMessage = '<div class="alert alert-danger">요청 시간이 초과되었습니다.</div>';
+          } else if (!navigator.onLine) {
+            errorMessage = '<div class="alert alert-danger">네트워크 연결을 확인해주세요.</div>';
+          } else {
+            errorMessage = `<div class="alert alert-warning">문서를 불러올 수 없습니다: ${err.message}</div>`;
+          }
+      
+          contentEl.innerHTML = errorMessage;
+          contentEl.style.opacity = 1;
+          document.title = `오류 - ${postfix}`;
+        });
+    }
+
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('scrollY', window.scrollY);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '') || 'tablecloth';
+      setActiveNav(hash);
+      loadMarkdownFromHash();
+    });
+    window.addEventListener('popstate', loadMarkdownFromHash);
+    window.addEventListener('hashchange', loadMarkdownFromHash);
+    window.addEventListener('error', (e) => {
+      console.error('페이지 오류:', e);
+    });
+  </script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <!-- Google tag (gtag.js) -->
+  <script async type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=G-HBJP4P0EBY"></script>
+  <script type="text/javascript">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HBJP4P0EBY');
+  </script>
+</body>
+</html>
