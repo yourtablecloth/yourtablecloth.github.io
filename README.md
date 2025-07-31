@@ -42,14 +42,12 @@ cd yourtablecloth.github.io
 
 리포지터리를 클론한 다음에는 단순 웹 서버만 띄우면 바로 내용을 보고 작업할 수 있습니다. 본 웹사이트는 정적 HTML/CSS/JavaScript로 구성되어 있어 별도의 빌드 과정이 필요하지 않습니다.
 
-Python 3.x 이상을 사용하신다면 아래와 같이 실행할 수 있습니다.
+예를 들어 Python 3.x 이상을 사용하신다면 아래와 같이 실행할 수 있습니다.
 
 ```bash
 cd docs
 python -m http.server 8000
 ```
-
-Visual Studio Code를 사용하시는 경우, Live Server 확장 ([VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) 또는 [Open VSX Registry](https://open-vsx.org/extension/ritwickdey/LiveServer) 중 선택)을 설치하고, `docs/index.html` 파일을 열어 명령 팔레트에서 `Open with Live Server` 명령을 찾아 실행합니다.
 
 ## 기여 방법
 
