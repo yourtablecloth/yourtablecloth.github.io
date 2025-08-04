@@ -41,7 +41,7 @@
 
 ### 🖨️ 프린터가 없어도 걱정하지 마세요
 
-실물 프린터를 찾는 사이트에서도 인쇄물을 PDF로 받아볼 수 있게 해주는 **[모두의 프린터](https://modu-print.tistory.com/)**를 샌드박스 안에서 편하게 설치할 수 있도록 돕습니다.
+실물 프린터를 찾는 사이트에서도 인쇄물을 PDF로 받아볼 수 있게 해주는 **[모두의 프린터](https://modu-print.tistory.com/)** 를 샌드박스 안에서 편하게 설치할 수 있도록 돕습니다.
 
 ### 📄 문서 작업 지원
 
@@ -98,13 +98,13 @@
 
 ### 🔗 유용한 링크
 
-- 📖 [식탁보 사용 전 필독사항](need_to_know.md)
-- ⚙️ [Windows Sandbox 설치 가이드](howto_install_sandbox.md)
+- ⚙️ [식탁보 설치 가이드](install.md)
 - 🔧 [문제 해결 가이드](troubleshoot.md)
 - 🔒 [개인정보 보호정책](privacy.md)
 
 ### 📄 라이선스 정보
 
-- 🆓 [MIT 라이선스](https://github.com/yourtablecloth/TableCloth/blob/dev/LICENSE.txt)로 **무료 사용** 가능
+- 🆓 [AGPL v3 라이선스](https://github.com/yourtablecloth/TableCloth/blob/dev/LICENSE.txt)로 **무료 사용** 가능, 상용 목적 개발이 필요한 경우 별도 문의
 - 🎨 아이콘: [Eucalyp](https://www.flaticon.com/authors/eucalyp) from [Flaticon](https://www.flaticon.com/)
 - 📸 사진: [Brooke Lark](https://unsplash.com/@brookelark) on [Unsplash](https://unsplash.com/s/photos/tablecloth)
+
