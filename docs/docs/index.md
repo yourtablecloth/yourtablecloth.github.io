@@ -104,7 +104,8 @@
 
 ### 📄 라이선스 정보
 
-- 🆓 [AGPL v3 라이선스](https://github.com/yourtablecloth/TableCloth/blob/dev/LICENSE.txt)로 **무료 사용** 가능, 상용 목적 개발이 필요한 경우 별도 문의
+- 🆓 [AGPL v3 라이선스](https://github.com/yourtablecloth/TableCloth/blob/main/LICENSE-AGPL)로 **무료 사용** 가능, 상용 목적 개발이 필요한 경우 별도 문의
 - 🎨 아이콘: [Eucalyp](https://www.flaticon.com/authors/eucalyp) from [Flaticon](https://www.flaticon.com/)
 - 📸 사진: [Brooke Lark](https://unsplash.com/@brookelark) on [Unsplash](https://unsplash.com/s/photos/tablecloth)
+
 
