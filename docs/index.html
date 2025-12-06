@@ -167,7 +167,7 @@
             e.preventDefault();
             window.location.hash = target;
           });
-        } else if (!href.startsWith('http') && !href.startsWith(getPathPrefix())) {
+        } else if (!href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith(getPathPrefix())) {
           link.setAttribute('href', getPathPrefix() + href);
         }
       });
