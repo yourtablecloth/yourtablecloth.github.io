@@ -19,7 +19,6 @@
 docs/                    # GitHub Pages 배포 디렉터리
 ├── index.html          # 메인 페이지 (마크다운 렌더링)
 ├── CNAME               # 커스텀 도메인 설정
-├── ads.txt             # 광고 관련 설정
 └── docs/               # 문서 콘텐츠 (마크다운)
     ├── index.md        # 홈 페이지 콘텐츠
     ├── howto_install_sandbox.md    # 샌드박스 설치 가이드
