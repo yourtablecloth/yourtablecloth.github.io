@@ -2,9 +2,12 @@
 
 > **언제나 안전하고 깨끗하게!** - 인터넷 뱅킹과 전자정부 서비스를 위한 혁신적인 Windows 샌드박스 솔루션
 
-[![식탁보 최신 버전 다운로드 (GitHub 릴리스)](https://img.shields.io/github/downloads/yourtablecloth/TableCloth/total?label=%EC%8B%9D%ED%83%81%EB%B3%B4%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C&color=blue&style=for-the-badge)](https://github.com/yourtablecloth/TableCloth/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/yourtablecloth/TableCloth?style=for-the-badge&color=yellow)](https://github.com/yourtablecloth/TableCloth/stargazers)
 [![License: GNU Affero General Public License version 3](https://img.shields.io/badge/License-AGPL3-green.svg?style=for-the-badge)](https://opensource.org/license/agpl-v3)
+[![식탁보 Discord](https://img.shields.io/discord/1443777680418930761?label=Discord&logo=discord&color=7289DA&style=for-the-badge)](https://discord.gg/eT2UnUXyTV)
+[![식탁보 후원](https://img.shields.io/github/sponsors/yourtablecloth?style=for-the-badge)](https://github.com/sponsors/yourtablecloth)
+[![식탁보 최신 버전 다운로드](https://img.shields.io/github/v/release/yourtablecloth/tablecloth?style=for-the-badge)](https://github.com/yourtablecloth/TableCloth/releases)
+[![UniGetUI에서 다운로드](https://img.shields.io/badge/UniGetUI-TableCloth-blue?style=for-the-badge)](https://marticliment.com/unigetui/share?name=TableCloth&id=TableClothProject.TableCloth&sourceName=winget&managerName=WinGet)
 
 ![식탁보 실행 화면](images/tablecloth.png)
 
@@ -71,9 +74,11 @@
 
 #### 📂 [카탈로그 업데이트](https://github.com/yourtablecloth/TableClothCatalog)
 
-- 🔗 **다운로드 링크가 바뀌었나요?** → `Catalog.xml` 수정 PR
-- 🆕 **새로운 사이트 추가하고 싶으신가요?** → 사이트 정보 + 아이콘과 함께 PR
-- 🌐 **IE 호환성 설정 필요하신가요?** → `sites.xml` 수정 PR
+식탁보에서 접속할 수 있는 특정 웹 사이트와 관련된 문제는 다음 중 한 가지 방법을 통하여 제보 또는 기여를 부탁드립니다.
+
+- [식탁보 카탈로그 리포지터리에 이슈 등록 또는 PR 제출](https://github.com/yourtablecloth/TableClothCatalog)
+- [Google Forms를 통한 제보](https://forms.gle/Pw6pBKhqF1e5Nesw6)
+- [Discord 채널을 통한 제보/토론](https://discord.gg/eT2UnUXyTV)
 
 #### 💡 다른 기여 방법
 
