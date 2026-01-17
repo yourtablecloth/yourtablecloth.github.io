@@ -26,7 +26,86 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           organization: true
-          file: 'docs/docs/sponsors.md'
+          file: 'docs/docs/sponsor.md'
+
+      - name: Generate Sponsors JSON 📄
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT }}
+          script: |
+            const fs = require('fs');
+            
+            // GraphQL 쿼리로 스폰서 목록 가져오기
+            const query = `
+              query($org: String!) {
+                organization(login: $org) {
+                  sponsorshipsAsMaintainer(first: 100, includePrivate: false) {
+                    totalCount
+                    nodes {
+                      createdAt
+                      isActive
+                      tier {
+                        name
+                        monthlyPriceInDollars
+                        isOneTime
+                      }
+                      sponsorEntity {
+                        ... on User {
+                          login
+                          name
+                          avatarUrl
+                          url
+                        }
+                        ... on Organization {
+                          login
+                          name
+                          avatarUrl
+                          url
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+            
+            try {
+              const result = await github.graphql(query, { org: 'yourtablecloth' });
+              const sponsorships = result.organization.sponsorshipsAsMaintainer;
+              
+              const sponsors = sponsorships.nodes
+                .filter(s => s.isActive && s.sponsorEntity)
+                .map(s => ({
+                  login: s.sponsorEntity.login,
+                  name: s.sponsorEntity.name || s.sponsorEntity.login,
+                  avatarUrl: s.sponsorEntity.avatarUrl,
+                  profileUrl: s.sponsorEntity.url,
+                  tier: s.tier ? {
+                    name: s.tier.name,
+                    monthlyPrice: s.tier.monthlyPriceInDollars,
+                    isOneTime: s.tier.isOneTime
+                  } : null,
+                  since: s.createdAt
+                }));
+              
+              const data = {
+                generatedAt: new Date().toISOString(),
+                totalCount: sponsors.length,
+                sponsors: sponsors
+              };
+              
+              // JSON 파일 저장
+              fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
+              console.log(`Generated sponsors.json with ${sponsors.length} sponsors`);
+            } catch (error) {
+              console.log('No sponsors found or API error:', error.message);
+              const data = {
+                generatedAt: new Date().toISOString(),
+                totalCount: 0,
+                sponsors: []
+              };
+              fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
+            }
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -529,6 +529,18 @@
           </div>
         </section>
 
+        <!-- 후원자 섹션 -->
+        <section class="mb-5 py-4 bg-secondary bg-opacity-10 rounded-4">
+          <div class="container text-center">
+            <h2 class="mb-3">💖 프로젝트에 도움을 주시는 감사한 분들</h2>
+            <p class="text-muted mb-4">식탁보 프로젝트가 지속될 수 있도록 후원해주시는 분들입니다.</p>
+            <div id="sponsors-container" class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+              <span class="text-muted">후원자 목록을 불러오는 중...</span>
+            </div>
+            <a href="#sponsor" class="btn btn-outline-secondary">💝 후원 안내 보기</a>
+          </div>
+        </section>
+
         <!-- 문제 제기 섹션 -->
         <section class="mb-5">
           <h2 class="text-center mb-4">😫 이런 문제, 겪어보셨나요?</h2>
@@ -851,6 +863,57 @@
       contentEl.style.opacity = 1;
       document.title = '식탁보® - 언제나 안전하고 깨끗하게!';
       setActiveNav('index');
+      loadSponsors();
+    }
+
+    function loadSponsors() {
+      const container = document.getElementById('sponsors-container');
+      if (!container) return;
+
+      // JSON 파일에서 스폰서 목록 로드 (데스크톱 앱과 동일한 데이터 소스)
+      fetch('sponsors.json')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load sponsors.json');
+          return response.json();
+        })
+        .then(data => {
+          if (data.sponsors && data.sponsors.length > 0) {
+            const html = data.sponsors.map(s => `
+              <a href="${s.profileUrl}" target="_blank" rel="noopener" title="${s.name}" class="text-decoration-none">
+                <img src="${s.avatarUrl}" alt="${s.name}" width="64" height="64" class="rounded-circle shadow-sm" style="border: 2px solid #e9ecef;" />
+              </a>
+            `).join('');
+            container.innerHTML = html;
+          } else {
+            container.innerHTML = '<span class="text-muted">아직 후원자가 없습니다. 첫 번째 후원자가 되어주세요! 🙏</span>';
+          }
+        })
+        .catch(() => {
+          // JSON 실패 시 마크다운 파일에서 폴백
+          loadSponsorsFromMarkdown(container);
+        });
+    }
+
+    function loadSponsorsFromMarkdown(container) {
+      fetch(getPathPrefix() + 'sponsor.md')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load sponsors');
+          return response.text();
+        })
+        .then(md => {
+          const match = md.match(/<!--\s*sponsors\s*-->([\s\S]*?)<!--\s*sponsors\s*-->/);
+          if (match && match[1].trim()) {
+            const sponsorContent = match[1].trim();
+            const dirty = marked.parse(sponsorContent);
+            const clean = safeSanitize(dirty);
+            container.innerHTML = clean;
+          } else {
+            container.innerHTML = '<span class="text-muted">아직 후원자가 없습니다. 첫 번째 후원자가 되어주세요! 🙏</span>';
+          }
+        })
+        .catch(() => {
+          container.innerHTML = '<span class="text-muted">후원자 목록을 불러올 수 없습니다.</span>';
+        });
     }
 
     function loadMarkdownFromHash() {

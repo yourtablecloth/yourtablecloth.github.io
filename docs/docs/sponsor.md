@@ -38,3 +38,11 @@ GitHub Sponsors 정책에 따라 처리됩니다. 자세한 내용은 <a href="h
 📧 <a href="mailto:rkttu@rkttu.com?subject=[식탁보] 기업/기관 후원 문의" style="color: #0d6efd;">이메일로 문의해주시면 자세히 안내해 드리겠습니다.</a>
 
 <small style="color: #6c757d;">문의 시 후원 규모/기간, 담당자 연락처, 로고 노출 필요 여부를 알려주시면 빠른 안내가 가능합니다.</small>
+
+---
+
+## 💖 프로젝트에 도움을 주시는 분들
+
+식탁보 프로젝트가 지속될 수 있도록 후원해주시는 감사한 분들입니다.
+
+<!-- sponsors --><!-- sponsors -->
