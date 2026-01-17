@@ -82,6 +82,161 @@
       footer, footer a {
         color: #adb5bd !important;
       }
+      /* Alert boxes */
+      .alert-warning {
+        background-color: #3d3200 !important;
+        border-color: #665200 !important;
+        color: #ffc107 !important;
+      }
+      .alert-warning .alert-heading,
+      .alert-warning p,
+      .alert-warning strong {
+        color: #ffe066 !important;
+      }
+      .alert-warning hr {
+        border-color: #665200 !important;
+      }
+      /* Buttons */
+      .btn-outline-primary {
+        border-color: #6ea8fe !important;
+        color: #6ea8fe !important;
+      }
+      .btn-outline-primary:hover {
+        background-color: #0d6efd !important;
+        color: #fff !important;
+      }
+      /* Text utilities */
+      .text-muted {
+        color: #adb5bd !important;
+      }
+      /* Links in dark mode */
+      #markdown-content a:not(.btn) {
+        color: #6ea8fe !important;
+      }
+      #markdown-content a:not(.btn):hover {
+        color: #9ec5fe !important;
+      }
+      /* Cards and sections */
+      .card {
+        background-color: #2c3034 !important;
+        border-color: #495057 !important;
+        color: #fff !important;
+      }
+      .card-body, .card-title, .card-text {
+        color: #fff !important;
+      }
+      /* Shadow adjustments */
+      .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.4) !important;
+      }
+      /* Image filters for dark mode - soften bright colors */
+      #markdown-content img,
+      .card img,
+      section img:not(.navbar-brand img) {
+        filter: brightness(0.9) saturate(0.85);
+        transition: filter 0.2s ease;
+      }
+      #markdown-content img:hover,
+      .card img:hover,
+      section img:not(.navbar-brand img):hover {
+        filter: brightness(1) saturate(0.9);
+      }
+      /* Soften red/danger colors */
+      .text-danger, .btn-danger, .badge-danger {
+        color: #f08080 !important;
+      }
+      .btn-outline-danger {
+        border-color: #f08080 !important;
+        color: #f08080 !important;
+      }
+      .btn-outline-danger:hover {
+        background-color: #c06060 !important;
+        border-color: #c06060 !important;
+        color: #fff !important;
+      }
+      .alert-danger {
+        background-color: #3d1a1a !important;
+        border-color: #662020 !important;
+        color: #f08080 !important;
+      }
+      /* Emoji and icon tone adjustment */
+      .emoji, [role="img"] {
+        filter: brightness(0.95) saturate(0.8);
+      }
+      /* Table styling */
+      table, th, td {
+        border-color: #495057 !important;
+      }
+      th {
+        background-color: #2c3034 !important;
+        color: #fff !important;
+      }
+      td {
+        background-color: #212529 !important;
+        color: #e9ecef !important;
+      }
+      /* Code blocks */
+      pre, code {
+        background-color: #2c3034 !important;
+        color: #e9ecef !important;
+        border-color: #495057 !important;
+      }
+      /* Blockquotes */
+      blockquote {
+        border-left-color: #6ea8fe !important;
+        background-color: #2c3034 !important;
+        color: #e9ecef !important;
+      }
+      /* Strong/bold text - softer white */
+      strong, b {
+        color: #f8f9fa !important;
+      }
+      /* Primary background sections */
+      .bg-primary.bg-opacity-10,
+      .bg-primary-subtle {
+        background-color: #1a3a5c !important;
+      }
+      .text-primary {
+        color: #6ea8fe !important;
+      }
+      /* Info alert */
+      .alert-info {
+        background-color: #1a3a4a !important;
+        border-color: #2a5a7a !important;
+        color: #8ecae6 !important;
+      }
+      .alert-info .alert-heading,
+      .alert-info p,
+      .alert-info strong {
+        color: #a8daec !important;
+      }
+      /* Border colors for cards */
+      .border-danger {
+        border-color: #f08080 !important;
+      }
+      .border-danger.border-opacity-25 {
+        border-color: rgba(240, 128, 128, 0.25) !important;
+      }
+      /* Card titles with text-danger */
+      .card-title.text-danger {
+        color: #f08080 !important;
+      }
+      /* Success colors */
+      .text-success {
+        color: #75d9a0 !important;
+      }
+      .alert-success {
+        background-color: #1a3d2a !important;
+        border-color: #2a5a3a !important;
+        color: #75d9a0 !important;
+      }
+      /* Secondary colors */
+      .bg-secondary, .bg-secondary.bg-opacity-10 {
+        background-color: #3a3d41 !important;
+      }
+      .text-secondary {
+        color: #adb5bd !important;
+      }
     }
     @media print {
       .navbar, footer { display: none; }
@@ -173,6 +328,32 @@
         modifiedPrefix += '/';
       }
       return modifiedPrefix;
+    }
+
+    function shareTablecloth() {
+      const shareData = {
+        title: '식탁보® - 언제나 안전하고 깨끗하게!',
+        text: '인터넷 뱅킹과 전자정부 서비스를 Windows 샌드박스에서 안전하게 사용할 수 있는 무료 소프트웨어입니다.',
+        url: 'https://yourtablecloth.app'
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => {
+          if (err.name !== 'AbortError') {
+            copyToClipboard(shareData.url);
+          }
+        });
+      } else {
+        copyToClipboard(shareData.url);
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('링크가 클립보드에 복사되었습니다!\n지인에게 공유해주세요 😊');
+      }).catch(() => {
+        prompt('아래 링크를 복사해서 공유해주세요:', text);
+      });
     }
 
     function setActiveNav(hash) {
@@ -561,8 +742,8 @@
                 <div class="card-body">
                   <div class="fs-1 mb-2">💝</div>
                   <h6 class="card-title">후원하기</h6>
-                  <a href="https://github.com/sponsors/yourtablecloth" target="_blank" rel="noopener">
-                    <img src="https://img.shields.io/badge/sponsor-GitHub%20Sponsors-pink?style=for-the-badge&logo=github" alt="GitHub Sponsors" />
+                  <a href="#sponsor">
+                    후원 안내 보기
                   </a>
                 </div>
               </div>
@@ -585,7 +766,7 @@
                 <div class="card-body">
                   <div class="fs-1 mb-2">🐛</div>
                   <h6 class="card-title">버그 신고</h6>
-                  <a href="https://github.com/yourtablecloth/TableCloth/issues" target="_blank" rel="noopener" class="btn btn-outline-secondary btn-sm">
+                  <a href="https://github.com/yourtablecloth/TableCloth/issues" target="_blank" rel="noopener">
                     GitHub 이슈 등록
                   </a>
                 </div>
@@ -596,7 +777,9 @@
                 <div class="card-body">
                   <div class="fs-1 mb-2">📢</div>
                   <h6 class="card-title">추천하기</h6>
-                  <p class="small text-muted mb-0">지인에게 추천해주세요!<br />가장 큰 도움이에요 ❤️</p>
+                  <a href="#" onclick="shareTablecloth(); return false;">
+                    지인에게 공유하기
+                  </a>
                 </div>
               </div>
             </div>
