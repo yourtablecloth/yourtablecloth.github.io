@@ -113,6 +113,14 @@ jobs:
               fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
             }
 
+      - name: Verify generated files 🔍
+        run: |
+          echo "=== sponsors.json content ==="
+          cat docs/sponsors.json
+          echo ""
+          echo "=== sponsor.md sponsors section ==="
+          grep -A 20 "<!-- sponsors -->" docs/docs/sponsor.md || echo "No sponsors marker found"
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
