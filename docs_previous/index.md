@@ -34,7 +34,6 @@ permalink: /
 식탁보는 다음의 시스템에서 사용할 수 있습니다.
 
 - 인텔 및 AMD 프로세서를 사용하는 실제 데스크톱 또는 노트북
-  - Windows 10 Pro, Windows 10 Enterprise, Windows 10 Education, Windows 10 Pro for Workstation (버전 1909 이상)
   - Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation
 - ARM 기반 프로세서를 사용하는 실제 데스크톱 또는 노트북 (애플 실리콘 제외)
   - Windows 11 Pro, Windows 11 Enterprise, Windows 11 Education, Windows 11 Pro for Workstation (버전 22H2 이상)
