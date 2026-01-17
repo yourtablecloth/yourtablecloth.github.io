@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'docs/**'
-      - 'github/workflows/deploy.yml'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
   schedule:
     - cron: '30 15 * * 0'  # 매주 일요일 (스폰서 목록 갱신)
