@@ -9,7 +9,7 @@ on:
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
   schedule:
-    - cron: '30 15 * * 0'  # 매주 일요일 (스폰서 목록 갱신)
+    - cron: '30 15 * * 0'  # 매주 일요일 (스폰서/기여자 목록 갱신)
 
 permissions:
   contents: read
@@ -40,77 +40,137 @@ jobs:
           github-token: ${{ secrets.PAT }}
           script: |
             const fs = require('fs');
-            
-            // GraphQL 쿼리로 스폰서 목록 가져오기
+
+            // 후원자: GitHub Sponsors 는 GraphQL 전용(REST 미지원).
+            // includePrivate:true 로 비공개 후원자까지 받되, 신원은 절대 공개하지 않고
+            // privacyLevel === 'PRIVATE' 인 후원자는 익명 집계(anonymousCount)로만 노출한다.
+            // first:100 한도를 넘겨도 끊기지 않도록 커서 페이지네이션한다.
             const query = `
-              query($org: String!) {
+              query($org: String!, $after: String) {
                 organization(login: $org) {
-                  sponsorshipsAsMaintainer(first: 100, includePrivate: false) {
-                    totalCount
+                  sponsorshipsAsMaintainer(first: 100, after: $after, includePrivate: true) {
+                    pageInfo { hasNextPage endCursor }
                     nodes {
                       createdAt
                       isActive
-                      tier {
-                        name
-                        monthlyPriceInDollars
-                        isOneTime
-                      }
+                      privacyLevel
+                      tier { name monthlyPriceInDollars isOneTime }
                       sponsorEntity {
-                        ... on User {
-                          login
-                          name
-                          avatarUrl
-                          url
-                        }
-                        ... on Organization {
-                          login
-                          name
-                          avatarUrl
-                          url
-                        }
+                        ... on User { login name avatarUrl url }
+                        ... on Organization { login name avatarUrl url }
                       }
                     }
                   }
                 }
               }
             `;
-            
+
+            const writeFallback = async (file, url) => {
+              // 일시적 실패(GraphQL 오류·PAT 만료 등)에 목록을 0으로 덮어쓰지 않는다.
+              // 레포의 커밋본은 빈 placeholder 이므로, 마지막으로 *배포된* 파일을 가져와 유지한다.
+              try {
+                const res = await fetch(url);
+                if (res.ok) { fs.writeFileSync(file, await res.text()); core.warning(`Kept last deployed ${file}`); return; }
+                throw new Error('HTTP ' + res.status);
+              } catch (e) {
+                if (!fs.existsSync(file)) {
+                  fs.writeFileSync(file, JSON.stringify({ generatedAt: new Date().toISOString(), totalCount: 0, publicCount: 0, anonymousCount: 0, sponsors: [] }, null, 2));
+                }
+                core.warning(`Fallback for ${file}: ${e.message}`);
+              }
+            };
+
             try {
-              const result = await github.graphql(query, { org: 'yourtablecloth' });
-              const sponsorships = result.organization.sponsorshipsAsMaintainer;
-              
-              const sponsors = sponsorships.nodes
-                .filter(s => s.isActive && s.sponsorEntity)
-                .map(s => ({
-                  login: s.sponsorEntity.login,
-                  name: s.sponsorEntity.name || s.sponsorEntity.login,
-                  avatarUrl: s.sponsorEntity.avatarUrl,
-                  profileUrl: s.sponsorEntity.url,
-                  tier: s.tier ? {
-                    name: s.tier.name,
-                    monthlyPrice: s.tier.monthlyPriceInDollars,
-                    isOneTime: s.tier.isOneTime
-                  } : null,
-                  since: s.createdAt
-                }));
-              
+              let sponsors = [], anonymousCount = 0, after = null;
+              do {
+                const result = await github.graphql(query, { org: 'yourtablecloth', after });
+                const conn = result.organization.sponsorshipsAsMaintainer;
+                for (const s of conn.nodes) {
+                  if (!s.isActive) continue;
+                  if (s.privacyLevel === 'PRIVATE' || !s.sponsorEntity) { anonymousCount++; continue; }
+                  sponsors.push({
+                    login: s.sponsorEntity.login,
+                    name: s.sponsorEntity.name || s.sponsorEntity.login,
+                    avatarUrl: s.sponsorEntity.avatarUrl,
+                    profileUrl: s.sponsorEntity.url,
+                    tier: s.tier ? { name: s.tier.name, monthlyPrice: s.tier.monthlyPriceInDollars, isOneTime: s.tier.isOneTime } : null,
+                    since: s.createdAt
+                  });
+                }
+                after = conn.pageInfo.hasNextPage ? conn.pageInfo.endCursor : null;
+              } while (after);
+
               const data = {
                 generatedAt: new Date().toISOString(),
-                totalCount: sponsors.length,
-                sponsors: sponsors
+                totalCount: sponsors.length + anonymousCount,
+                publicCount: sponsors.length,
+                anonymousCount,
+                sponsors
               };
-              
-              // JSON 파일 저장
               fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
-              console.log(`Generated sponsors.json with ${sponsors.length} sponsors`);
+              console.log(`Generated sponsors.json: ${sponsors.length} public + ${anonymousCount} anonymous`);
             } catch (error) {
-              console.log('No sponsors found or API error:', error.message);
+              core.warning('Sponsor fetch failed: ' + error.message);
+              await writeFallback('docs/sponsors.json', 'https://yourtablecloth.app/sponsors.json');
+            }
+
+      - name: Generate Contributors JSON 👥
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // 기여자: 공개 REST /contributors 로 충분(익명 포함은 ?anon=true).
+            // TableCloth + TableClothCatalog 두 저장소를 합산하고 login 기준으로 합친다.
+            // 봇은 제외하고, 이메일만 있는 익명 기여자는 익명 집계로만 노출한다.
+            const repos = ['TableCloth', 'TableClothCatalog'];
+
+            const writeFallback = async (file, url) => {
+              try {
+                const res = await fetch(url);
+                if (res.ok) { fs.writeFileSync(file, await res.text()); core.warning(`Kept last deployed ${file}`); return; }
+                throw new Error('HTTP ' + res.status);
+              } catch (e) {
+                if (!fs.existsSync(file)) {
+                  fs.writeFileSync(file, JSON.stringify({ generatedAt: new Date().toISOString(), totalCount: 0, anonymousCount: 0, contributors: [] }, null, 2));
+                }
+                core.warning(`Fallback for ${file}: ${e.message}`);
+              }
+            };
+
+            try {
+              const byLogin = new Map();
+              const anonEmails = new Set();
+              let anonNoEmail = 0;
+              for (const repo of repos) {
+                const list = await github.paginate('GET /repos/{owner}/{repo}/contributors', {
+                  owner: 'yourtablecloth', repo, anon: 'true', per_page: 100
+                });
+                for (const c of list) {
+                  if (c.type === 'Bot') continue;
+                  if (c.type === 'Anonymous' || !c.login) {
+                    if (c.email) anonEmails.add(String(c.email).toLowerCase()); else anonNoEmail++;
+                    continue;
+                  }
+                  if (/\[bot\]$/i.test(c.login)) continue;
+                  const prev = byLogin.get(c.login) || { login: c.login, name: c.login, avatarUrl: c.avatar_url, profileUrl: c.html_url, contributions: 0 };
+                  prev.contributions += (c.contributions || 0);
+                  byLogin.set(c.login, prev);
+                }
+              }
+              const contributors = [...byLogin.values()].sort((a, b) => b.contributions - a.contributions);
+              const anonymousCount = anonEmails.size + anonNoEmail;
               const data = {
                 generatedAt: new Date().toISOString(),
-                totalCount: 0,
-                sponsors: []
+                totalCount: contributors.length,
+                anonymousCount,
+                contributors
               };
-              fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
+              fs.writeFileSync('docs/contributors.json', JSON.stringify(data, null, 2));
+              console.log(`Generated contributors.json: ${contributors.length} contributors + ${anonymousCount} anonymous`);
+            } catch (error) {
+              core.warning('Contributor fetch failed: ' + error.message);
+              await writeFallback('docs/contributors.json', 'https://yourtablecloth.app/contributors.json');
             }
 
       - name: Verify generated files 🔍
@@ -118,6 +178,8 @@ jobs:
           echo "=== sponsors.json content ==="
           cat docs/sponsors.json
           echo ""
+          echo "=== contributors.json (head) ==="
+          head -c 1200 docs/contributors.json; echo ""
           echo "=== sponsor.md sponsors section ==="
           grep -A 20 "<!-- sponsors -->" docs/docs/sponsor.md || echo "No sponsors marker found"
 
