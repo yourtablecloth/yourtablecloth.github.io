@@ -105,6 +105,18 @@
         background-color: #0d6efd !important;
         color: #fff !important;
       }
+      /* Modal */
+      .modal-content {
+        background-color: #2c3034 !important;
+        color: #fff !important;
+        border-color: #495057 !important;
+      }
+      .modal-header, .modal-footer {
+        border-color: #495057 !important;
+      }
+      .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+      }
       /* Text utilities */
       .text-muted {
         color: #adb5bd !important;
@@ -356,6 +368,27 @@
       });
     }
 
+    // 무설치 버전 다운로드 시작과 동시에 안내 모달 표시
+    // (앵커 기본 동작으로 .wsb 다운로드는 그대로 진행되고, 여기서는 모달만 띄운다)
+    function startNoInstall() {
+      const modalEl = document.getElementById('sandboxGuideModal');
+      if (modalEl && window.bootstrap) {
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      }
+    }
+
+    // 모달을 완전히 닫은 뒤 설치 가이드로 이동 (백드롭 잔상 방지)
+    function goToInstallGuide() {
+      const modalEl = document.getElementById('sandboxGuideModal');
+      const instance = (modalEl && window.bootstrap) ? bootstrap.Modal.getInstance(modalEl) : null;
+      if (instance) {
+        modalEl.addEventListener('hidden.bs.modal', () => { window.location.hash = 'install'; }, { once: true });
+        instance.hide();
+      } else {
+        window.location.hash = 'install';
+      }
+    }
+
     function setActiveNav(hash) {
       document.querySelectorAll('.nav-link').forEach(link => {
         if (link.getAttribute('href') === '#' + hash) {
@@ -504,9 +537,18 @@
               인터넷 뱅킹과 전자정부 서비스를 위한<br class="d-md-none" />
               <strong>혁신적인 제로 트러스트 컴퓨팅 솔루션</strong>
             </p>
+            <!-- 무설치 즉시 실행 CTA -->
+            <div class="mb-3">
+              <a href="https://github.com/yourtablecloth/TableCloth/releases/latest/download/no-install-spork.wsb" class="btn btn-success btn-lg px-4 py-3 fw-bold shadow" onclick="startNoInstall()">
+                ⚡ 설치 없이 지금 바로 시작하기
+              </a>
+            </div>
+            <p class="small text-muted mb-4">
+              <strong>Windows 샌드박스</strong>만 켜져 있으면 됩니다. 내려받은 <code>.wsb</code> 파일을 실행하면 설치 과정 없이 식탁보가 바로 열려요.
+            </p>
             <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-              <a href="https://github.com/yourtablecloth/TableCloth/releases" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
-                🚀 지금 다운로드
+              <a href="https://github.com/yourtablecloth/TableCloth/releases" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener">
+                🚀 정식 버전 다운로드
               </a>
               <a href="#install" class="btn btn-outline-primary btn-lg">
                 📖 설치 가이드
@@ -842,6 +884,44 @@
             <strong>📸 사진</strong> · <a href="https://unsplash.com/@brookelark" target="_blank" rel="noopener">Brooke Lark</a> on <a href="https://unsplash.com/s/photos/tablecloth" target="_blank" rel="noopener">Unsplash</a>
           </p>
         </section>
+
+        <!-- 무설치 시작 안내 모달 -->
+        <div class="modal fade" id="sandboxGuideModal" tabindex="-1" aria-labelledby="sandboxGuideModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="sandboxGuideModalLabel">🚀 다운로드가 시작되었어요!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+              </div>
+              <div class="modal-body">
+                <p>식탁보 무설치 버전(<code>no-install-spork.wsb</code>) 다운로드가 시작되었습니다.</p>
+                <div class="alert alert-success border-0 mb-4">
+                  <strong>✅ 다음 단계</strong><br />
+                  내려받은 <code>.wsb</code> 파일을 <strong>두 번 눌러 실행</strong>하면 Windows 샌드박스 안에서 식탁보가 자동으로 열립니다. 별도의 설치 과정은 필요 없어요.
+                </div>
+                <h6 class="fw-bold">🧩 파일이 열리지 않나요?</h6>
+                <p class="mb-2 text-muted small">
+                  <code>.wsb</code> 파일을 실행해도 아무 반응이 없거나 오류가 난다면, <strong>Windows 샌드박스가 아직 켜져 있지 않은 것</strong>입니다. 아래 순서로 활성화해 주세요.
+                </p>
+                <div class="alert alert-warning border-0">
+                  <ol class="mb-2 ps-3">
+                    <li><strong>Windows 기능 켜기/끄기</strong>를 실행합니다.</li>
+                    <li>목록에서 <strong>Windows 샌드박스</strong>를 체크하고 확인을 누릅니다.</li>
+                    <li>안내에 따라 <strong>컴퓨터를 다시 시작</strong>합니다.</li>
+                  </ol>
+                  <hr />
+                  <p class="mb-0 small">
+                    Windows 샌드박스는 <strong>Windows 11 Pro / Enterprise / Education</strong> 이상에서만 사용할 수 있습니다.
+                  </p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#install" class="btn btn-primary" onclick="goToInstallGuide(); return false;">📖 설치 가이드 자세히 보기</a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
       `;
     }
 
