@@ -25,3 +25,9 @@ Windows 11 Pro, Education, Enterprise를 사용하고 있다면 무료로 사용
 ## ❓ Windows Home 에디션에서도 사용할 수 있나요?
 
 식탁보는 Windows Sandbox가 **정상적으로 제공되는 Windows Pro 이상의 버전에서만 안정적으로** 사용 가능합니다.
+
+## ❓ Mac에서도 사용할 수 있나요?
+
+Apple Silicon 기반 맥이라면 사용할 수 있습니다! Windows 샌드박스를 macOS로 포팅한 [macSandbox](https://yourtablecloth.app/macSandbox)를 설치하면 식탁보 무설치 버전(`.wsb`)을 **그대로 실행**할 수 있습니다.
+
+macOS 26 (Tahoe) 이상 권장, 본인 소유의 Windows 11 ARM64 라이선스, 약 24GB의 여유 공간이 필요합니다. (인텔 기반 맥은 지원되지 않습니다.) 자세한 설치 방법은 [macOS 설치 가이드](install-macos.md)를 참고하세요.

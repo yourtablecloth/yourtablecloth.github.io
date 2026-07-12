@@ -6,7 +6,7 @@
   <title>식탁보&reg; - 언제나 안전하고 깨끗하게!</title>
 
   <meta name="description" content="식탁보&reg; - 언제나 안전하고 깨끗하게!" />
-  <meta name="keywords" content="식탁보, 인터넷뱅킹, 샌드박스, 가상PC" />
+  <meta name="keywords" content="식탁보, 인터넷뱅킹, 샌드박스, 가상PC, macOS, 맥, macSandbox" />
   <meta name="author" content="rkttu" />
 
   <meta property="og:title" content="식탁보&reg;" />
@@ -208,6 +208,10 @@
       .bg-primary-subtle {
         background-color: #1a3a5c !important;
       }
+      /* Success background sections */
+      .bg-success.bg-opacity-10 {
+        background-color: #1a3d2a !important;
+      }
       .text-primary {
         color: #6ea8fe !important;
       }
@@ -345,7 +349,7 @@
     function shareTablecloth() {
       const shareData = {
         title: '식탁보® - 언제나 안전하고 깨끗하게!',
-        text: '인터넷 뱅킹과 전자정부 서비스를 Windows 샌드박스에서 안전하게 사용할 수 있는 무료 소프트웨어입니다.',
+        text: '인터넷 뱅킹과 전자정부 서비스를 Windows·macOS의 샌드박스 환경에서 안전하게 사용할 수 있는 무료 소프트웨어입니다.',
         url: 'https://yourtablecloth.app'
       };
 
@@ -368,24 +372,36 @@
       });
     }
 
+    function isMacOS() {
+      return /Mac/i.test(navigator.platform || navigator.userAgent);
+    }
+
     // 무설치 버전 다운로드 시작과 동시에 안내 모달 표시
     // (앵커 기본 동작으로 .wsb 다운로드는 그대로 진행되고, 여기서는 모달만 띄운다)
     function startNoInstall() {
       const modalEl = document.getElementById('sandboxGuideModal');
-      if (modalEl && window.bootstrap) {
-        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      if (modalEl) {
+        const winGuide = modalEl.querySelector('#sandboxGuideWindows');
+        const macGuide = modalEl.querySelector('#sandboxGuideMac');
+        const onMac = isMacOS();
+        if (winGuide) winGuide.classList.toggle('d-none', onMac);
+        if (macGuide) macGuide.classList.toggle('d-none', !onMac);
+        if (window.bootstrap) {
+          bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        }
       }
     }
 
     // 모달을 완전히 닫은 뒤 설치 가이드로 이동 (백드롭 잔상 방지)
-    function goToInstallGuide() {
+    function goToInstallGuide(target) {
+      const dest = target || 'install';
       const modalEl = document.getElementById('sandboxGuideModal');
       const instance = (modalEl && window.bootstrap) ? bootstrap.Modal.getInstance(modalEl) : null;
       if (instance) {
-        modalEl.addEventListener('hidden.bs.modal', () => { window.location.hash = 'install'; }, { once: true });
+        modalEl.addEventListener('hidden.bs.modal', () => { window.location.hash = dest; }, { once: true });
         instance.hide();
       } else {
-        window.location.hash = 'install';
+        window.location.hash = dest;
       }
     }
 
@@ -543,8 +559,13 @@
                 ⚡ 설치 없이 지금 바로 시작하기
               </a>
             </div>
-            <p class="small text-muted mb-4">
+            <p class="small text-muted mb-2">
               <strong>Windows 샌드박스</strong>만 켜져 있으면 됩니다. 내려받은 <code>.wsb</code> 파일을 실행하면 설치 과정 없이 식탁보가 바로 열려요.
+            </p>
+            <p class="small mb-4">
+              <span class="badge bg-success">NEW</span>
+              🍎 Mac 사용자이신가요? 이제 <strong>macSandbox</strong>로 macOS에서도 같은 <code>.wsb</code> 파일을 그대로 실행할 수 있어요.
+              <a href="#install-macos"><strong>📖 macOS 설치 가이드</strong></a>
             </p>
             <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
               <a href="https://github.com/yourtablecloth/TableCloth/releases" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener">
@@ -645,6 +666,59 @@
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- macOS 지원 섹션 -->
+        <section class="mb-5 py-5 bg-success bg-opacity-10 rounded-4">
+          <div class="container">
+            <h2 class="text-center mb-3">🍎 이제 Mac에서도 식탁보를</h2>
+            <p class="text-center text-muted mb-4">
+              Windows 샌드박스를 macOS로 포팅한 <strong>macSandbox</strong> 위에서<br class="d-md-none" />
+              식탁보 무설치 버전(<code>.wsb</code>)이 그대로 실행됩니다.
+            </p>
+            <div class="row justify-content-center g-4">
+              <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">✨ Windows에서와 같은 경험</h5>
+                    <ul class="text-muted mb-0">
+                      <li>부팅할 때마다 <strong>깨끗한 새 Windows 환경</strong></li>
+                      <li>창을 닫으면 <strong>모든 변경 사항이 완전히 삭제</strong></li>
+                      <li>클립보드 공유, 폴더 공유, 프린터 리다이렉션 지원</li>
+                      <li>식탁보 무설치 <code>.wsb</code> 파일을 <strong>그대로 실행</strong></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-sm">
+                  <div class="card-body">
+                    <h5 class="card-title">📋 준비물</h5>
+                    <ul class="text-muted mb-0">
+                      <li><strong>Apple Silicon</strong> 기반 Mac (M1 이상)</li>
+                      <li>macOS 26 (Tahoe) 이상 권장</li>
+                      <li>본인 소유의 <strong>Windows 11 ARM64 라이선스</strong></li>
+                      <li>여유 공간 약 24GB · 최초 1회 빌드 필요</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+              <a href="#install-macos" class="btn btn-success btn-lg">
+                📖 macOS 설치 가이드
+              </a>
+              <a href="https://yourtablecloth.app/macSandbox" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener">
+                🍎 macSandbox 알아보기
+              </a>
+              <a href="https://github.com/yourtablecloth/TableCloth/releases/latest/download/no-install-spork.wsb" class="btn btn-outline-primary btn-lg" onclick="startNoInstall()">
+                ⚡ 무설치 .wsb 다운로드
+              </a>
+            </div>
+            <p class="text-center text-muted small mt-3 mb-0">
+              macSandbox는 식탁보와 별도의 프로젝트로, GNU AGPL-3.0 또는 상용 라이선스로 제공됩니다.
+            </p>
           </div>
         </section>
 
@@ -895,24 +969,37 @@
               </div>
               <div class="modal-body">
                 <p>식탁보 무설치 버전(<code>no-install-spork.wsb</code>) 다운로드가 시작되었습니다.</p>
-                <div class="alert alert-success border-0 mb-4">
-                  <strong>✅ 다음 단계</strong><br />
-                  내려받은 <code>.wsb</code> 파일을 <strong>두 번 눌러 실행</strong>하면 Windows 샌드박스 안에서 식탁보가 자동으로 열립니다. 별도의 설치 과정은 필요 없어요.
-                </div>
-                <h6 class="fw-bold">🧩 파일이 열리지 않나요?</h6>
-                <p class="mb-2 text-muted small">
-                  <code>.wsb</code> 파일을 실행해도 아무 반응이 없거나 오류가 난다면, <strong>Windows 샌드박스가 아직 켜져 있지 않은 것</strong>입니다. 아래 순서로 활성화해 주세요.
-                </p>
-                <div class="alert alert-warning border-0">
-                  <ol class="mb-2 ps-3">
-                    <li><strong>Windows 기능 켜기/끄기</strong>를 실행합니다.</li>
-                    <li>목록에서 <strong>Windows 샌드박스</strong>를 체크하고 확인을 누릅니다.</li>
-                    <li>안내에 따라 <strong>컴퓨터를 다시 시작</strong>합니다.</li>
-                  </ol>
-                  <hr />
-                  <p class="mb-0 small">
-                    Windows 샌드박스는 <strong>Windows 11 Pro / Enterprise / Education</strong> 이상에서만 사용할 수 있습니다.
+                <div id="sandboxGuideWindows">
+                  <div class="alert alert-success border-0 mb-4">
+                    <strong>✅ 다음 단계</strong><br />
+                    내려받은 <code>.wsb</code> 파일을 <strong>두 번 눌러 실행</strong>하면 Windows 샌드박스 안에서 식탁보가 자동으로 열립니다. 별도의 설치 과정은 필요 없어요.
+                  </div>
+                  <h6 class="fw-bold">🧩 파일이 열리지 않나요?</h6>
+                  <p class="mb-2 text-muted small">
+                    <code>.wsb</code> 파일을 실행해도 아무 반응이 없거나 오류가 난다면, <strong>Windows 샌드박스가 아직 켜져 있지 않은 것</strong>입니다. 아래 순서로 활성화해 주세요.
                   </p>
+                  <div class="alert alert-warning border-0">
+                    <ol class="mb-2 ps-3">
+                      <li><strong>Windows 기능 켜기/끄기</strong>를 실행합니다.</li>
+                      <li>목록에서 <strong>Windows 샌드박스</strong>를 체크하고 확인을 누릅니다.</li>
+                      <li>안내에 따라 <strong>컴퓨터를 다시 시작</strong>합니다.</li>
+                    </ol>
+                    <hr />
+                    <p class="mb-0 small">
+                      Windows 샌드박스는 <strong>Windows 11 Pro / Enterprise / Education</strong> 이상에서만 사용할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+                <div id="sandboxGuideMac" class="d-none">
+                  <div class="alert alert-success border-0 mb-4">
+                    <strong>🍎 Mac에서 내려받으셨네요!</strong><br />
+                    <strong>macSandbox</strong>를 설치하면 내려받은 <code>.wsb</code> 파일을 macOS에서 <strong>그대로 실행</strong>할 수 있습니다.
+                  </div>
+                  <p class="mb-3 text-muted small">
+                    macSandbox는 Windows 샌드박스를 macOS로 포팅한 도구입니다.
+                    <strong>Apple Silicon 기반 Mac</strong>(macOS 26 이상 권장)과 본인 소유의 <strong>Windows 11 ARM64 라이선스</strong>, 약 24GB의 여유 공간이 필요하며, 최초 1회 빌드 과정을 거칩니다.
+                  </p>
+                  <a href="#install-macos" class="btn btn-success w-100" onclick="goToInstallGuide('install-macos'); return false;">📖 macOS 설치 가이드 보기</a>
                 </div>
               </div>
               <div class="modal-footer">

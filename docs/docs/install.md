@@ -1,33 +1,34 @@
 # 식탁보 설치하기
 
-## 1️⃣ 시스템 요구사항 확인
+식탁보는 Windows PC와 Apple Silicon 기반 맥에서 사용할 수 있습니다. 사용 중인 운영체제에 맞는 설치 가이드를 선택해주세요.
 
-식탁보는 Windows 11 Pro, Enterprise, Education, Pro for Workstation이 필요합니다.
+<div class="row g-4 my-2">
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <div class="fs-1">🪟</div>
+        <h3 class="h4">Windows</h3>
+        <p class="text-muted small">
+          Windows 11 Pro / Enterprise / Education에 내장된 <strong>Windows 샌드박스</strong>를 사용합니다.
+          기능만 켜면 무료로 바로 시작할 수 있어요.
+        </p>
+        <a href="install-windows.md" class="btn btn-primary">🪟 Windows 설치 가이드</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <div class="fs-1">🍎</div>
+        <h3 class="h4">macOS <span class="badge bg-success">NEW</span></h3>
+        <p class="text-muted small">
+          Windows 샌드박스를 macOS로 포팅한 <strong>macSandbox</strong>를 사용합니다.
+          Apple Silicon 기반 맥에서 사용할 수 있어요. (인텔 맥 미지원)
+        </p>
+        <a href="install-macos.md" class="btn btn-success">🍎 macOS 설치 가이드</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-클라우드 PC, 애플 맥북, 아이맥과 같은 일반적인 PC가 아닌 환경인 경우 아래의 **더 자세한 내용** 단락을 확인해주세요.
-
-## 2️⃣ Windows Sandbox 활성화
-
-식탁보를 설치하기 전, 먼저 윈도우 샌드박스를 활성화해야 합니다.
-
-- "Windows 기능 켜기/끄기" 어플리케이션을 실행합니다.
-
-  ![윈도우 기능 켜기/끄기](images/Step1.png)
-
-- "Windows 샌드박스" 기능을 켭니다.
-
-  ![윈도우 샌드박스 켜기](images/Step2.png)
-
-샌드박스 기능을 켜거나 끄려면 컴퓨터를 다시 시작해야 하므로, 작업 중인 모든 파일을 저장한 후 컴퓨터를 다시 시작합니다.
-
-## 3️⃣ 식탁보 다운로드 및 실행
-
-1. [최신 릴리스](https://github.com/yourtablecloth/TableCloth/releases)에서 다운로드
-2. 압축 해제 후 실행
-3. 원하는 사이트 선택하고 시작!
-
-## 🔎 더 자세한 내용
-
-- 윈도우 365, 혹은 윈도우 가상 데스크톱 (마이크로소프트 애저 기반), 혹은 Hyper-V 같은 가상 컴퓨터 상에서 식탁보를 이용하고자 할 경우, 해당 서비스 또는 가상 컴퓨터 인스턴스 내에서 추가로 가상화 (혹은 Second Level Address Translation, SLAT) 기능을 지원해야만 윈도우 샌드박스를 활성화할 수 있습니다.
-
-- 맥 컴퓨터에서 Windows를 실행하는 경우, Windows Sandbox를 사용하기 어렵거나 지원되지 않을 수 있으므로 이 환경에서는 식탁보를 사용할 수 없습니다. (인텔 맥, 애플 실리콘 기반 맥 모두 해당)
+어떤 환경에서든 식탁보의 핵심 경험은 같습니다. **샌드박스 창을 닫으면 그 안에서 있었던 모든 일이 완전히 삭제**되고, 실제 컴퓨터에는 아무런 흔적도 남지 않습니다.
