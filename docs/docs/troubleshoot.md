@@ -15,6 +15,18 @@
 
 더 자세한 내용은 [이 문서](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-troubleshoot)를 확인해주십시오.
 
+## ZScaler 환경에서 Windows Sandbox 내 인터넷 연결이 차단됩니다
+
+기업 환경에서 [ZScaler](https://www.zscaler.com/)를 사용하는 경우, Windows Sandbox 내부로 ZScaler 루트 인증서가 자동으로 전파되지 않아 샌드박스 내에서 인터넷 연결(HTTPS)이 차단될 수 있습니다.
+
+> ⚠️ **무설치 식탁보(`no-install-spork.wsb`) 사용 시 주의**: 무설치 버전은 `.wsb` 파일만 다운로드하여 실행하는 방식이므로, 아래에 설명된 ZScaler 인증서 전파 기능을 **지원하지 않습니다**. ZScaler 환경에서 인터넷 연결이 필요한 경우 [식탁보 정식 버전](https://github.com/yourtablecloth/TableCloth/releases)을 설치하여 사용하시기 바랍니다.
+
+### 정식 버전 사용 시 해결 방법
+
+식탁보 정식 버전은 호스트 PC의 ZScaler 루트 인증서를 Windows Sandbox 내부로 전파하는 옵션을 제공합니다. 정식 버전을 설치한 뒤 설정에서 **"호스트의 ZScaler 루트 인증서를 샌드박스로 전파"** 옵션을 켜면, 다음 샌드박스 실행부터 호스트의 ZScaler 루트 인증서가 샌드박스 안의 신뢰할 수 있는 루트 저장소에 등록되어 인터넷 연결을 정상적으로 사용할 수 있습니다. (호스트에 해당 인증서가 없으면 아무 동작도 하지 않습니다.)
+
+자세한 설치 방법은 [식탁보 설치 가이드](install-windows.md)를 참고하세요.
+
 ## 샌드박스가 닫히면서 "현재 연결은 원격 호스트에 의해 강제로 끊겼습니다" 오류 메시지가 나타납니다
 
 Windows Sandbox는 사용자와 상호 작용하는 부분을 Remote Desktop Protocol (RDP)을 이용하여 구현했습니다. 그러나 일부 보안 소프트웨어들은 RDP를 통한 서비스 사용을 의도적으로 차단합니다.
