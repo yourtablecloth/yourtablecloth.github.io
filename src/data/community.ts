@@ -1,33 +1,23 @@
 /**
- * Community snapshot: sponsors, questions people actually ask, and coverage.
+ * Community snapshot: questions people actually ask, and coverage.
  *
- * All three come from the project's own published sources, copied here at
- * author time rather than fetched at runtime:
+ * Both come from the project's own published sources, copied here at author
+ * time rather than fetched at runtime:
  *
- *   - Sponsors: yourtablecloth.app/sponsors.json, which the official site
- *     generates from GitHub Sponsors. Only the sponsors GitHub already lists
- *     publicly appear below; the anonymous one is counted and left unnamed,
- *     which is the whole point of sponsoring anonymously. No token is involved
- *     and nothing is fetched in the browser.
  *   - FAQ: yourtablecloth.app/docs/faq.md, condensed. Answers are the
  *     project's, not ours — this page must not invent support advice.
  *   - Press and awards: the official site's own listing.
  *
- * `asOf` is when these were read. Sponsor counts move; the page says when it
- * looked rather than implying it is live.
+ * `asOf` is when these were read. The page says when it looked rather than
+ * implying it is live.
+ *
+ * Sponsors used to be a third snapshot here. They are not: that list is
+ * regenerated on every deploy and lives in src/data/sponsors.ts.
  */
 
 import type { Locale } from '../content/site'
 
 type Bilingual = Record<Locale, string>
-
-export interface Sponsor {
-  login: string
-  avatarUrl: string
-  profileUrl: string
-  /** ISO date the sponsorship started. */
-  since: string
-}
 
 export interface Question {
   key: string
@@ -45,46 +35,12 @@ export interface Coverage {
 
 export interface CommunitySnapshot {
   asOf: string
-  sponsors: {
-    /** Everyone supporting the project, including those who chose privacy. */
-    total: number
-    /** Those GitHub lists publicly — the only ones named below. */
-    publicCount: number
-    anonymousCount: number
-    people: ReadonlyArray<Sponsor>
-  }
   faq: ReadonlyArray<Question>
   coverage: ReadonlyArray<Coverage>
 }
 
 export const community: CommunitySnapshot = {
   asOf: '2026-07-12',
-
-  sponsors: {
-    total: 4,
-    publicCount: 3,
-    anonymousCount: 1,
-    people: [
-      {
-        login: 'Jukebox85',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/85714996?v=4',
-        profileUrl: 'https://github.com/Jukebox85',
-        since: '2024-10-18',
-      },
-      {
-        login: 'qb20nh',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/1734074?v=4',
-        profileUrl: 'https://github.com/qb20nh',
-        since: '2025-12-04',
-      },
-      {
-        login: 'x2605',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/69812394?v=4',
-        profileUrl: 'https://github.com/x2605',
-        since: '2026-01-08',
-      },
-    ],
-  },
 
   faq: [
     {

@@ -4,21 +4,23 @@ import { COPY, LINKS, type Locale } from '../../content/site'
 import { DUR, EASE, MOTION, STAGGER, gsap, useGsap } from '../../lib/motion'
 import { Section } from '../shell/Section'
 import { community } from '../../data/community'
+import { SPONSORS } from '../../data/sponsors'
 import styles from './Support.module.css'
 
 /**
  * Who keeps this running, who wrote about it, and where to go next.
  *
  * The public sponsors are named because GitHub already lists them publicly;
- * the anonymous one is counted, never guessed at — that privacy is the whole
- * point of sponsoring anonymously. See the header of src/data/community.ts.
+ * the anonymous ones are counted, never guessed at — that privacy is the whole
+ * point of sponsoring anonymously. The list is regenerated on every deploy, so
+ * it carries its own date; see src/data/sponsors.ts.
  *
  * Sponsors arrive as a roll call rather than a fade: each avatar pops in on a
  * tight stagger, in the same DOM order they render — so the anonymous badge,
  * last in that list, is also the last to land.
  */
 export function Support({ locale }: { locale: Locale }) {
-  const { sponsors, coverage, asOf } = community
+  const { coverage, asOf } = community
   const root = useRef<HTMLDivElement>(null)
 
   useGsap(
@@ -55,7 +57,7 @@ export function Support({ locale }: { locale: Locale }) {
         <div className={styles.block}>
           <p className={styles.blockLabel}>{COPY.support.sponsorsLabel[locale]}</p>
           <ul className={styles.avatars}>
-            {sponsors.people.map((person) => (
+            {SPONSORS.people.map((person) => (
               <li key={person.login}>
                 <a
                   className={styles.avatarLink}
@@ -75,14 +77,14 @@ export function Support({ locale }: { locale: Locale }) {
                 </a>
               </li>
             ))}
-            {sponsors.anonymousCount > 0 && (
+            {SPONSORS.anonymousCount > 0 && (
               <li>
                 <span
                   className={styles.anonymous}
                   role="img"
-                  aria-label={`+${sponsors.anonymousCount} ${COPY.support.anonymousLabel[locale]}`}
+                  aria-label={`+${SPONSORS.anonymousCount} ${COPY.support.anonymousLabel[locale]}`}
                 >
-                  +{sponsors.anonymousCount}
+                  +{SPONSORS.anonymousCount}
                 </span>
               </li>
             )}
@@ -90,6 +92,17 @@ export function Support({ locale }: { locale: Locale }) {
           <a className={styles.cta} data-reveal href={LINKS.sponsor} target="_blank" rel="noopener">
             {COPY.support.becomeSponsor[locale]}
           </a>
+          {/*
+            * The sponsor list is regenerated on every deploy while the rest of
+            * this section is a hand-read snapshot, so it gets its own date —
+            * but only once it has actually moved past the section's. Printing
+            * the same date twice reads as a mistake, not as provenance.
+            */}
+          {SPONSORS.asOf !== asOf && (
+            <p className={styles.asOf} data-reveal>
+              {COPY.project.asOf[locale]} {SPONSORS.asOf}
+            </p>
+          )}
         </div>
 
         <div className={styles.block}>

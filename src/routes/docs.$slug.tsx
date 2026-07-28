@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm'
 
 import { findDoc } from '../content/docs'
 import { COPY } from '../content/site'
+import { SPONSORS } from '../data/sponsors'
 import { usePrefs } from '../lib/prefs'
 import {
   childrenToText,
@@ -40,6 +41,14 @@ export const Route = createFileRoute('/docs/$slug')({
 const INSTALL_CARDS_MARKER = '<div class="row g-4 my-2">'
 const SPONSOR_BUTTONS_MARKER = '<p style="display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0;">'
 const SPONSOR_NOTE_MARKER = '<small style="color: #6c757d;">버튼을 누르면'
+/*
+ * The pair of empty HTML comments at the end of sponsor.md. The deploy
+ * workflow fills the gap between them with generated avatar markup; we cut the
+ * whole thing out and render the same data ourselves (SponsorWall), because
+ * this renderer drops raw HTML and because the list is already typed data by
+ * the time it reaches here.
+ */
+const SPONSOR_LIST_MARKER = '<!-- sponsors -->'
 
 function DocSlugPage() {
   const { slug } = Route.useParams()
@@ -155,6 +164,7 @@ function DocBody({ slug, body }: { slug: string; body: string }) {
   if (slug === 'sponsor') {
     const step1 = splitAroundHtmlBlock(body, SPONSOR_BUTTONS_MARKER)
     const step2 = splitAroundHtmlBlock(step1.after, SPONSOR_NOTE_MARKER)
+    const step3 = splitAroundHtmlBlock(step2.after, SPONSOR_LIST_MARKER)
     return (
       <>
         <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={components}>
@@ -162,7 +172,11 @@ function DocBody({ slug, body }: { slug: string; body: string }) {
         </ReactMarkdown>
         <SponsorCtas />
         <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={components}>
-          {preprocessDocBody(step2.after)}
+          {preprocessDocBody(step3.before)}
+        </ReactMarkdown>
+        <SponsorWall />
+        <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml components={components}>
+          {preprocessDocBody(step3.after)}
         </ReactMarkdown>
       </>
     )
@@ -244,6 +258,65 @@ function SponsorCtas() {
       <p className={styles.sponsorNote}>
         버튼을 누르면 GitHub Sponsors 페이지로 이동합니다. 이동 후 원하시는 금액을 선택하여 후원하실 수 있습니다.
         결제는 GitHub에서 안전하게 처리됩니다.
+      </p>
+    </div>
+  )
+}
+
+/**
+ * The sponsor list, where sponsor.md's `<!-- sponsors -->` markers sit.
+ *
+ * Same data and same treatment as the home page's Support section — avatars
+ * that link to the profile GitHub already lists publicly, and a count for
+ * everyone who chose privacy. Nothing is fetched here: the list is generated
+ * into public/sponsors.json at deploy time and imported (src/data/sponsors.ts).
+ *
+ * Renders nothing at all when the file is empty, which is what the deploy
+ * workflow writes if the API call fails and it has no last-deployed copy to
+ * fall back to. An empty avatar strip would read as "nobody sponsors this".
+ */
+function SponsorWall() {
+  const { locale } = usePrefs()
+
+  if (SPONSORS.people.length === 0 && SPONSORS.anonymousCount === 0) return null
+
+  return (
+    <div className={styles.sponsorWall}>
+      <ul className={styles.sponsorAvatars}>
+        {SPONSORS.people.map((person) => (
+          <li key={person.login}>
+            <a
+              className={styles.sponsorAvatarLink}
+              href={person.profileUrl}
+              target="_blank"
+              rel="noopener"
+              title={`${person.login} · ${COPY.support.sinceLabel[locale]} ${person.since}`}
+            >
+              <img
+                className={styles.sponsorAvatar}
+                src={person.avatarUrl}
+                alt={person.login}
+                width={48}
+                height={48}
+                loading="lazy"
+              />
+            </a>
+          </li>
+        ))}
+        {SPONSORS.anonymousCount > 0 && (
+          <li>
+            <span
+              className={styles.sponsorAnonymous}
+              role="img"
+              aria-label={`+${SPONSORS.anonymousCount} ${COPY.support.anonymousLabel[locale]}`}
+            >
+              +{SPONSORS.anonymousCount}
+            </span>
+          </li>
+        )}
+      </ul>
+      <p className={styles.sponsorAsOf}>
+        {COPY.project.asOf[locale]} {SPONSORS.asOf}
       </p>
     </div>
   )

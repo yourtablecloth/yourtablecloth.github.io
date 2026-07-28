@@ -69,6 +69,10 @@ pnpm dev          # http://localhost:3100
 
 페이지에 보이는 문구는 `src/content/site.ts`에 한국어와 영어 두 벌로 모여 있습니다. 숫자는 문구에 직접 쓰지 않고 `src/data/catalog.ts`에서 가져옵니다.
 
+### 후원자 목록
+
+후원자 목록은 손으로 고치지 않습니다. 배포 워크플로가 GitHub Sponsors API로 `public/sponsors.json`을 다시 쓰고, 빌드가 그 파일을 읽어 홈의 후원자 영역과 `/docs/sponsor` 페이지를 함께 그립니다(`src/data/sponsors.ts`). 비공개를 선택한 후원자는 이름 없이 인원수로만 표시합니다.
+
 ### 스타일링 수정
 
 - **스타일**: CSS Modules (`*.module.css`)와 `src/styles/app.css`
@@ -98,7 +102,7 @@ pnpm dev          # http://localhost:3100
 - **배포 소스**: GitHub Actions가 빌드한 `dist/client` 디렉터리
 - **배포 트리거**: `main` 브랜치에 푸시 시 자동 배포, 매주 일요일 후원자·기여자 목록 갱신
 
-워크플로(`.github/workflows/deploy.yml`)는 후원자·기여자 목록을 `public/`에 쓰고, `pnpm build`로 사이트를 만든 뒤 그 결과를 Pages에 올립니다. `sponsors.json`과 `contributors.json` 주소는 이전과 같습니다.
+워크플로(`.github/workflows/deploy.yml`)는 후원자·기여자 목록을 `public/`에 쓰고, `pnpm build`로 사이트를 만든 뒤 그 결과를 Pages에 올립니다. `sponsors.json`과 `contributors.json` 주소는 이전과 같고, 후원자 목록은 그 파일을 읽어 화면에 그립니다.
 
 파일이 없는 주소는 `404.html`이 404 상태로 응답하고, 그때부터 앱이 주소를 보고 화면을 그립니다. 예전 사이트가 쓰던 `#install`, `#faq` 같은 해시 주소는 홈에서 받아 새 경로로 넘겨 줍니다.
 
