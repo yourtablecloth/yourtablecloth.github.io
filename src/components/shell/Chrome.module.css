@@ -1,0 +1,322 @@
+/*
+ * Site chrome: header and footer.
+ *
+ * Deliberately plainer than the sections between them. The sections carry the
+ * argument — display type, live data, one cloth to lift — and earn their
+ * motion and scale. The chrome frames that argument; it should read as
+ * furniture, not as another exhibit. So: no reveal animation, no accent
+ * fills, a single hairline border and a translucent surface, and buttons
+ * that only ever borrow the accent colour on hover. Quiet on purpose.
+ *
+ * The header is the one exception: past about a viewport of scroll it
+ * tightens up (shorter, denser, a hairline underneath), so the furniture
+ * still registers that the page has moved even though it never competes with
+ * the sections themselves for attention.
+ */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: 3.5rem;
+  border-bottom: 1px solid transparent;
+  background: color-mix(in srgb, var(--tc-surface) 78%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    height var(--tc-dur-base) var(--tc-ease-soft),
+    background-color var(--tc-dur-base) var(--tc-ease-soft),
+    border-bottom-color var(--tc-dur-base) var(--tc-ease-soft);
+}
+
+.header[data-scrolled] {
+  height: 3rem;
+  border-bottom-color: var(--tc-ink-hair);
+  background: color-mix(in srgb, var(--tc-surface) 94%, transparent);
+}
+
+/*
+ * Two full-width bands blurring a live WebGL backdrop, re-snapshotted by the
+ * compositor on every scroll frame at device pixel ratio. On a phone that is
+ * pure cost — see the same swap, and the same reasoning, at the foot of
+ * Section.module.css.
+ */
+@media (pointer: coarse) {
+  .header,
+  .header[data-scrolled],
+  .footer {
+    background: color-mix(in srgb, var(--tc-surface) 96%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 100%;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  padding-inline: var(--tc-gutter);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* The bar centres its children, so a 44px floor costs nothing visually and
+     buys the wordmark a thumb-sized target instead of a 22px one. */
+  min-height: 2.75rem;
+  color: var(--tc-ink);
+  text-decoration: none;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.navList {
+  display: none;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}
+
+.navList a {
+  position: relative;
+  text-decoration: none;
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.navList a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.375rem;
+  height: 1px;
+  background: var(--tc-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.navList a:hover,
+.navList a:focus-visible,
+.navList a[data-current],
+.navList a[data-status='active'] {
+  color: var(--tc-ink);
+}
+
+.navList a:hover::after,
+.navList a:focus-visible::after,
+.navList a[data-current]::after,
+.navList a[data-status='active']::after {
+  transform: scaleX(1);
+}
+
+/*
+ * The header's running-commentary line (see the caption block in Chrome.tsx).
+ * Four candidate spans share one grid cell — the same stacking
+ * Hero.module.css uses for its own reveal captions — so the box never
+ * resizes when the active span changes; only its opacity moves. That opacity
+ * transition rides on `--tc-dur-base`, which app.css already collapses to
+ * 1ms under `prefers-reduced-motion: reduce`, so the swap needs no separate
+ * override here to land instantly for that reader.
+ */
+.caption {
+  display: none;
+}
+
+.caption span {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity var(--tc-dur-base) var(--tc-ease-soft);
+}
+
+.caption span[data-active] {
+  opacity: 1;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding-inline: 0.625rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tc-ink);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * A 36px pill is right for a 56px bar and wrong for a thumb. Rather than
+ * inflate the pill — which would change the bar at every width — the target
+ * grows past it. Sideways it grows exactly 4px, because the 0.5rem gap
+ * between the two controls is all the room there is: the regions abut and
+ * neither can steal the other's tap. Vertically the bar itself is the only
+ * limit, so it takes 6px and clears 44 with room to spare.
+ */
+.control::after {
+  content: '';
+  position: absolute;
+  inset: -0.375rem -0.25rem;
+}
+
+.control:hover,
+.control:active {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+/*
+ * A phone header has no room for a fourth thing — the wordmark, the nav
+ * links, and the two control pills already fill it. This line only ever
+ * shows once the bar has the same width headroom `.navList` needed above.
+ */
+@media (min-width: 48rem) {
+  .navList {
+    display: flex;
+  }
+
+  .caption {
+    display: grid;
+    /* Fluid rather than fixed: 16vw gives it real room on a wide desktop
+       bar without ever crowding the nav at the 48rem floor, where the two
+       other flex children (wordmark, controls) already claim most of the
+       width. The ellipsis above is a backstop and should never actually
+       fire — the copy in `COPY.headerCaption` is written to fit this box,
+       and a line that trails off mid-word reads as a broken layout rather
+       than as a voice. */
+    width: clamp(11rem, 18vw, 18rem);
+    font-family: var(--tc-mono);
+    font-size: var(--tc-text-xs);
+    color: var(--tc-ink-faint);
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--tc-section-y);
+  border-top: 1px solid var(--tc-ink-hair);
+  /*
+   * The footer sits outside `.app-shell` and is the last thing between the
+   * reader and the fixed cloth layer. At 1440px that reads as a dark close;
+   * at 390px the narrow frame parks the sheet itself behind the legal fine
+   * print, which is ink-faint and unreadable over red. Same scrim the
+   * sections use — the table still shows through, just not through the type.
+   */
+  background: color-mix(in srgb, var(--tc-surface) 72%, transparent);
+  backdrop-filter: blur(22px) saturate(115%);
+}
+
+.footerInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  padding-inline: var(--tc-gutter);
+}
+
+/* aria-hidden already on the mark itself (see Mark.tsx); this is pure ink. */
+.flourish {
+  position: absolute;
+  right: var(--tc-gutter);
+  bottom: -3rem;
+  color: var(--tc-ink);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.tagline {
+  margin: 0;
+  font-size: var(--tc-text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * Padding alone lands this pill at 40px, which is a fine mouse target and a
+ * poor thumb one. The floor is scoped to coarse pointers so the bar and the
+ * footer keep their exact proportions everywhere a cursor is in use.
+ */
+@media (pointer: coarse) {
+  .link {
+    min-height: 2.75rem;
+  }
+}
+
+/* `:active` rides with `:hover` on every control here: a phone never hovers,
+   so without it a tap has no acknowledgement at all. */
+.link:hover,
+.link:active {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+.fine {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--tc-ink-faint);
+  font-size: var(--tc-text-xs);
+}
+
+.fine p {
+  margin: 0;
+}

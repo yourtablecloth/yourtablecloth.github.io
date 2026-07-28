@@ -1,0 +1,196 @@
+.block {
+  margin-bottom: 3.5rem;
+}
+
+.blockLabel {
+  margin: 0 0 1.125rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tc-ink-faint);
+}
+
+/* ------------------------------------------------------------- sponsors */
+
+.avatars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.avatarLink {
+  display: block;
+  border-radius: 999px;
+  transition:
+    box-shadow var(--tc-dur-fast) var(--tc-ease-soft),
+    transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * The 2px ceiling below is a page-wide rule (see Underneath/Project); this
+ * predates it at 3px and is brought in line here rather than left as the
+ * one outlier.
+ */
+.avatarLink:hover,
+.avatarLink:active,
+.avatarLink:focus-visible {
+  box-shadow: 0 0 0 2px var(--tc-accent);
+  transform: translateY(-2px);
+}
+
+.avatar {
+  display: block;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+/* Counted, never named — a bare circle with a number, nothing else. */
+.anonymous {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 999px;
+  border: 1px dashed var(--tc-ink-hair);
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  color: var(--tc-ink-faint);
+}
+
+.cta {
+  display: inline-block;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--tc-radius-sm);
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.cta:hover,
+.cta:active {
+  background: var(--tc-accent-deep);
+}
+
+/* ------------------------------------------------------------- coverage */
+
+.coverageList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tc-ink-hair);
+}
+
+.coverageRow {
+  border-bottom: 1px solid var(--tc-ink-hair);
+}
+
+.coverageLink {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  padding-block: 1rem;
+  text-decoration: none;
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.coverageLink:hover,
+.coverageLink:active {
+  color: var(--tc-accent);
+}
+
+.outlet {
+  flex: none;
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+}
+
+.coverageTitle {
+  flex: 1 1 16rem;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}
+
+.year {
+  flex: none;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  color: var(--tc-ink-faint);
+}
+
+/* ---------------------------------------------------------------- links */
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft),
+    background-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.pill:hover,
+.pill:active,
+.pill:focus-visible {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+/*
+ * The border/colour swap above already answers "is this a link"; this adds
+ * the one thing it doesn't — a background tint, so a pill reads as
+ * something to press rather than just outlined text. Gated behind
+ * hover:hover because a lingering tint after a touch-scroll would read as a
+ * stuck press, unlike the border/colour swap above, which a real tap
+ * confirms and releases via :active.
+ */
+@media (hover: hover) {
+  .pill:hover,
+  .pill:focus-visible {
+    background-color: color-mix(in srgb, var(--tc-accent) 10%, transparent);
+  }
+}
+
+@media (pointer: coarse) {
+  .cta,
+  .pill {
+    min-height: 2.75rem;
+  }
+
+  /* inline-block would ignore the floor's spare height; centring puts it
+     evenly above and below the label instead of all of it underneath. */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.asOf {
+  margin-top: 1.25rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  color: var(--tc-ink-faint);
+}

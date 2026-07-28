@@ -1,0 +1,396 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/*
+ * A stepper, not three paragraphs. The list runs down one continuous hairline
+ * and each step owns the segment beside it — so the sequence is legible as a
+ * sequence before a word is read, and the diagram's current beat has
+ * somewhere to show itself in the copy.
+ */
+.steps {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The spine, drawn once behind every segment so the gaps are bridged. */
+.steps::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 2px;
+  background: var(--tc-ink-hair);
+}
+
+/*
+ * A step is its natural height, and the beat it owns lives elsewhere.
+ *
+ * Inflating each step to a share of a viewport was an attempt to put step N
+ * physically beside the diagram while beat N played, and it cost the thing
+ * that made this a stepper: with a screenful of air between them the three
+ * sentences stopped reading as one sequence and the section became a column
+ * of empty. The scrub takes its range from the section's own travel instead
+ * (see HowItWorks.tsx), which leaves the list compact enough that all three
+ * steps and the diagram are in frame together — and once they are, spatial
+ * alignment is not what tells the reader where they are. Contrast is.
+ *
+ * So the beat being played is the only step at full strength. The other two
+ * are visibly where the reader has been and is going, the accent on the spine
+ * agrees with it, and the sequence stays legible AS a sequence.
+ *
+ * The entrance tween deliberately fades `.stepButton`, not this element, so
+ * the two uses of opacity multiply instead of fighting over one inline style.
+ */
+.step {
+  position: relative;
+  padding-left: 1.5rem;
+  opacity: 0.42;
+  transition: opacity var(--tc-dur-base) var(--tc-ease-soft);
+}
+
+.step[data-current] {
+  opacity: 1;
+}
+
+/*
+ * A real <button> wraps the numeral/title/body so every step is reachable and
+ * activatable without a mouse - the diagram beside it is driven from here.
+ */
+.stepButton {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/*
+ * The scroll drives the diagram, so a step's own control is a jump to that
+ * step's place in the scroll rather than a scrub. Pressing lights the same
+ * accent the current step wears — on a phone, which never hovers, that press
+ * state is the only acknowledgement a tap gets before the page starts moving.
+ */
+.stepButton:active .index,
+.stepButton:active .title {
+  color: var(--tc-accent);
+}
+
+/*
+ * This step's own length of the spine. It draws down on scroll-entry (GSAP
+ * tweens scaleY from 0) and is the only thing that takes the accent, and only
+ * while the diagram beside it is on that step's beat — so colour here means
+ * "this is the beat the scroll has reached", never decoration.
+ */
+.rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 2px;
+  background: var(--tc-ink-soft);
+  transform-origin: top;
+  transition: background-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.step[data-current] .rule {
+  background: var(--tc-accent);
+}
+
+.index {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--tc-ink-faint);
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.step[data-current] .index {
+  color: var(--tc-accent);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--tc-text-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.body {
+  margin: 0;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}
+
+/*
+ * Hover/focus preview for the two idle steps. They sit at 0.42 opacity (see
+ * .step above) so the beat the scroll has reached reads unambiguously, but
+ * that same dimming made the other two look inert next to a fully-clickable
+ * stepButton. Bringing a step to full opacity under the pointer, or under
+ * keyboard focus, says "this jumps the diagram" without borrowing the
+ * accent, which stays reserved for "this is the beat playing now" (see the
+ * .rule comment above). :focus-within, not :focus-visible, because the
+ * opacity lives on .step and focus lands on its .stepButton child; the
+ * index colour bump just below gives the button its own directly-matched
+ * :focus-visible signal. Touch never hovers and already has :active above,
+ * so this is gated out for it rather than risking a step stuck at full
+ * opacity after a scroll-by graze.
+ */
+@media (hover: hover) {
+  .step:hover,
+  .step:focus-within {
+    transition-duration: var(--tc-dur-fast);
+    opacity: 1;
+  }
+
+  .stepButton:hover .index,
+  .stepButton:focus-visible .index {
+    color: var(--tc-ink);
+  }
+}
+
+/*
+ * The diagram: a schematic host + sandbox, animated with GSAP instead of
+ * drawn as a static image, so the three beats can be scrubbed by the scroll
+ * that carries the steps past it. No text lives in the SVG — the host/sandbox
+ * captions are real DOM so they read in whichever locale is active.
+ */
+.diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/*
+ * The same argument the desktop rule makes, at the other breakpoint.
+ *
+ * Stacked above the list, the diagram has scrolled 83px past the top of a
+ * 360x640 screen by the time step three is comfortably readable — so on a
+ * phone the three buttons were driving a picture nobody could see. Pinned to
+ * a full-bleed band of the page's own surface it stays in frame for all
+ * three, and the steps pass cleanly underneath rather than ghosting through.
+ * Held to 9rem of art so it never takes more than a third of a short screen.
+ */
+@media (max-width: 47.9375rem) {
+  .diagram {
+    position: sticky;
+    /* The header's scrolled height, so no strip of section shows between the
+       two; unscrolled the band simply tucks under the taller bar. */
+    top: 3rem;
+    z-index: 1;
+    gap: 0.5rem;
+    margin-inline: calc(var(--tc-gutter) * -1);
+    padding: 0.75rem var(--tc-gutter) 0.625rem;
+    background: var(--tc-surface);
+    /* The same hairline the header takes once it is pinned — it is what makes
+       an opaque band read as furniture holding still rather than as a panel
+       whose tone does not quite match the section behind it. */
+    border-bottom: 1px solid var(--tc-ink-hair);
+  }
+
+  .art {
+    height: 9rem;
+  }
+}
+
+/*
+ * `.host` and `.sandboxGroup` carry no paint of their own - they exist so JS
+ * can select and transform each as one unit (the sandbox, chips included,
+ * opens/closes as a single group). `fill-box` makes the percentage origin
+ * below resolve against each element's own geometry instead of the SVG
+ * viewport's, which is what makes a centred scale actually look centred.
+ */
+.host,
+.sandboxGroup {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hostScreen {
+  fill: var(--tc-surface-raised);
+  stroke: var(--tc-ink-hair);
+  stroke-width: 2;
+}
+
+.hostFile,
+.hostStand,
+.hostBase {
+  fill: var(--tc-ink-hair);
+}
+
+/*
+ * The sandbox window is dashed rather than solid: what it draws is temporary,
+ * not another fixture like the host screen.
+ */
+.sandboxWindow {
+  fill: var(--tc-surface-sunk);
+  stroke: var(--tc-ink-soft);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.sandboxDot {
+  fill: var(--tc-ink-soft);
+}
+
+.chip {
+  fill: color-mix(in srgb, var(--tc-accent) 22%, var(--tc-surface-raised));
+  stroke: var(--tc-accent);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.diagramLabels {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 0.25rem;
+}
+
+.diagramLabel {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tc-ink-faint);
+}
+
+.express {
+  margin-top: 3.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: var(--tc-radius);
+  background: var(--tc-surface-raised);
+}
+
+.expressTitle {
+  margin: 0 0 0.375rem;
+  font-size: var(--tc-text-md);
+  font-weight: 600;
+}
+
+.expressCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.expressBody {
+  margin: 0;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}
+
+/* The macSandbox note is the newest capability, so it gets the one flash of
+   accent in this section — and a hard separator, because it is a different
+   platform rather than more detail about the same one. */
+.mac {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--tc-ink-hair);
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}
+
+/*
+ * The "new capability" pill, in the idiom every developer already reads that
+ * way: a tinted wash of the accent rather than a solid block, a hairline
+ * border, a leading status dot, and uppercase mono at small size. A filled red
+ * chip reads as an error badge; this reads as a release note.
+ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-inline-end: 0.5rem;
+  padding: 0.1rem 0.5rem 0.1rem 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--tc-accent) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tc-accent) 14%, transparent);
+  color: var(--tc-accent);
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  vertical-align: 0.08em;
+}
+
+.badge::before {
+  content: '';
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--tc-accent);
+}
+
+.macLink {
+  color: var(--tc-accent);
+  text-underline-offset: 0.2em;
+}
+
+@media (min-width: 48rem) {
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    align-items: start;
+    gap: 3rem;
+  }
+
+  /*
+   * Pinned beside the list. The diagram is what the steps are describing, so
+   * it has to still be on screen when the reader reaches step three — left to
+   * scroll away it becomes an illustration of the first step only. 5rem
+   * clears the sticky header at its scrolled height.
+   *
+   * A viewport-tall sticky box centring the art was tried, to sit it opposite
+   * whichever step was current. It fails on entry: before the box's top
+   * reaches 0 it is still laid out from the top of the grid, so the centred
+   * art starts half a viewport below that and the reader meets the section
+   * with an empty left column. A plain offset is honest about being an
+   * offset, and with a compact list the diagram is beside all three steps
+   * anyway.
+   */
+  .diagram {
+    position: sticky;
+    top: 5rem;
+  }
+
+  .title {
+    font-size: var(--tc-text-2xl);
+  }
+
+  .express {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+  }
+
+  .expressTitle {
+    margin: 0;
+    flex: none;
+    width: 10rem;
+  }
+}

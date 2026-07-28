@@ -1,0 +1,557 @@
+/*
+ * The cloth layer: fixed, full-viewport, behind every section.
+ *
+ * Fixed rather than scrolled, because the cloth is not an illustration inside
+ * the hero — it is the surface the whole document sits on. Scrolling peels it
+ * back (see ClothScene), so it has to stay in frame for that to be legible.
+ */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Every pointer event belongs to the content above; the scene listens on the
+     window and maps coordinates itself, so this layer must never intercept. */
+  pointer-events: none;
+  background: var(--tc-surface);
+}
+
+/*
+ * Forced colours: the cloth stands down.
+ *
+ * A WebGL canvas is the one thing on this page that cannot be repainted by
+ * the system, so in a mode whose entire purpose is that the reader controls
+ * every colour, a full-bleed render behind every section is not an argument —
+ * it is an obstruction they explicitly asked not to have. The page still
+ * makes its case in type and numbers, which is the half that survives being
+ * recoloured. See the matching note in app.css.
+ */
+@media (forced-colors: active) {
+  .stage {
+    display: none;
+  }
+}
+
+.stage :global(.app-canvas) {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * Atmosphere, in two blended layers over the render.
+ *
+ * Measured against the sites this page is trying to sit beside, the whole
+ * document had exactly zero blended or filtered layers, and 95% of every
+ * frame sat below a fifth of the luminance scale — a well-composed page with
+ * no light in it. These two are the cheap half of the fix (the other half is
+ * in the scene's own lighting):
+ *
+ *   `.glow`     a warm wash where the key falls, screened over the render, so
+ *               the lit side of the table has air around it instead of a hard
+ *               edge into flat background.
+ *   `.vignette` the counterweight: the frame's corners fall off, which is
+ *               what stops the added light from reading as a brighter page
+ *               rather than a lit one. Contrast is a range, not a level.
+ *
+ * Both are pointer-transparent and sit under the content, so nothing about
+ * reading the page changes.
+ */
+.glow,
+.grain,
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+ * Grain, because a render this clean reads as a render.
+ *
+ * Measured against the sites this page is trying to sit beside, the document
+ * carried zero filtered layers while they run six to a hundred-odd; the
+ * difference on screen is that their images sit in the page and ours sits on
+ * top of it. A single noise field over the whole stage is what closes that —
+ * it puts the same tooth on the cloth, the table and the background, so they
+ * stop reading as a WebGL viewport pasted onto a webpage.
+ *
+ * `feTurbulence` rasterised once into a background-image, not a live
+ * `filter` on the canvas: a filter on a full-screen WebGL surface is
+ * re-evaluated every frame for the same result, which is a frame budget spent
+ * on nothing. This is one static bitmap the compositor reuses.
+ *
+ * Overlay rather than a flat wash so it darkens the lit half and lifts the
+ * shadowed one — grain that only ever brightens is fog.
+ */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+}
+
+.glow {
+  background: radial-gradient(
+    58% 46% at 62% 34%,
+    color-mix(in srgb, var(--tc-accent) 26%, transparent) 0%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  /* Fades out with the drift: the accent wash belongs to the hero, where the
+     cloth is. Over body copy it is just a red cast on a paragraph. */
+  opacity: calc(0.5 * (1 - var(--tc-drift, 0)));
+}
+
+/*
+ * Neither blended layer survives a touch device.
+ *
+ * `screen` and `overlay` over a live WebGL canvas are the two most expensive
+ * things on this page that are not the render itself: a blend mode on a
+ * full-viewport element forces the compositor off its fast path, so every
+ * composited frame reads the canvas back and blends it again — on a phone,
+ * while the reader is scrolling a 15,000px document over the top of it. The
+ * first report from a real phone was that the page stuttered badly and the
+ * scene was unreadable; the sim was measured at 2ms of a 16.7ms frame, so it
+ * was never the physics.
+ *
+ * Losing them costs almost nothing at that size. The grain is a 7%-opacity
+ * noise field whose whole job is to put tooth on a large render, and there is
+ * no large render on a 390px screen; the glow is a wash of air around a key
+ * light that a phone frame is too tight to show. The vignette stays — it is a
+ * plain gradient with an animated opacity, which is the one thing the
+ * compositor can do on its own, and it is also the layer doing actual work
+ * for legibility.
+ */
+@media (pointer: coarse) {
+  .glow,
+  .grain {
+    display: none;
+  }
+}
+
+/*
+ * The vignette doubles as the veil for the lower page.
+ *
+ * `--tc-drift` runs 0 at the hero to 1 once the camera has finished settling,
+ * and the clear centre closes as it does. The scene stays live the whole way
+ * down — that was the point of the drift — but by the time the reader is in
+ * body copy the table is a soft field rather than a lit slab cutting a hard
+ * diagonal through a paragraph.
+ *
+ * Two fixed gradients cross-faded, rather than one gradient whose stop moves.
+ * Interpolating the stop meant re-rasterising a full-viewport radial gradient
+ * on the main thread for every scroll frame of the drift — one of the things
+ * making the opening scroll stutter on a phone. Opacity is the one property
+ * the compositor can animate on its own, so the same look now costs nothing
+ * per frame.
+ *
+ * The two layers no longer share a tint. At the hero, 88% is the right number:
+ * the corners fall off and the table is still unmistakably a lit object. Over
+ * body copy the same 88% left a twelfth of a key-lit tabletop on screen, which
+ * on the dark palette is a warm brown field spread under the reading — the
+ * measured cost was a page centre running roughly 50% above the panel drive of
+ * the sections with no table behind them, and paragraphs sitting on a gradient
+ * instead of on the page. The closed layer gets its own, much deeper tint:
+ * enough of the render survives to know the table is still there, not enough
+ * for it to be a surface anyone reads on.
+ *
+ * Declared once from `--tc-surface`, which is already whichever world the page
+ * is in, so this needs no per-theme restatement — including for the reader who
+ * arrived at the linen by pulling the cloth off rather than by pressing a
+ * button.
+ */
+.vignette,
+.vignette::after {
+  background: radial-gradient(
+    var(--tc-veil-shape),
+    transparent var(--tc-clear),
+    var(--tc-veil-tint) 100%
+  );
+}
+
+/* Open: the hero, where the table is the subject and the centre is clear.
+   Shape and tint are declared here and inherited by the closed layer, so a
+   theme only ever has to restate them once. */
+.vignette {
+  --tc-veil-shape: 78% 68% at 50% 44%;
+  --tc-veil-tint: color-mix(in srgb, var(--tc-surface) 88%, transparent);
+  --tc-veil-closed: color-mix(in srgb, var(--tc-surface) 95%, transparent);
+  --tc-clear: 38%;
+}
+
+/* Closed: body copy, where the table is a field behind the reading. */
+.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --tc-clear: 2%;
+  --tc-veil-tint: var(--tc-veil-closed);
+  opacity: var(--tc-drift, 0);
+  will-change: opacity;
+}
+
+/*
+ * A screen blend over a light surface is a haze, not a glow. On the light
+ * theme the same wash has to multiply instead, and the vignette has to stop
+ * being a black corner it would otherwise smear across a linen tabletop.
+ */
+:global(html.light) .glow {
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+}
+
+:global(html.light) .vignette {
+  --tc-veil-shape: 82% 72% at 50% 44%;
+  --tc-veil-tint: color-mix(in srgb, var(--tc-surface-sunk) 55%, transparent);
+  --tc-clear: 42%;
+}
+
+/* --------------------------------------------------------- boot / splash */
+
+/*
+ * The frame the page holds while the scene is still in flight.
+ *
+ * The bar here has always quoted the app's own splash — an indeterminate
+ * progress line under the cloth while it boots. What it was missing was the
+ * other half of that splash: the mark above the line. Without it the first
+ * screen was an empty surface with a 2px hairline at the bottom edge, which
+ * reads as a page that has not started rather than as a product that has, and
+ * it is the one frame a juror is guaranteed to see.
+ *
+ * So the boot layer is the whole stage, centred on the spot the cloth is
+ * about to land on. The bar leaves by lifting off — the same direction the
+ * sheet is coming from, so the splash getting out of the way is the first
+ * gesture of the metaphor rather than a spinner blinking out. The mark
+ * leaves differently: see the note above `.bootMark`.
+ *
+ * It deliberately does NOT cover the hero copy: `.app-shell` sits above the
+ * stage, and the copy has its own entrance keyed to the same phase attribute
+ * (see Hero.module.css, cue 0.48s of the app's 1.2s splash). Putting an opaque
+ * curtain over the headline would have pushed the largest contentful paint out
+ * behind the WebGL chunk for no gain — the headline is the fastest, cheapest
+ * thing on the page and there is no reason to make anyone wait for it.
+ */
+.boot {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  /*
+   * Layout only now. The exit used to be one opacity/translate pair declared
+   * here and shared by both children; it lives on `.bootMark` and `.bootBar`
+   * separately below, because they no longer leave the same way, and
+   * composing this container's own transform with the mark's flight would
+   * have made the flight's distance depend on whatever lift the container
+   * was mid-transition on.
+   */
+}
+
+/*
+ * Only while the chunk is actually in flight.
+ *
+ * The bar used to stay up through `falling` as well, which meant a progress
+ * indicator sat on screen for the full 1.2s of an animation that had already
+ * started — progress for something visibly finished. It leaves the moment the
+ * cloth does, and the lift is what carries it out.
+ */
+:global(html[data-cloth='loading']) .bootBar {
+  opacity: 1;
+}
+
+:global(html[data-cloth='falling']) .bootBar,
+:global(html[data-cloth='settled']) .bootBar {
+  opacity: 0;
+  translate: 0 -1.5rem;
+}
+
+/*
+ * The mark doesn't leave — it travels to the header and becomes the one
+ * already sitting there.
+ *
+ * Ten of the eleven SOTD winners audited ship a preloader, and the strongest
+ * ones don't discard it: Lama Lama's counter blocks rearrange into the
+ * header logo, Glitch&Grit's wordmark splits into the footer signature,
+ * Neue Montreal's spinner reappears inline in a headline. This does the same
+ * with what the page already has — `Chrome.tsx` renders the same `Mark` at
+ * the top-left, on screen at its final size and position before any of this
+ * runs. So instead of fading this copy out in place, it flies to where that
+ * one already is and only then disappears; the "handoff" is really this mark
+ * turning invisible on top of a mark that was never not there.
+ *
+ * The destination is computed once, in CSS, from the same tokens the header
+ * lays itself out with — `--tc-shell` for where its content column stops
+ * centring and starts hugging the gutter, `--tc-gutter` for the inline
+ * padding, its fixed 3.5rem height — rather than measured with
+ * `getBoundingClientRect`. Both marks paint before any script runs a layout
+ * pass, and the header's position is a pure function of viewport width that
+ * never depends on content, so a measurement would tell CSS nothing CSS
+ * didn't already know. This does assume the header is still at its 3.5rem
+ * resting height and not the 3rem `[data-scrolled]` one, which holds for the
+ * whole boot sequence — it resolves in the first couple of seconds of a page
+ * nobody has scrolled yet. `1.2s` matches `DRAPE_SECONDS` in ClothScene, the
+ * literal duration of the physical fall (not a token — see the same literal
+ * quoted in Hero.module.css and InAppNotice.module.css), so the mark lands
+ * exactly as the cloth does.
+ *
+ * Composited only: `translate`, `scale`, `opacity`, computed once and never
+ * written per frame — unlike the drift and peel variables above this file,
+ * this costs nothing extra on a throttled phone, coarse pointer included.
+ */
+.bootMark {
+  display: block;
+  /* Dimmed rather than full strength: this is the page clearing its throat,
+     not the header's wordmark competing with itself twelve pixels away. */
+  opacity: 0;
+  translate: 0 0;
+  scale: 1;
+  transition:
+    opacity 1.2s var(--tc-ease-soft),
+    translate 1.2s var(--tc-ease-out),
+    scale 1.2s var(--tc-ease-out);
+}
+
+:global(html[data-cloth='loading']) .bootMark {
+  opacity: 0.72;
+}
+
+:global(html[data-cloth='falling']) .bootMark,
+:global(html[data-cloth='settled']) .bootMark {
+  opacity: 0;
+  /*
+   * Centre-to-centre, from this mark's resting spot in the stage (50vw, 50vh
+   * less half the centred mark+gap+bar stack) to the header mark's own
+   * centre (the gutter-and-shell-clamped inline offset plus half its 22px,
+   * half the 3.5rem bar). `max(0rem, …)` is the same clamp `margin-inline:
+   * auto` performs on `.inner` once the viewport is narrower than
+   * `--tc-shell` — past that point the header's content hugs the gutter with
+   * no extra centring, and this has to hug it too.
+   */
+  translate: calc(max(0rem, (100vw - var(--tc-shell)) / 2) + var(--tc-gutter) + 0.6875rem - 50vw)
+    calc(2.4375rem - 50vh);
+  /* The header's mark is 22px against this one's 44. */
+  scale: 0.5;
+}
+
+.bootBar {
+  position: relative;
+  display: block;
+  width: min(15rem, 40vw);
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--tc-ink-hair);
+  opacity: 0;
+  /* Lifts as it goes. Composited: opacity and translate only. */
+  translate: 0 0;
+  transition:
+    opacity var(--tc-dur-slow) var(--tc-ease-soft),
+    translate var(--tc-dur-slow) var(--tc-ease-out);
+}
+
+.bootBar::after {
+  content: '';
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tc-accent);
+  animation: slide 1.1s var(--tc-ease-soft) infinite;
+}
+
+@keyframes slide {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 350% 0;
+  }
+}
+
+/*
+ * Reduced motion gets the same two states and nothing between them: a full
+ * line instead of a travelling one, no lift on the bar, and no flight for the
+ * mark. The information is "it is loading" and then "it is not" — the mark
+ * disappears in place rather than crossing the screen, since a slowed-down
+ * cross-screen flight is exactly the kind of motion this preference exists
+ * to remove.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .bootMark,
+  .bootBar {
+    transition: none;
+  }
+
+  :global(html[data-cloth='falling']) .bootBar,
+  :global(html[data-cloth='settled']) .bootBar {
+    translate: 0 0;
+  }
+
+  :global(html[data-cloth='falling']) .bootMark,
+  :global(html[data-cloth='settled']) .bootMark {
+    translate: 0 0;
+    scale: 1;
+  }
+
+  .bootBar::after {
+    animation: none;
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ hint */
+
+.hint {
+  /*
+   * Fixed on its own, not absolute inside the stage — it is a sibling now, so
+   * there is no full-viewport parent to be absolute against. Above
+   * `.app-shell`'s z-index 1 so the hero's copy pane cannot swallow the click,
+   * and below the header's 40 so it never covers the navigation.
+   */
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  bottom: 2.25rem;
+  translate: -50% 0;
+  margin: 0;
+  /*
+   * Sized as the invitation it is, not as a footnote about one.
+   *
+   * This is the only thing on the first screen that tells the reader the
+   * cloth is theirs to move, and at 0.4rem of mono xs in faint ink it read as
+   * a status line — the page's whole interaction sat behind a label nobody
+   * had a reason to look at. It now carries the accent on its edge and full
+   * ink in its label, which is the same weight the hero's own buttons have,
+   * because it is asking for the same order of commitment.
+   */
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tc-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--tc-surface) 82%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tc-accent) 9%, transparent);
+  /* The fill below is clipped to the pill and kept behind the label. */
+  overflow: hidden;
+  isolation: isolate;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--tc-ink);
+  white-space: nowrap;
+  opacity: 0;
+  /*
+   * The stage is pointer-transparent so the cloth behind it can be grabbed
+   * anywhere on the page, and this control is the one exception — but only
+   * while it is actually being offered. Left clickable at zero opacity it
+   * would be an invisible 150px target parked over the hero's buttons.
+   */
+  pointer-events: none;
+  transition:
+    opacity var(--tc-dur-slow) var(--tc-ease-soft),
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * The distance to the cloth, worn as a fill.
+ *
+ * `--tc-dwell` is how far the reader is through the 0.7 viewport that passes
+ * before the sheet moves at all — written by ClothScene, so this is the real
+ * distance and not a spinner miming one. It matters most for the press: the
+ * pill starts the scroll itself, and without this the first two seconds are a
+ * page sliding under a cloth that is sitting perfectly still, which reads as
+ * a control that did nothing. Filling left to right, it reads as a countdown
+ * to the fabric — and it reaches the end exactly as the peel begins and the
+ * pill fades out, so the bar never has to explain where it went.
+ *
+ * Scaled rather than sized: a transform is the compositor's to do, and this
+ * updates on every scroll frame of the run.
+ */
+.hint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform-origin: left center;
+  scale: var(--tc-dwell, 0) 1;
+  background: color-mix(in srgb, var(--tc-accent) 26%, transparent);
+}
+
+/*
+ * While the pill is driving the scroll itself, it takes the accent. The fill
+ * says how far; this says who is doing it.
+ */
+:global(html[data-cloth-revealing]) .hint {
+  border-color: color-mix(in srgb, var(--tc-accent) 70%, transparent);
+  color: var(--tc-ink);
+}
+
+/* Shown only once the cloth is down AND still fully on the table, and only on
+   the way in. The moment scrolling starts taking it off, the instruction stops
+   being something the reader can act on; and when the closing beat brings the
+   sheet home the peel unwinds back past the same threshold, where an
+   invitation floating over the disclaimer is clutter rather than an offer. */
+:global(html[data-cloth='settled']:not([data-cloth-peeling]):not([data-cloth-recover]))
+  .hint {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hint:hover,
+.hint:focus-visible {
+  border-color: color-mix(in srgb, var(--tc-accent) 85%, transparent);
+  box-shadow: 0 0 0 0.35rem color-mix(in srgb, var(--tc-accent) 16%, transparent);
+  color: var(--tc-ink);
+}
+
+/*
+ * A slow breath on the ring, and only while the offer stands.
+ *
+ * The pill is the one control on the page whose job is to be noticed by
+ * someone who has not realised there is anything to do yet, and stillness on
+ * a screen where a cloth has just finished falling is easy to miss. Six
+ * seconds is deliberately slower than anything else here — it should register
+ * as breathing rather than as a notification demanding a click.
+ *
+ * Scoped to the same selector that offers the control, so it can never run on
+ * a pill that is fading out or already driving the scroll, and dropped
+ * entirely for readers who asked for less movement.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-cloth='settled']:not([data-cloth-peeling]):not([data-cloth-recover]))
+    .hint:not(:hover):not(:focus-visible) {
+    animation: hintBreath 6s var(--tc-ease-soft) infinite;
+  }
+}
+
+@keyframes hintBreath {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tc-accent) 9%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 0.6rem color-mix(in srgb, var(--tc-accent) 0%, transparent);
+  }
+}
+
+/*
+ * On a phone the bottom of the first screen already belongs to the hero: the
+ * copy block runs to the lower-left corner and its two buttons sit exactly
+ * where a centred pill would land — measured overlap up to 86x34px on a
+ * 360-wide screen, worse in English. The instruction moves to the one band of
+ * the frame nothing else claims, directly under the header, where it still
+ * points down at the sheet without sitting on a tap target.
+ */
+@media (max-width: 47.9375rem) {
+  .hint {
+    top: calc(3.5rem + 1rem);
+    bottom: auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  .hint {
+    bottom: 3rem;
+  }
+}

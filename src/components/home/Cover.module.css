@@ -1,0 +1,105 @@
+/*
+ * The mirror of the hero, at the other end of the page.
+ *
+ * Same shape as Hero and Tally: a track much taller than the viewport with a
+ * sticky pane held inside it, because the length IS the interaction — the run
+ * the cloth needs to come back over the table. 200svh gives the pane its own
+ * screen plus exactly one viewport of travel, which is the span ClothScene
+ * measures off this element (`height - 100svh`) and spends bringing the peel
+ * and the camera home.
+ */
+.root {
+  position: relative;
+  min-height: 200svh;
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  min-height: 100svh;
+  padding-block: clamp(4rem, 12svh, 8rem);
+  padding-inline: var(--tc-gutter);
+}
+
+/*
+ * Held to the lower-left, the same corner the hero's copy claims, so the two
+ * ends of the document are visibly the same shot. No scrim and no panel: the
+ * table has to be plainly visible for this to mean anything, and contrast
+ * comes from the same soft pool of surface behind the glyphs that Hero and
+ * Tally use.
+ */
+.copy {
+  width: 100%;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-shadow: 0 2px 32px color-mix(in srgb, var(--tc-surface) 78%, transparent);
+
+  /*
+   * Paced by the cloth, not by a scroll trigger of its own. `--tc-recover` is
+   * the sheet's own return, written by ClothScene, so the sentence cannot
+   * arrive before the fabric it describes. The fallback of 1 is the no-JS
+   * resting state: no scene, no property, copy simply there.
+   *
+   * Hosted on `.root` (the `data-cloth-recover-track` element — see
+   * Cover.tsx) rather than on `<html>`: this section is the smallest
+   * subtree that reads it, so the write no longer forces a style recalc
+   * across the rest of the document on every scroll frame.
+   */
+  opacity: clamp(0, calc(var(--tc-recover, 1) / 0.4), 1);
+  translate: 0 calc((1 - clamp(0, calc(var(--tc-recover, 1) / 0.4), 1)) * 1.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy {
+    translate: none;
+  }
+}
+
+/*
+ * Ink, not accent — for the same reason Hero's eyebrow is. This block exists
+ * to be read while the cloth is coming back over the table, so by the time the
+ * sentence has faded in the thing behind it is the fabric, and the fabric is
+ * that exact red. An accent eyebrow here is a line of type that is only
+ * legible before it means anything.
+ */
+.eyebrow {
+  margin: 0;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tc-ink);
+}
+
+.title {
+  margin: 0;
+  max-width: 18ch;
+  font-size: var(--tc-text-3xl);
+  font-weight: 700;
+  line-height: var(--tc-leading-tight);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.body {
+  margin: 0;
+  max-width: 34ch;
+  font-size: var(--tc-text-md);
+  color: var(--tc-ink-soft);
+}
+
+@media (min-width: 48rem) {
+  .title {
+    font-size: var(--tc-text-4xl);
+  }
+
+  .body {
+    font-size: var(--tc-text-lg);
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "lang": "ko",
+  "name": "식탁보®",
+  "short_name": "TableCloth®",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#141019",
+  "background_color": "#141019",
+  "icons": [
+    {
+      "src": "/tablecloth.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}

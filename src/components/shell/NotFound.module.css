@@ -1,0 +1,246 @@
+/*
+ * The 404, which is a full screen and not a strip.
+ *
+ * The rest of the page is a scroll: every section is a beat in an argument and
+ * none of them owns the viewport alone. This one does, because there is nothing
+ * after it — the reader is at a dead end and the only useful thing the layout
+ * can do is put the way out where their eye already is.
+ *
+ * No cloth behind it. `ClothStage` is mounted per-route rather than in the
+ * shell, and a 404 is the one screen where the scene would be actively
+ * misleading: the whole scene is driven by scroll, and this page has none, so
+ * the sheet would sit at its opening pose forever with no way to move it.
+ * The surface token alone carries the theme here.
+ */
+
+.root {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  min-height: 100svh;
+  padding: 6rem var(--tc-gutter) 4rem;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--tc-accent);
+}
+
+.title {
+  margin: 0 0 1rem;
+  max-width: 18ch;
+  font-size: var(--tc-text-2xl);
+  font-weight: 800;
+  line-height: var(--tc-leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.body {
+  margin: 0 0 2rem;
+  max-width: var(--tc-measure);
+  font-size: var(--tc-text-md);
+  line-height: var(--tc-leading);
+  color: var(--tc-ink-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.625rem 1.25rem;
+  border-radius: 999px;
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.link:hover,
+.link:active {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+@media (pointer: coarse) {
+  .cta,
+  .link {
+    min-height: 2.75rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .title {
+    font-size: var(--tc-text-3xl);
+  }
+}
+
+/* ------------------------------------------------------------- setting */
+
+/*
+ * The place setting, and the cloth over it.
+ *
+ * Sized well under either link and dropped after them in both markup and
+ * visual weight — quiet surface tones, no accent — so the reader who is
+ * actually lost is never in doubt about which two things on this screen
+ * matter first. Fixed at one small size on every viewport: it is a detail
+ * to notice, not a layout element, and giving it a breakpoint would be
+ * treating it like one.
+ */
+.setting {
+  position: relative;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin-top: 3rem;
+}
+
+.plate {
+  position: absolute;
+  inset: 1.125rem;
+  border-radius: 50%;
+  border: 1px solid var(--tc-ink-hair);
+  background: var(--tc-surface-sunk);
+}
+
+.utensil {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 0.2rem;
+  border-radius: 999px;
+  background: var(--tc-ink-hair);
+}
+
+.utensil[data-side='fork'] {
+  left: 0.35rem;
+}
+
+.utensil[data-side='knife'] {
+  right: 0.35rem;
+}
+
+/*
+ * The cloth is a real `<button>`, not a caption over the plate — lifting it
+ * is the one thing on this page a screen reader has to be able to name and
+ * a keyboard has to be able to reach, so it takes a focus ring and an
+ * `aria-label` from `COPY.notFound` like everything else user-facing here,
+ * rather than living as a decorative div with a click handler bolted on.
+ *
+ * It stays a plain full-square hit target on its own box; every visual —
+ * the fabric, the drape, the lift — lives on `::before` instead. The corner
+ * shape needs `clip-path` to read as cloth rather than a cropped rectangle,
+ * but `clip-path` also trims the box's own hit-test region along with its
+ * paint, and this button's area is exactly where the second tap — the one
+ * that sets the corner back down — has to land. Putting the shape on a
+ * pseudo-element keeps the button's tap target the full square in every
+ * state while the fabric moves freely inside it.
+ */
+.cloth {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/*
+ * `clip-path` rather than `width`/`height` for the draped shape: both states
+ * below are four-point polygons, which the compositor can interpolate
+ * directly, and the corner needs an irregular edge to read as fabric rather
+ * than as a cropped rectangle.
+ */
+.cloth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--tc-radius-sm);
+  background: linear-gradient(
+    155deg,
+    var(--tc-surface-raised),
+    color-mix(in srgb, var(--tc-surface-raised) 75%, var(--tc-ink) 8%)
+  );
+  box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 0.28);
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 88%);
+  transform-origin: 0% 0%;
+  transition:
+    clip-path var(--tc-dur-base) var(--tc-ease-soft),
+    transform var(--tc-dur-base) var(--tc-ease-soft),
+    box-shadow var(--tc-dur-base) var(--tc-ease-soft);
+}
+
+/*
+ * Hover previews the lift without committing to it, same relationship the
+ * hero's cloth has to a pointer that has not pressed yet. Gated to devices
+ * that actually have a hover channel: an ungated `:hover` fires on touch and
+ * then sticks until the next tap lands somewhere else, which on the one
+ * page that must not feel broken is worse than no preview at all.
+ */
+@media (hover: hover) {
+  .cloth:hover::before {
+    clip-path: polygon(0 0, 62% 0, 50% 62%, 0% 50%);
+    transform: translate(-0.3rem, -0.3rem) rotate(-6deg);
+    box-shadow: 0.5rem 0.75rem 1.25rem rgb(0 0 0 / 0.38);
+  }
+}
+
+/*
+ * A tap or an Enter/Space pins the same lift, because a coarse pointer never
+ * sees the `:hover` above and a first-time visitor needs an answer that
+ * stays on screen rather than a flash that is gone by the time they look.
+ * `[data-peek]` is React state, not CSS state, on purpose — the button also
+ * has to report `aria-pressed`, and deriving both from one source is the
+ * only way they cannot drift apart.
+ */
+.cloth[data-peek]::before {
+  clip-path: polygon(0 0, 55% 0, 45% 68%, 0% 55%);
+  transform: translate(-0.4rem, -0.4rem) rotate(-8deg);
+  box-shadow: 0.6rem 0.85rem 1.5rem rgb(0 0 0 / 0.42);
+}
+
+.cloth:focus-visible {
+  outline: 2px solid var(--tc-accent);
+  outline-offset: 2px;
+}
+
+/*
+ * Reduced motion keeps the toggle — tapping still answers "empty" — but
+ * drops the tween, the same rule the rest of the page follows: the
+ * destination state, arrived at instantly, never a slowed version of the
+ * move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .cloth::before {
+    transition: none;
+  }
+}
