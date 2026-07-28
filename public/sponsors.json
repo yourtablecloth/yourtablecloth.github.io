@@ -1,5 +1,44 @@
 {
-  "generatedAt": "2026-01-17T00:00:00.000Z",
-  "totalCount": 0,
-  "sponsors": []
+  "generatedAt": "2026-07-12T16:26:44.888Z",
+  "totalCount": 4,
+  "publicCount": 3,
+  "anonymousCount": 1,
+  "sponsors": [
+    {
+      "login": "qb20nh",
+      "name": "qb20nh",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/1734074?u=87e2d7c4d877d447309da84d0ffd8855e3531b33&v=4",
+      "profileUrl": "https://github.com/qb20nh",
+      "tier": {
+        "name": "$5 a month",
+        "monthlyPrice": 5,
+        "isOneTime": false
+      },
+      "since": "2025-12-04T22:25:37Z"
+    },
+    {
+      "login": "x2605",
+      "name": "x2605",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/69812394?u=4767eeefad8e884faa1b5aaae7b5da70de557dc4&v=4",
+      "profileUrl": "https://github.com/x2605",
+      "tier": {
+        "name": "$5 a month",
+        "monthlyPrice": 5,
+        "isOneTime": false
+      },
+      "since": "2026-01-08T10:01:22Z"
+    },
+    {
+      "login": "Jukebox85",
+      "name": "Jukebox85",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/85714996?u=0d156539cdc6bd94f593bb2e3581a3b853377c27&v=4",
+      "profileUrl": "https://github.com/Jukebox85",
+      "tier": {
+        "name": "$5 a month",
+        "monthlyPrice": 5,
+        "isOneTime": false
+      },
+      "since": "2024-10-18T06:38:13Z"
+    }
+  ]
 }
