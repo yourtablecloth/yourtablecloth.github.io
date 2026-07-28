@@ -1,0 +1,104 @@
+.list {
+  margin: 0;
+  border-top: 1px solid var(--tc-ink-hair);
+}
+
+.row {
+  border-bottom: 1px solid var(--tc-ink-hair);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.125rem;
+  font-size: var(--tc-text-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+  list-style: none;
+}
+
+.question::-webkit-details-marker {
+  display: none;
+}
+
+/* The row already reads as pressable at rest; a tap only needs to say it
+   registered, which the accent on the marker's own colour does. */
+.question:active {
+  color: var(--tc-accent);
+}
+
+/*
+ * Hover and keyboard focus get the same accent :active already gives a tap
+ * — previewing the colour before the row opens, rather than only confirming
+ * it after. Gated behind hover:hover so a touch-scroll that grazes a row on
+ * the way past never leaves it looking permanently pressed; `:active` above
+ * stays ungated on purpose, that's the one thing a finger still gets.
+ */
+@media (hover: hover) {
+  .question:hover,
+  .question:focus-visible {
+    color: var(--tc-accent);
+  }
+}
+
+/*
+ * Two bars form a plus. Opening the row rotates the vertical bar onto the
+ * horizontal one and fades it out, leaving a minus — rotation and opacity
+ * are the only properties animated, per the motion contract.
+ */
+.marker {
+  position: relative;
+  flex: none;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+}
+
+.marker::before,
+.marker::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--tc-accent);
+  border-radius: 999px;
+}
+
+.marker::before {
+  inline-size: 100%;
+  block-size: 2px;
+}
+
+.marker::after {
+  inline-size: 2px;
+  block-size: 100%;
+  transition:
+    transform var(--tc-dur-fast) var(--tc-ease-soft),
+    opacity var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.row[open] .marker::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+
+/*
+ * While the enhanced collapse animation runs, `open` is briefly forced back
+ * on so the height tween has content to measure — but the marker should read
+ * "closed" the instant the user asks to close it. This overrides the rule
+ * above for exactly that window; under reduced motion nothing ever sets
+ * `data-expanded`, so `[open]` alone governs, matching native behaviour.
+ */
+.row[data-expanded='false'] .marker::after {
+  transform: none;
+  opacity: 1;
+}
+
+.answer {
+  margin: 0 0 1.125rem;
+  overflow: hidden;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-soft);
+}

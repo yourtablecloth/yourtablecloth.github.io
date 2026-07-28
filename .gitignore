@@ -1,1 +1,21 @@
+# Installed, not authored.
+node_modules/
+
+# Build output. `dist/client` is the published site and `dist/server` is the
+# renderer the prerender step runs to produce it; both are rebuilt from source
+# by `pnpm build`, and the deploy workflow builds them itself.
+dist/
+
+# Scratch directory the TanStack route generator writes while regenerating
+# src/routeTree.gen.ts. The generated tree itself IS committed — the build
+# reads it, and a diff on it is how a route change shows up in review.
+.tanstack/
+
+# Local environment overrides. Nothing in this repo needs a secret to build,
+# so anything matching these is a machine-local experiment.
+.env
+.env.*
+*.local
+
+# macOS writes these into every directory it looks at.
 .DS_Store

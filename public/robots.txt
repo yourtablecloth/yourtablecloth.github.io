@@ -1,0 +1,7 @@
+# Nothing on this site is gated — it's a marketing/docs surface, not an app
+# with private routes — so we allow every crawler and just point at the
+# sitemap for discovery.
+User-agent: *
+Allow: /
+
+Sitemap: https://yourtablecloth.app/sitemap.xml

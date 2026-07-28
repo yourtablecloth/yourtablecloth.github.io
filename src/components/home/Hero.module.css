@@ -1,0 +1,361 @@
+/*
+ * The hero is a caption on the cloth, not a panel over it.
+ *
+ * No background, no card: the type sits directly on the table and is held to
+ * the lower-left so the sheet keeps the middle of the frame. Contrast is safe
+ * there because the table beneath is the darkest surface on the page, and the
+ * cloth peels away from the bottom edge as soon as the reader scrolls.
+ */
+
+/*
+ * The hero is deliberately much taller than the viewport.
+ *
+ * At exactly 100svh the cloth began peeling almost immediately, so "천을
+ * 들춰보세요" pointed at something already leaving the table. The extra height
+ * buys the reader real time on the covered table — long enough to notice the
+ * hint, pick the cloth up, and put it back — before scroll takes over and
+ * starts peeling. The copy is sticky through that run so the headline stays
+ * put while the sheet is the thing being played with.
+ *
+ * The exact figure is arithmetic, not taste. The pane below is pinned for
+ * (min-height - 100svh), and the reveal captions live in that pane, so the
+ * pin must outlast the peel: PEEL_DWELL (0.7) + PEEL_VIEWPORTS (2.1) = 2.8
+ * viewports of peel, plus a beat at full peel for the last caption to be
+ * read, plus the 100svh the pane itself occupies. Shorten this and the final
+ * caption is dragged off the top mid-sentence; the two constants in
+ * ClothScene.tsx move with it or not at all.
+ */
+.root {
+  position: relative;
+  min-height: 400svh;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  padding-inline: var(--tc-gutter);
+}
+
+/*
+ * A viewport-tall pane pinned to the top of the hero's long scroll track. The
+ * copy therefore sits at the bottom of the FIRST screen and stays exactly
+ * there while the reader plays with the cloth, instead of being pushed to the
+ * bottom of a 190svh block where nobody would ever see it.
+ */
+.copy {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: start;
+  gap: 1rem;
+  /* Wide enough for the display headline to set on two lines without the
+     column breaking it into three; the lede keeps its own narrow measure. */
+  max-width: min(54rem, 100%);
+  padding-bottom: clamp(4.5rem, 13svh, 8rem);
+  /* A soft pool of surface behind the words, so display type never has to
+     fight the fabric for contrast. */
+  text-shadow: 0 2px 32px color-mix(in srgb, var(--tc-surface) 78%, transparent);
+  opacity: 0;
+}
+
+/*
+ * Intro and reveal captions share one grid cell.
+ *
+ * Stacking them is the whole point: the headline does not slide away and the
+ * captions do not arrive somewhere else — one becomes the other in the exact
+ * spot the reader is already looking, while the table behind keeps moving.
+ * Both are bottom-aligned so the baseline never jumps between them.
+ */
+.stack {
+  display: grid;
+  width: 100%;
+}
+
+.stack > * {
+  grid-area: 1 / 1;
+  align-self: end;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1rem;
+  /*
+   * Driven by the peel, not by a scroll trigger of its own — `--tc-peel` is
+   * written by ClothScene and is the sheet's actual progress, so the copy can
+   * never disagree with the fabric. It clears well before the first caption
+   * opens, because the two share a grid cell: any overlap is two sentences
+   * printed on top of each other, not a crossfade.
+   *
+   * `--tc-peel` is hosted on `.root` (see the `data-tc-peel` attribute in
+   * Hero.tsx) rather than on `<html>`: the hero is the smallest subtree that
+   * reads it, so writing it here instead of on the document root keeps the
+   * rest of the page's style recalc out of this property's blast radius.
+   */
+  --tc-gone: clamp(0, calc((var(--tc-peel, 0) - 0.015) / 0.09), 1);
+  opacity: calc(1 - var(--tc-gone));
+  translate: 0 calc(var(--tc-gone) * -1.25rem);
+}
+
+/* Invisible copy must not keep eating clicks aimed at the table behind it. */
+:global(html[data-cloth-reveal]) .intro {
+  pointer-events: none;
+}
+
+.reveal {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * One rule for every caption; `--from`/`--to` come in from the data. `--tc-on`
+ * ramps up over `--tc-edge` of peel after `--from` and back down before
+ * `--to`, so a caption is a window on the sheet's travel rather than a
+ * duration — scroll slowly and it holds, scroll fast and it flicks past,
+ * which is exactly how a caption on something you are physically moving
+ * should behave.
+ */
+.caption {
+  grid-area: 1 / 1;
+  align-self: end;
+  --tc-edge: 0.06;
+  --tc-on: clamp(
+    0,
+    min(
+      calc((var(--tc-peel, 0) - var(--from)) / var(--tc-edge)),
+      calc((var(--to) - var(--tc-peel, 0)) / var(--tc-edge))
+    ),
+    1
+  );
+  max-width: 32rem;
+  font-size: var(--tc-text-2xl);
+  font-weight: 600;
+  line-height: var(--tc-leading-snug);
+  letter-spacing: -0.01em;
+  opacity: var(--tc-on);
+  translate: 0 calc((1 - var(--tc-on)) * 0.9rem);
+}
+
+/*
+ * A rule that grows with the caption, so the sequence reads as a progress
+ * bar through the reveal rather than as three unrelated sentences.
+ */
+.caption::before {
+  content: '';
+  display: block;
+  width: calc(2.5rem + var(--tc-on) * 1.5rem);
+  height: 2px;
+  margin-bottom: 1rem;
+  background: var(--tc-accent);
+}
+
+/*
+ * Entrance, keyed to the cloth rather than to page load.
+ *
+ * `:not([data-cloth='loading'])` starts matching the moment the sheet begins to
+ * fall and keeps matching once it has settled, so the animation runs exactly
+ * once and never restarts on a phase change. The 0.48s delay is Cue 0.4 of the
+ * app's 1.2s splash — the point where its own title begins to appear.
+ */
+:global(html[data-cloth]:not([data-cloth='loading'])) .copy {
+  animation: heroIn var(--tc-dur-slow) var(--tc-ease-out) 0.48s both;
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Never trapped invisible: with no JS the attribute is never set, so the copy
+   is simply there. */
+:global(html:not([data-cloth])) .copy {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy {
+    opacity: 1;
+  }
+
+  :global(html[data-cloth]:not([data-cloth='loading'])) .copy {
+    animation: none;
+  }
+}
+
+/*
+ * Announcement pill, in the idiom every developer already reads as "new
+ * capability": a hairline border, a status chip, and an arrow that steps on
+ * hover. A filled red block would read as an error badge; this reads as a
+ * release note.
+ *
+ * The pill carries its own surface rather than a wash of the accent, and that
+ * is not a style preference — it is the only element on the first screen that
+ * is BOTH tinted with the accent and sitting on the accent. A 12% red wash
+ * inside a 34% red border, laid on the red cloth, has no edge and no interior:
+ * the "NEW" chip and the arrow, both solid accent, melt straight into the
+ * fabric behind them. Giving the pill a pane of the page's own surface hands
+ * its contents back the dark context they were drawn for — the same recipe
+ * `.secondary` and the cloth hint already use over this exact background — and
+ * costs nothing on the light theme, where the pane simply goes linen.
+ */
+.announce {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.35rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tc-surface) 66%, transparent);
+  backdrop-filter: blur(10px);
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    background-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/* A phone never hovers, so without `:active` these three are the only
+   controls on the first screen that acknowledge nothing when tapped. */
+.announce:hover,
+.announce:active {
+  border-color: color-mix(in srgb, var(--tc-accent) 62%, transparent);
+  background: color-mix(in srgb, var(--tc-surface) 82%, transparent);
+}
+
+@media (pointer: coarse) {
+  .announce {
+    min-height: 2.75rem;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.announceText {
+  color: var(--tc-ink);
+}
+
+.announceArrow {
+  color: var(--tc-accent);
+  transition: translate var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.announce:hover .announceArrow {
+  translate: 0.15rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce:hover .announceArrow {
+    translate: 0 0;
+  }
+}
+
+/*
+ * The one eyebrow on the page that is NOT accent-coloured, and it cannot be:
+ * every other section's eyebrow sits on the dark table or a scrim, but this
+ * one lands squarely on the cloth — which is that exact red. Accent on accent
+ * is an invisible line of type. Ink reads on both the fabric and the table.
+ */
+.eyebrow {
+  margin: 0;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tc-ink);
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: var(--tc-text-hero);
+  font-weight: 800;
+  /* Tighter than the token: at display size the stepped leading opens a gap
+     between the two lines wide enough to read as two headings. */
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+.line {
+  display: block;
+}
+
+.lede {
+  margin: 0;
+  max-width: 32ch;
+  font-size: var(--tc-text-md);
+  color: var(--tc-ink-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--tc-dur-fast) var(--tc-ease-soft),
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.primary {
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+}
+
+.primary:hover,
+.primary:active {
+  background: var(--tc-accent-deep);
+}
+
+.secondary {
+  border: 1px solid var(--tc-ink-hair);
+  background: color-mix(in srgb, var(--tc-surface) 60%, transparent);
+  backdrop-filter: blur(6px);
+  color: var(--tc-ink);
+}
+
+.secondary:hover,
+.secondary:active {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+@media (min-width: 48rem) {
+  .lede {
+    font-size: var(--tc-text-lg);
+  }
+}

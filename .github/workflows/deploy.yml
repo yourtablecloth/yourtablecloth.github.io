@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
   schedule:
     - cron: '30 15 * * 0'  # 매주 일요일 (스폰서/기여자 목록 갱신)
@@ -27,12 +24,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Generate Sponsors 💖
-        uses: JamesIves/github-sponsors-readme-action@v1
-        with:
-          token: ${{ secrets.PAT }}
-          organization: true
-          file: 'docs/docs/sponsor.md'
+      # 후원자·기여자 목록은 빌드 전에 public/ 에 써 둡니다. vite 가 public/ 아래를
+      # 그대로 사이트 루트로 복사하므로, 배포 후 주소는 예전과 같은
+      # https://yourtablecloth.app/sponsors.json, /contributors.json 입니다.
 
       - name: Generate Sponsors JSON 📄
         uses: actions/github-script@v7
@@ -107,11 +101,11 @@ jobs:
                 anonymousCount,
                 sponsors
               };
-              fs.writeFileSync('docs/sponsors.json', JSON.stringify(data, null, 2));
+              fs.writeFileSync('public/sponsors.json', JSON.stringify(data, null, 2));
               console.log(`Generated sponsors.json: ${sponsors.length} public + ${anonymousCount} anonymous`);
             } catch (error) {
               core.warning('Sponsor fetch failed: ' + error.message);
-              await writeFallback('docs/sponsors.json', 'https://yourtablecloth.app/sponsors.json');
+              await writeFallback('public/sponsors.json', 'https://yourtablecloth.app/sponsors.json');
             }
 
       - name: Generate Contributors JSON 👥
@@ -166,22 +160,38 @@ jobs:
                 anonymousCount,
                 contributors
               };
-              fs.writeFileSync('docs/contributors.json', JSON.stringify(data, null, 2));
+              fs.writeFileSync('public/contributors.json', JSON.stringify(data, null, 2));
               console.log(`Generated contributors.json: ${contributors.length} contributors + ${anonymousCount} anonymous`);
             } catch (error) {
               core.warning('Contributor fetch failed: ' + error.message);
-              await writeFallback('docs/contributors.json', 'https://yourtablecloth.app/contributors.json');
+              await writeFallback('public/contributors.json', 'https://yourtablecloth.app/contributors.json');
             }
 
       - name: Verify generated files 🔍
         run: |
           echo "=== sponsors.json content ==="
-          cat docs/sponsors.json
+          cat public/sponsors.json
           echo ""
           echo "=== contributors.json (head) ==="
-          head -c 1200 docs/contributors.json; echo ""
-          echo "=== sponsor.md sponsors section ==="
-          grep -A 20 "<!-- sponsors -->" docs/docs/sponsor.md || echo "No sponsors marker found"
+          head -c 1200 public/contributors.json; echo ""
+
+      # package.json 의 packageManager 필드에 적힌 pnpm 을 그대로 설치합니다.
+      - name: Setup pnpm 📦
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node 🟩
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install 🧩
+        run: pnpm install --frozen-lockfile
+
+      # 라우트마다 HTML 을 미리 만들어 dist/client 에 넣습니다. 404.html 과
+      # public/ 아래의 CNAME·이미지·JSON 도 같은 디렉터리로 들어갑니다.
+      - name: Build 🏗️
+        run: pnpm build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -189,7 +199,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs'
+          path: 'dist/client'
 
   deploy:
     environment:

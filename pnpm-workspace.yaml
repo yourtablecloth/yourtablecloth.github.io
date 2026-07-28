@@ -1,0 +1,14 @@
+# pnpm 11 blocks postinstall scripts unless a package is named here.
+#
+# esbuild's install is a binary fetch, not an optional nicety: it downloads the
+# platform binary vite's own dependency chain then executes. Without it the
+# build fails before it starts.
+allowBuilds:
+  esbuild: true
+  workerd: set this to true or false
+
+# Every dependency in package.json is written as an exact version, so a fresh
+# `pnpm install` on any machine resolves the same tree the lockfile records.
+# `saveExact` keeps it that way: `pnpm add x` writes `1.2.3`, not `^1.2.3`,
+# instead of quietly reopening the range the next person widens it through.
+saveExact: true

@@ -1,0 +1,95 @@
+/*
+ * The one full-bleed moment on the page.
+ *
+ * Every other section is a shell-constrained, left-aligned column; this one
+ * spans the full viewport width with its content centred, which is the whole
+ * point — a single number is meant to fill the frame, not sit in a column
+ * beside a matching gutter of empty space.
+ */
+.root {
+  position: relative;
+  /*
+   * The pinned pane below is 100svh; the extra 90svh here is pure dwell —
+   * scroll track with nothing else in it, so the number holds still on
+   * screen for a beat before releasing into Underneath. Shorten this and the
+   * pin never has time to register as a pin.
+   */
+  min-height: 190svh;
+  padding-inline: var(--tc-gutter);
+}
+
+/* Sticky, not a GSAP pin — see Tally.tsx for why. */
+.pin {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+  /*
+   * No scrim behind this one (see Tally.tsx) — contrast has to come from the
+   * type itself. Same recipe Hero uses to keep its own headline legible over
+   * the render: a soft pool of the surface colour behind the glyphs.
+   */
+  text-shadow: 0 2px 32px color-mix(in srgb, var(--tc-surface) 78%, transparent);
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tc-ink-faint);
+}
+
+.value {
+  margin: 0;
+  /*
+   * Larger than --tc-text-hero on purpose — that token is tuned for a
+   * two-word, two-line headline, which wraps badly if pushed much further.
+   * Three tabular digits tolerate far more width before wrapping or
+   * overflow becomes a risk, so the scale is multiplied up rather than
+   * replaced with an independent clamp: it stays tied to the one fluid size
+   * the page already tunes, just scaled for a shorter payload.
+   */
+  font-size: calc(var(--tc-text-hero) * 3);
+  font-family: var(--tc-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  /* Matches Underneath's counts: any number pulled from the catalog
+     measurement reads in the cloth's own red. */
+  color: var(--tc-accent);
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * The one very small thing this page's loudest element gets: a step from
+ * accent to accent-deep, nothing else — colour only, no movement, because
+ * this number is already the biggest gesture on the page and a bouncy
+ * number would undercut it rather than add to it. `.value` is aria-hidden
+ * (the real number lives in the visually-hidden span beside it, see
+ * Tally.tsx), so there is no keyboard-focus target to lose parity with —
+ * :focus-visible is included anyway for the same forward-compatible reason
+ * as Underneath's rows.
+ */
+@media (hover: hover) {
+  .pin:hover .value,
+  .pin:focus-visible .value {
+    color: var(--tc-accent-deep);
+  }
+}
+
+.caption {
+  margin: 0;
+  max-width: 30rem;
+  font-size: var(--tc-text-lg);
+  color: var(--tc-ink-soft);
+}

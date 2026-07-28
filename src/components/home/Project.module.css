@@ -1,0 +1,284 @@
+.install {
+  margin-bottom: 4rem;
+}
+
+.installTitle {
+  margin: 0 0 0.75rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tc-ink-faint);
+}
+
+.command {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.875rem 0.875rem 0.875rem 1.125rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: var(--tc-radius);
+  background: var(--tc-surface-raised);
+}
+
+.code {
+  flex: 1 1 18rem;
+  align-self: center;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-sm);
+  /* The command is one token; let it scroll rather than wrap mid-identifier. */
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/*
+ * That trade is wrong on a phone. At 360px the box is 280px wide and the
+ * command is 370px, so the line reads "winget install TableClothProject.T"
+ * and stops — a silent truncation of the one string on the page meant to be
+ * taken away, with no scrollbar to say so. Below the breakpoint it wraps
+ * instead: an ugly break inside an identifier is still the whole command,
+ * and the copy button beside it means nobody has to retype either half.
+ */
+@media (max-width: 47.9375rem) {
+  .code {
+    overflow-x: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+/*
+ * The blinking block is a terminal caret, not decoration: it is what makes
+ * the install line read as something typed live rather than a paragraph that
+ * happens to use a monospace font. It freezes solid — never disappears —
+ * once the typing tween completes.
+ */
+.code::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.15em;
+  vertical-align: -0.15em;
+  background: var(--tc-accent);
+  animation: projectCaret calc(var(--tc-dur-slow) * 2) var(--tc-ease-soft) infinite;
+}
+
+.code[data-typed='true']::after {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes projectCaret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.copy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: var(--tc-radius-sm);
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.copy:hover,
+.copy:active,
+.copy[data-copied] {
+  background: var(--tc-accent-deep);
+}
+
+/*
+ * Clipboard writes are refused outright in plenty of mobile contexts — an
+ * in-app webview, a locked-down browser, anything not on https. The button
+ * says so and hands the reader the selected command instead of pretending
+ * the copy happened.
+ */
+.copy[data-failed] {
+  background: transparent;
+  border: 1px solid var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+@media (pointer: coarse) {
+  .copy {
+    min-height: 2.75rem;
+  }
+}
+
+/* Every label occupies the same grid cell; only one is ever legible, so the
+   button never reflows when a confirmation or a refusal swaps in. */
+.copyLabel {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--tc-dur-fast) var(--tc-ease-soft),
+    transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.copyLabel[data-state='copied'],
+.copyLabel[data-state='failed'] {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.copy[data-copied] .copyLabel[data-state='copy'],
+.copy[data-failed] .copyLabel[data-state='copy'] {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.copy[data-copied] .copyLabel[data-state='copied'],
+.copy[data-failed] .copyLabel[data-state='failed'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- figures */
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.value {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-2xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.figureLabel {
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-faint);
+}
+
+.asOf {
+  margin-top: 1.25rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  color: var(--tc-ink-faint);
+}
+
+/* ------------------------------------------------------------------ facts */
+
+.facts {
+  display: grid;
+  gap: 0;
+  margin: 3.5rem 0 0;
+  border-top: 1px solid var(--tc-ink-hair);
+}
+
+.fact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--tc-ink-hair);
+  transition: border-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.factLabel {
+  flex: none;
+  width: 8rem;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-faint);
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--tc-text-sm);
+  font-weight: 500;
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/*
+ * The facts are a definition list, not a control — nothing here is a link
+ * or a button, so like Underneath's rows this has to invent its own pointer
+ * affordance rather than borrow one. The row's own rule brightens and the
+ * value nudges toward the accent, both well under the page's 2px ceiling
+ * (there's no movement at all here, only colour). :focus-visible is
+ * included for parity even though a plain <div>/<dt>/<dd> row has no
+ * focusable descendant today — nothing is lost, since there is nothing here
+ * a keyboard user could otherwise reach that a mouse user cannot.
+ */
+@media (hover: hover) {
+  .fact:hover,
+  .fact:focus-visible {
+    border-bottom-color: var(--tc-accent);
+  }
+
+  .fact:hover .factValue,
+  .fact:focus-visible .factValue {
+    color: var(--tc-accent);
+  }
+}
+
+/* ------------------------------------------------------------------ links */
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 999px;
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--tc-dur-fast) var(--tc-ease-soft),
+    color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.link:hover,
+.link:active,
+.link:focus-visible {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+@media (pointer: coarse) {
+  .link {
+    min-height: 2.75rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .figures {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .value {
+    font-size: var(--tc-text-3xl);
+  }
+}

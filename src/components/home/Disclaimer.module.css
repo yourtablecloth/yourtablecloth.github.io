@@ -1,0 +1,77 @@
+/*
+ * The one element on the page allowed to interrupt.
+ *
+ * Everything else recedes so the cloth can be looked at; this does the
+ * opposite. It is fully opaque — the only block that hides the table entirely —
+ * because a liability notice read through a moving background is a liability
+ * notice nobody read. The accent rule on the leading edge is the same red as
+ * the cloth, so it still belongs to the page while clearly not being part of
+ * the argument.
+ */
+
+.root {
+  position: relative;
+  z-index: 1;
+  background: var(--tc-surface-raised);
+  border-block: 1px solid var(--tc-ink-hair);
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  padding: 2.5rem var(--tc-gutter);
+  padding-inline-start: calc(var(--tc-gutter) + 3px);
+}
+
+/* The accent rule wipes down from the top instead of sitting static — the
+   one arrival on the page that is meant to interrupt, not ease in. */
+.rule {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: var(--tc-accent);
+  transform-origin: top;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tc-accent);
+}
+
+.title {
+  margin: 0 0 0.75rem;
+  font-size: var(--tc-text-lg);
+  font-weight: 700;
+  line-height: var(--tc-leading-snug);
+  letter-spacing: -0.01em;
+}
+
+.body {
+  margin: 0;
+  max-width: 64ch;
+  font-size: var(--tc-text-sm);
+  line-height: var(--tc-leading);
+  color: var(--tc-ink-soft);
+}
+
+@media (min-width: 48rem) {
+  .inner {
+    padding-block: 3rem;
+  }
+
+  .title {
+    font-size: var(--tc-text-xl);
+  }
+
+  .body {
+    font-size: var(--tc-text-md);
+  }
+}

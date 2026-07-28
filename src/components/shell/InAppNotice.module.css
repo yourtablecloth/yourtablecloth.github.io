@@ -1,0 +1,105 @@
+/*
+ * The one banner on this page.
+ *
+ * It sits at the bottom, above the safe-area inset, because the top of a phone
+ * screen already belongs to the app's own chrome and the header — stacking a
+ * third bar there is what makes a shared link feel like an ad. The bottom is
+ * also where the in-app browser's own "open in..." menu lives, so the message
+ * and the thing it is describing are in the same corner of the eye.
+ *
+ * Opaque, not translucent. Everything else on this page reads through to the
+ * render on purpose; this is the one element whose job is to be read by
+ * somebody whose frame rate is bad, and a blur over a stuttering canvas is
+ * both slower and harder to read.
+ */
+
+.root {
+  position: fixed;
+  z-index: 60;
+  inset-inline: 0.75rem;
+  bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: var(--tc-radius);
+  background: var(--tc-surface-raised);
+  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 0.35);
+}
+
+/* Arrives after the page has had a moment to be itself, so the first thing a
+   reader sees is the table rather than a notice about their browser. */
+@media (prefers-reduced-motion: no-preference) {
+  .root {
+    animation: noticeIn var(--tc-dur-slow) var(--tc-ease-out) 1.2s both;
+  }
+}
+
+@keyframes noticeIn {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: var(--tc-text-sm);
+  font-weight: 700;
+}
+
+.body {
+  margin: 0;
+  font-size: var(--tc-text-xs);
+  line-height: var(--tc-leading);
+  color: var(--tc-ink-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cta,
+.ghost {
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: var(--tc-text-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cta {
+  border: 0;
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+}
+
+.ghost {
+  border: 1px solid var(--tc-ink-hair);
+  background: none;
+  color: var(--tc-ink-soft);
+  font-weight: 500;
+}
+
+/* Pushed to the far end: dismissing is the one action here that costs the
+   reader something, so it does not sit where a thumb lands by accident. */
+.dismiss {
+  margin-inline-start: auto;
+  border: 0;
+  background: none;
+  padding: 0.5rem;
+  min-height: 2.5rem;
+  color: var(--tc-ink-faint);
+  font-size: var(--tc-text-xs);
+  cursor: pointer;
+}

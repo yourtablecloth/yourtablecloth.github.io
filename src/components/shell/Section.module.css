@@ -1,0 +1,182 @@
+.section {
+  position: relative;
+  padding-block: var(--tc-section-y);
+  /*
+   * The scrim, declared once. Both the always-on solid sections and the
+   * narrow-screen rule further down draw it, and the coarse-pointer block at
+   * the end of this file swaps it wholesale.
+   */
+  --tc-scrim: color-mix(in srgb, var(--tc-surface) 72%, transparent);
+  --tc-scrim-blur: blur(22px) saturate(115%);
+}
+
+/*
+ * Solid sections let the table show through.
+ *
+ * The scrim is deliberately weak — heavy enough that body copy is never read
+ * against moving geometry, light enough that the surface underneath is still
+ * plainly there. The blur is doing most of the work: it destroys the
+ * high-frequency detail that would fight the text while keeping the tone and
+ * the colour of whatever is behind it.
+ */
+.section[data-solid] {
+  background: var(--tc-scrim);
+  backdrop-filter: var(--tc-scrim-blur);
+}
+
+/*
+ * The vignette (see ClothStage.module.css) doesn't close over the render
+ * until drift hits 1 at scrollY≈8000, but Underneath (5310–6802) and
+ * How It Works (6802–7936) sit in the stretch where it's still 37–90% open —
+ * the render is a lit walnut tabletop behind the densest copy on the page, a
+ * requirement list and a histogram. Measured: a mean panel drive of 33–37
+ * there against 24 once the veil is shut, `--tc-ink-soft` body text sitting
+ * on a warm gradient with the table's own hard edge cutting through the rows.
+ *
+ * Closing the vignette any sooner would erase the reveal Underneath exists to
+ * show, so the difference gets absorbed here instead: a second, section-local
+ * tint that is strongest exactly where the page-level veil is still weak.
+ * It isn't gated on `[data-solid]` — Underneath is the one section that
+ * stays transparent by design (see Underneath.tsx) and it needs this
+ * exactly as much as a solid one.
+ *
+ * This used to fade itself out on the vignette's own curve —
+ * `calc(0.6 * (1 - var(--tc-drift, 0)))`. `--tc-drift` was an inherited
+ * custom property written on `<html>` every scroll frame, so this one rule
+ * forced a style recalc across the whole 15,000px document each time it
+ * changed; suppressing just this write measured -451ms of the 2,061ms of
+ * style recalc logged over 5s of throttled scrolling. It also wasn't buying
+ * much here specifically: `.vignette::after` in ClothStage already scales
+ * its own opacity directly off drift to close over the render, so the
+ * closing half of this job was being paid for twice. That's now the
+ * vignette's alone — this layer holds flat at the strength the 37–90%-open
+ * band actually needed and lets the vignette do all of the scaling.
+ *
+ * One fixed-colour layer, opacity-only — the same reason `.glow` in
+ * ClothStage animates opacity instead of a gradient stop: recomputing an
+ * alpha via `calc()` on the section's own `background` would repaint that
+ * flat fill every scroll frame, and stacked over a live WebGL canvas that's
+ * the cost the vignette's own comment already describes ripping out once.
+ * A constant costs the compositor nothing at all.
+ */
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--tc-surface-raised) 85%, transparent);
+  opacity: 0.4;
+}
+
+/*
+ * Relatively positioned so it joins the same positioned-stacking bucket as
+ * `.section::before` above: with both `position`-ed, paint order falls back
+ * to tree order, and `::before` (generated first) paints behind this box
+ * instead of over it. Without this, the drift boost — an absolutely
+ * positioned, full-coverage layer — would render on top of the copy it's
+ * meant to sit behind.
+ */
+.inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--tc-shell);
+  margin-inline: auto;
+  padding-inline: var(--tc-gutter);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tc-accent);
+}
+
+/*
+ * Display type steps between scale tokens at breakpoints — never interpolated —
+ * so a rendered heading is always exactly one value from the scale.
+ */
+.title {
+  margin: 0;
+  font-size: var(--tc-text-2xl);
+  font-weight: 700;
+  line-height: var(--tc-leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/*
+ * A hairline that reads as structure without introducing a third colour.
+ * `::after`, not `::before` — `::before` on `.section` is now claimed by the
+ * drift boost above, and this needs to stay a distinct layer rather than
+ * fight it for the same box's `background`.
+ */
+.section[data-solid] + .section[data-solid]::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--tc-gutter);
+  top: 0;
+  height: 1px;
+  background: var(--tc-ink-hair);
+}
+
+/*
+ * At 1440px the transparent section works because the 3D frame is wide: the
+ * uncovered table sits beside the numbers and they are read against it. At
+ * 390px the same frame puts the cloth, the tiles and the table's own hard
+ * edges directly behind the copy — grey and red bands through the middle of a
+ * data list. Below the breakpoint it takes the same scrim as every other
+ * section, which is weak enough that the table is still plainly there.
+ */
+@media (max-width: 47.9375rem) {
+  .section {
+    background: var(--tc-scrim);
+    backdrop-filter: var(--tc-scrim-blur);
+  }
+
+  .section + .section::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--tc-gutter);
+    top: 0;
+    height: 1px;
+    background: var(--tc-ink-hair);
+  }
+}
+
+@media (min-width: 48rem) {
+  .head {
+    margin-bottom: 4rem;
+  }
+
+  .title {
+    font-size: var(--tc-text-3xl);
+  }
+}
+
+/*
+ * Backdrop blur is the most expensive thing on this page and it is billed per
+ * frame, per element, over a live WebGL canvas: every scroll frame the
+ * compositor re-snapshots the backdrop of a full-width band and blurs it at
+ * device pixel ratio. Stacked with the cloth sim running underneath, that is
+ * the opening scroll readers reported as stuttering on a phone.
+ *
+ * A device with no mouse gets an opaque scrim instead. It costs nothing, and
+ * it lands within a hair of what the blurred one was already showing: below
+ * the breakpoint the table behind a section was a soft tone, never a picture.
+ */
+@media (pointer: coarse) {
+  .section {
+    --tc-scrim: color-mix(in srgb, var(--tc-surface) 94%, transparent);
+    --tc-scrim-blur: none;
+  }
+}

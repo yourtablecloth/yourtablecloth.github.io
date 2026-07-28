@@ -1,0 +1,564 @@
+/*
+ * Global layer + design tokens.
+ *
+ * TableCloth has no design system of its own, so this file IS the token source
+ * of truth. Everything downstream references these custom properties by name;
+ * no component hard-codes a colour, size, or duration. Tokens are namespaced
+ * `--tc-*` so they read unambiguously as this project's contract.
+ *
+ * Palette discipline: two colours carry the whole page — ink and surface — plus
+ * a single accent, the red of the cloth itself, taken from the project's own
+ * logo. Greys are ink at reduced alpha, never new hues.
+ *
+ * Fonts: Pretendard for Hangul (dynamic unicode-range subset, so an English
+ * page never downloads Korean glyphs and a Korean page pulls only what it
+ * renders), JetBrains Mono for the machine voice — counts and the command.
+ */
+
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+@import '@fontsource-variable/jetbrains-mono';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+/*
+ * The palette has to be able to TWEEN, which means the engine has to know
+ * these are colours.
+ *
+ * An unregistered custom property is a string as far as animation is
+ * concerned: `--tc-surface: #141019` becoming `#efe7da` is a discrete swap at
+ * the 50% mark, which on a full-page palette change reads as the lights being
+ * switched rather than as a surface being uncovered. Registering them with a
+ * `<color>` syntax is the whole difference, and it costs nothing anywhere
+ * else — the initial values below are the dark palette, so a document that
+ * never transitions renders identically either way.
+ *
+ * The accents are deliberately NOT registered. The project owns exactly one
+ * red and it has to read as the same red in both worlds, so there is nothing
+ * for it to interpolate between.
+ */
+@property --tc-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f2ece0;
+}
+
+@property --tc-ink-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(242 236 224 / 0.74);
+}
+
+@property --tc-ink-faint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(242 236 224 / 0.58);
+}
+
+@property --tc-ink-hair {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(242 236 224 / 0.14);
+}
+
+@property --tc-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #141019;
+}
+
+@property --tc-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1d1824;
+}
+
+@property --tc-surface-sunk {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0d0a12;
+}
+
+/*
+ * The four scroll-driven properties — `--tc-peel`, `--tc-drift`, `--tc-dwell`,
+ * `--tc-recover` — are deliberately NOT registered here, and that is not an
+ * oversight to "complete" by analogy with the palette above.
+ *
+ * They have to stay inherited: ClothScene now hosts each one on the smallest
+ * subtree that reads it (the hero root, the cloth stage, the hint button, the
+ * cover's recover track — see ClothScene.tsx and each consumer's own
+ * comment) rather than on `<html>`, and every consumer downstream of that
+ * host still finds the value by inheritance, including `::before`/`::after`
+ * pseudo-elements. `@property` defaults to `inherits: false`; declaring one
+ * of these with `inherits: false` would silently stop it at the host element
+ * and every pseudo-element consumer would fall back to its `var(…, 0)`
+ * default instead of the live value. `inherits: true` is legal but buys
+ * nothing — these are plain numbers, not colours, so there is no discrete
+ * animation-interpolation problem for `@property` to solve, and registering
+ * them adds a syntax check with no benefit. Leave them as bare custom
+ * properties.
+ */
+
+:root {
+  /* ---- palette: dark table (default) ---- */
+  --tc-ink: #f2ece0;
+  --tc-ink-soft: rgb(242 236 224 / 0.74);
+  /*
+   * Measured, not eyeballed. At 0.42 this token scored APCA Lc 49 on the
+   * page's 12px text against a required 100 — and two of the things wearing
+   * it were links. 0.58 is where the same text clears the Lc 60 floor that
+   * APCA sets for small non-body text; anything below that is decoration
+   * pretending to be information.
+   */
+  --tc-ink-faint: rgb(242 236 224 / 0.58);
+  --tc-ink-hair: rgb(242 236 224 / 0.14);
+  --tc-surface: #141019; /* the table: deep aubergine-ink */
+  --tc-surface-raised: #1d1824;
+  --tc-surface-sunk: #0d0a12;
+  /* Both reds are lifted from the project's own logo artwork. */
+  --tc-accent: #d21e25;
+  --tc-accent-deep: #a21b21;
+  --tc-accent-fg: #fbf4ee;
+
+  color-scheme: dark;
+
+  /* ---- layout: this page's shell, not design tokens ---- */
+  --tc-shell: 82rem;
+  --tc-measure: 62ch;
+  --tc-gutter: 1.25rem;
+  --tc-section-y: 5rem;
+
+  /* ---- radii ---- */
+  --tc-radius-sm: 0.375rem;
+  --tc-radius: 0.75rem;
+  --tc-radius-lg: 1.25rem;
+
+  /* ---- type scale ---- */
+  /*
+   * Nothing on this page renders below 1rem. That is the rule the bottom of
+   * this scale exists to enforce, and it is why the first three steps sit so
+   * close together.
+   *
+   * `xs` is not decoration here — it is the eyebrow that names the section,
+   * the counts, the release pill, the cloth's own instruction, the footer's
+   * legal line. At 12px that is the size interfaces reserve for boilerplate
+   * nobody is expected to read, and it was carrying half the page's actual
+   * information. Raising it to the browser's own default text size means a
+   * reader who has set that default larger gets every one of those in
+   * proportion, which `rem` promises and 0.75rem quietly took back.
+   *
+   * `sm` and `md` then have to move too, or the ladder collapses into one
+   * rung. They are one step each rather than a proportional rescale on
+   * purpose: `lg` and everything above it are display sizes that were
+   * composed against the render, and pushing those up would re-tune the whole
+   * page to fix a problem that only ever existed at the bottom.
+   */
+  --tc-text-xs: 1rem;
+  --tc-text-sm: 1.0625rem;
+  --tc-text-md: 1.125rem;
+  --tc-text-lg: 1.25rem;
+  --tc-text-xl: 1.5rem;
+  --tc-text-2xl: 2rem;
+  --tc-text-3xl: 2.75rem;
+  --tc-text-4xl: 3.75rem;
+  --tc-text-5xl: 5rem;
+  /*
+   * The one fluid size on the page, and the one exception to the step scale.
+   *
+   * Every other size steps between tokens at breakpoints, deliberately, so a
+   * rendered heading is always exactly one value from the scale. The hero
+   * headline is measured against a different yardstick: it is the only thing
+   * asked to carry a whole viewport on its own, and the sites it is competing
+   * with run their opening line at 11-15% of the viewport width. Stepped, it
+   * sat at 5.6% — a section heading that happened to be first. Fluid, it holds
+   * that proportion at every width instead of only at three of them.
+   *
+   * Bounded by height as well, because width alone does not know about a wide
+   * short window. A two-line headline at 11vw of a 1568px viewport is 344px of
+   * type; drop the window to 520px tall and the hero's copy stack — pill,
+   * eyebrow, headline, lede, two buttons — overflows the pane it is bottom
+   * aligned in and the release pill is clipped straight off the top of the
+   * screen. 22svh per line is the ceiling that keeps the whole stack inside a
+   * short frame, and on any window tall enough to hold it the width term is
+   * still the smaller of the two, so the composed shot is untouched.
+   */
+  --tc-text-hero: clamp(2.75rem, min(11vw, 22svh), 10.5rem);
+
+  /* ---- line heights ---- */
+  --tc-leading-tight: 1.12;
+  --tc-leading-snug: 1.3;
+  --tc-leading: 1.6;
+
+  /* ---- fonts ---- */
+  --tc-font: 'Pretendard Variable', system-ui, sans-serif;
+  --tc-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* ---- motion contract (never linear) ---- */
+  --tc-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* expo.out */
+  --tc-ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1); /* power2.out */
+  --tc-dur-fast: 200ms;
+  --tc-dur-base: 400ms;
+  --tc-dur-slow: 600ms;
+  /* The palette crossfade, and nothing else. Longer than any other duration
+     here because it is the only one the reader is meant to watch happen
+     rather than to feel resolve. */
+  --tc-dur-reveal: 1100ms;
+  --tc-motion: 1;
+}
+
+/*
+ * The other world. Two ways in, and they must never contradict each other.
+ *
+ * The reader asks for it with the toggle — that is `.light`, permanent until
+ * they say otherwise.
+ *
+ * Or the cloth uncovers it. That is `[data-surface='lit']`, written by
+ * ClothScene once the peel is past its threshold, and it is the page keeping
+ * the promise its own headline makes: the surface below is commented "a bare
+ * linen tabletop", which is exactly the thing under the sheet. Printing
+ * 안전하고 깨끗하게 over a dark render is a claim; arriving at a clean surface
+ * because you pulled the cover off is the argument.
+ *
+ * The gate is the important half. An earlier version applied this to everyone
+ * on the dark palette, which swept up readers who had CHOSEN dark and handed
+ * them a light page halfway down with no way to keep the one they picked —
+ * indistinguishable from the toggle misfiring, and a fair reason it was taken
+ * out. `.tc-undecided` is set only when localStorage holds no theme at all
+ * (see prefs.tsx), so the surface can only move for a reader who has never
+ * expressed a preference. Touch the toggle in either direction and the class
+ * is gone for good.
+ */
+:root.light,
+:root.tc-undecided[data-surface='lit'] {
+  --tc-ink: #23150f;
+  --tc-ink-soft: rgb(35 21 15 / 0.72);
+  --tc-ink-faint: rgb(35 21 15 / 0.62);
+  --tc-ink-hair: rgb(35 21 15 / 0.14);
+  --tc-surface: #efe7da; /* a bare linen tabletop */
+  --tc-surface-raised: #fbf7ee;
+  --tc-surface-sunk: #c6b499;
+  --tc-accent: #c5392b;
+  --tc-accent-deep: #9c2b20;
+  --tc-accent-fg: #fbf4ee;
+
+  color-scheme: light;
+}
+
+/*
+ * Only the uncover crossfades; the toggle stays instant.
+ *
+ * A reader who presses the theme control wants the theme, now — a one-second
+ * dissolve there is latency wearing a costume. The cloth is the opposite: the
+ * palette IS the reveal, and a hard cut would read as a repaint bug rather
+ * than as a surface being uncovered. So the transition hangs off the
+ * scroll-driven class alone, which is also why the tokens above had to be
+ * registered with `@property` — see the top of this file.
+ *
+ * Reduced motion gets the same two states with no tween between them. The
+ * information is the destination, not the dissolve.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root.tc-undecided {
+    transition:
+      --tc-ink var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-ink-soft var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-ink-faint var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-ink-hair var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-surface var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-surface-raised var(--tc-dur-reveal) var(--tc-ease-soft),
+      --tc-surface-sunk var(--tc-dur-reveal) var(--tc-ease-soft);
+  }
+}
+
+/*
+ * Readers who asked the OS for more contrast.
+ *
+ * The greys on this page are ink at reduced alpha by policy, which is what
+ * keeps the palette to two colours — and also what makes them the first thing
+ * to fail for anyone who needs more separation than the design's taste
+ * allows. Only the alphas move: the hues, the accent and every layout token
+ * stay exactly as they are, so this is the same page with its quiet parts
+ * turned up rather than a third theme to maintain. `--tc-ink-hair` gets the
+ * largest jump because a 14%-alpha hairline is the page's only structure and
+ * is invisible well before the text is.
+ */
+@media (prefers-contrast: more) {
+  :root {
+    --tc-ink-soft: rgb(242 236 224 / 0.92);
+    --tc-ink-faint: rgb(242 236 224 / 0.84);
+    --tc-ink-hair: rgb(242 236 224 / 0.38);
+  }
+
+  :root.light {
+    --tc-ink-soft: rgb(35 21 15 / 0.92);
+    --tc-ink-faint: rgb(35 21 15 / 0.86);
+    --tc-ink-hair: rgb(35 21 15 / 0.4);
+  }
+}
+
+/*
+ * Forced colours — Windows High Contrast and friends.
+ *
+ * Here the system owns the palette outright and our tokens are overridden on
+ * text and backgrounds whether we like it or not. Two things still need
+ * saying, and only two.
+ *
+ * The hairline is one: at 14% alpha of an ink the system has replaced, every
+ * border, rule and section divider on the page silently disappears, and this
+ * layout is almost entirely made of them. `CanvasText` makes them real edges.
+ *
+ * The cloth is the other, and it is handled where it lives — see
+ * ClothStage.module.css. A WebGL canvas cannot be forced to anyone's palette,
+ * so a full-bleed render behind every section is the one element on this page
+ * that would actively fight a reader who has told their OS they need it not
+ * to. The argument is worth less than the reading.
+ *
+ * Deliberately NOT remapped: `--tc-accent`, `--tc-surface-*` and `--tc-ink`.
+ * The scene samples those through `getComputedStyle` and hands them to
+ * `THREE.Color`, which cannot parse a system colour keyword — and the scene
+ * is hidden here anyway, so remapping them would buy nothing and break the
+ * one thing that still reads them.
+ */
+@media (forced-colors: active) {
+  :root,
+  :root.light {
+    --tc-ink-hair: CanvasText;
+  }
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --tc-gutter: 2.5rem;
+    --tc-section-y: 8rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --tc-gutter: 3.5rem;
+    --tc-section-y: 10rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --tc-motion: 0;
+    --tc-dur-fast: 1ms;
+    --tc-dur-base: 1ms;
+    --tc-dur-slow: 1ms;
+  }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  /* The cloth layer paints the real background; this is only what shows before
+     the canvas exists, so the first paint is never a white flash. */
+  background: var(--tc-surface);
+  color: var(--tc-ink);
+  font-family: var(--tc-font);
+  font-size: var(--tc-text-md);
+  line-height: var(--tc-leading);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Korean typesetting: keep-all preserves 어절 boundaries, break-word stops
+     long Latin tokens (URLs, identifiers) from overflowing. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+p {
+  max-width: var(--tc-measure);
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tc-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+}
+
+/* ------------------------------------------------------------ utilities */
+
+.app-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.app-skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--tc-accent);
+  color: var(--tc-accent-fg);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-text-sm);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.app-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/*
+ * Everything readable stacks above the fixed cloth layer, which sits at
+ * z-index 0 and is pointer-transparent. Only the stacking context is declared
+ * here — sections decide for themselves whether they occlude the table.
+ */
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * While the cloth can be dragged, the cursor should say so. Set on the root
+ * rather than the canvas because the canvas sits behind the content and never
+ * receives the pointer itself.
+ */
+html[data-cloth='settled'][data-cloth-active] {
+  cursor: grab;
+}
+
+html[data-cloth='settled'][data-cloth-active]:active {
+  cursor: grabbing;
+}
+
+/* Anything actually interactive overrides the grab affordance. */
+html[data-cloth-active] :is(a, button, summary, input, select, textarea, label, [tabindex]) {
+  cursor: pointer;
+}
+
+/*
+ * Scroll-reveal primitive. GSAP drives the animation; the resting state below
+ * is visible, so content is never trapped invisible if the motion layer fails.
+ * `.motion-ready` is set by JS only once GSAP is live.
+ */
+html.motion-ready [data-reveal] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready [data-reveal] {
+    opacity: 1;
+  }
+}
+
+/*
+ * Route changes were a hard cut: the old page vanished, the new one
+ * appeared, and the "one continuous surface" thesis broke exactly at
+ * the seam a reader would notice most — leaving it. `defaultViewTransition`
+ * on the router (see router.tsx) wraps the commit in
+ * `document.startViewTransition()`; this block is what that transition
+ * actually looks like.
+ *
+ * Shape: a short crossfade with a small upward settle on the incoming
+ * view — the new page arrives rather than just appearing, but it does not
+ * travel far enough to read as a slide. A slide was tried and rejected: it
+ * implies the two pages are panels on a shared track, which is not true of
+ * this router (docs pages are not siblings of the home sections), so the
+ * motion was answering a question nobody asked. Duration sits at
+ * `--tc-dur-base`, the same 400ms used for ordinary UI motion elsewhere on
+ * the page — this is a page swap, not the cloth reveal, and borrowing
+ * `--tc-dur-reveal` would tell the reader to watch it happen instead of
+ * letting it resolve.
+ *
+ * Browsers without the View Transitions API never run any of this: with no
+ * `document.startViewTransition`, `defaultViewTransition: true` is inert
+ * and the router just navigates. Nothing here needs a feature check.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: tc-view-transition-out var(--tc-dur-base) var(--tc-ease-soft) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: tc-view-transition-in var(--tc-dur-base) var(--tc-ease-soft) both;
+  }
+
+  @keyframes tc-view-transition-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes tc-view-transition-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+}
+
+/*
+ * The default capture treats the whole document as one `root` snapshot, so
+ * the fixed WebGL canvas — which never actually changes between routes —
+ * would get crossfaded against its own old frame: a flicker on the one
+ * element that is supposed to read as continuous underneath everything
+ * else. Naming it takes it out of the root capture and into its own
+ * transition group, which by default just persists across the navigation
+ * with no animation at all — exactly "don't touch this."
+ */
+.app-canvas {
+  view-transition-name: tc-canvas;
+}
+
+/*
+ * The information is the destination page, not the dissolve getting there.
+ * `::view-transition-group(*)` covers old, new, and the named canvas group
+ * alike, so this one rule is the complete reduced-motion escape — no tween,
+ * old view gone and new view there on the same frame a hard navigation
+ * would have produced.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation: none !important;
+  }
+}

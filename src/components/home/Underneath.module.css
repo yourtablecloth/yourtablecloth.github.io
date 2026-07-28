@@ -1,0 +1,212 @@
+.list {
+  list-style: none;
+  margin: 0 0 5rem;
+  padding: 0;
+  border-top: 1px solid var(--tc-ink-hair);
+}
+
+/*
+ * One row per class. The grid collapses to two lines on small screens rather
+ * than letting the meter squeeze the label into a single character per line —
+ * Hangul wraps by 어절, so a narrow column gets ugly fast.
+ */
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'label count'
+    'role  count'
+    'meter meter';
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  padding-block: 1.125rem;
+  border-bottom: 1px solid var(--tc-ink-hair);
+  transition: border-color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.label {
+  grid-area: label;
+  font-size: var(--tc-text-md);
+  font-weight: 600;
+}
+
+.role {
+  grid-area: role;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-faint);
+}
+
+.meter {
+  grid-area: meter;
+  display: block;
+  height: 3px;
+  margin-top: 0.625rem;
+  background: var(--tc-ink-hair);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--tc-accent);
+  border-radius: inherit;
+}
+
+.count {
+  grid-area: count;
+  align-self: center;
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--tc-accent);
+  transition: transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+/* ------------------------------------------------------------- histogram */
+
+.burden {
+  margin: 0;
+}
+
+.burdenTitle {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tc-ink-faint);
+  margin-bottom: 1.5rem;
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.375rem;
+  align-items: end;
+  height: 12rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar {
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  align-items: end;
+  justify-items: center;
+  height: 100%;
+  gap: 0.375rem;
+}
+
+.barFill {
+  display: block;
+  width: 100%;
+  min-height: 2px;
+  background: var(--tc-accent);
+  border-radius: 3px 3px 0 0;
+  align-self: end;
+  transition: transform var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.barCount {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--tc-ink-soft);
+  transition: color var(--tc-dur-fast) var(--tc-ease-soft);
+}
+
+.barLabel {
+  font-family: var(--tc-mono);
+  font-size: var(--tc-text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--tc-ink-faint);
+  padding-top: 0.375rem;
+  border-top: 1px solid var(--tc-ink-hair);
+  width: 100%;
+  text-align: center;
+}
+
+.axis {
+  margin-top: 1.25rem;
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-faint);
+}
+
+/*
+ * The list and the histogram are read-only measurements — nothing here is a
+ * link or a button, so this is the one place on the page that has to invent
+ * its own pointer affordance instead of borrowing one from an interactive
+ * element. Kept to the smallest legible signal: a row's own rule (its
+ * bottom border) takes the accent and its count nudges 2px toward the meter
+ * it belongs to; a bar lifts 2px off its own baseline and its count takes
+ * the accent too. Nothing scales and nothing moves past 2px — this section
+ * argues from a measurement, and a bouncy measurement reads as make-believe.
+ *
+ * :focus-visible is included for parity even though neither a row nor a bar
+ * has a focusable descendant today (both are plain <li>s of static data) —
+ * there is nothing here a keyboard user could reach that a mouse user
+ * cannot, so the pairing is symmetric but presently unreachable rather than
+ * a real second path to the same information.
+ */
+@media (hover: hover) {
+  .row:hover,
+  .row:focus-visible {
+    border-bottom-color: var(--tc-accent);
+  }
+
+  .row:hover .count,
+  .row:focus-visible .count {
+    transform: translateX(2px);
+  }
+
+  .bar:hover .barFill,
+  .bar:focus-visible .barFill {
+    transform: translateY(-2px);
+  }
+
+  .bar:hover .barCount,
+  .bar:focus-visible .barCount {
+    color: var(--tc-accent);
+  }
+}
+
+@media (min-width: 48rem) {
+  .row {
+    grid-template-columns: 16rem 1fr 8rem auto;
+    grid-template-areas: 'label role meter count';
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .meter {
+    margin-top: 0;
+  }
+
+  .bars {
+    gap: 0.75rem;
+    height: 15rem;
+  }
+}
+
+/*
+ * Forced colours: the measurements keep their edges.
+ *
+ * A meter is a coloured fill inside a tinted track, and when the system takes
+ * both colours they collapse into each other — the bars came out reading
+ * backwards, which is worse than not drawing them. System colour keywords
+ * survive forced-colors where our tokens do not, so the track becomes a real
+ * outline and the fill becomes solid ink inside it. Same chart, two colours.
+ */
+@media (forced-colors: active) {
+  .meter,
+  .barFill {
+    border: 1px solid CanvasText;
+  }
+
+  .fill,
+  .barFill {
+    background: CanvasText;
+  }
+}
