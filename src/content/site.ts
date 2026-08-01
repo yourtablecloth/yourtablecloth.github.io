@@ -21,6 +21,25 @@ export type Localized<T> = Record<Locale, T>
 
 export const LINKS = {
   github: 'https://github.com/yourtablecloth/TableCloth',
+  /**
+   * The newest release's own page, not the list of every release.
+   *
+   * `/releases` opens on a wall of versions and asks the reader to judge which
+   * one they want; `/releases/latest` is the answer to the question the
+   * Install button actually asks. The list stays reachable from the docs.
+   */
+  releasesLatest: 'https://github.com/yourtablecloth/TableCloth/releases/latest',
+  /**
+   * The no-install build, downloaded directly rather than by way of a page.
+   *
+   * One 5MB `.wsb` that Windows Sandbox (or macSandbox) opens on its own, so
+   * there is nothing between the button and a running TableCloth. GitHub keeps
+   * `/latest/download/<asset>` pointed at the newest release, which is why
+   * this can be a fixed URL and still never go stale — the asset name is the
+   * contract, and it is `no-install-spork.wsb` (see docs/install-macos.md).
+   */
+  noInstall:
+    'https://github.com/yourtablecloth/TableCloth/releases/latest/download/no-install-spork.wsb',
   releases: 'https://github.com/yourtablecloth/TableCloth/releases',
   catalog: 'https://github.com/yourtablecloth/TableClothCatalog',
   discord: 'https://discord.gg/eT2UnUXyTV',
@@ -230,7 +249,29 @@ export const COPY = {
     },
     /** Splash line, echoing the app's own startup screen. */
     booting: { ko: '식탁보를 펴는 중', en: 'Spreading the cloth' },
-    install: { ko: '설치', en: 'Install' },
+    /*
+     * Two ways in, not one.
+     *
+     * "설치" used to be a single button pointing at the releases list, which
+     * buried the thing most readers of this page want: the no-install build is
+     * one file, needs no installer, and is the shortest path from this screen
+     * to a running sandbox. It leads, and the installed version keeps its own
+     * button rather than being a step inside the other one.
+     *
+     * `noInstallAria` exists because the label cannot say everything a button
+     * that starts a download owes the reader — which file, and how big. The
+     * visible text stays short enough to sit next to two others.
+     */
+    noInstall: { ko: '무설치 실행', en: 'No-install' },
+    noInstallAria: {
+      ko: '무설치 식탁보 내려받기 (.wsb 파일, 약 5MB)',
+      en: 'Download no-install TableCloth (.wsb file, about 5MB)',
+    },
+    install: { ko: '설치 버전', en: 'Installer' },
+    installAria: {
+      ko: '설치 버전 내려받기 (GitHub 최신 릴리스)',
+      en: 'Download the installer (latest GitHub release)',
+    },
     source: { ko: '소스', en: 'Source' },
   },
 

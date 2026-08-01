@@ -66,8 +66,34 @@ export function Hero({ locale }: { locale: Locale }) {
 
             <p className={styles.lede}>{COPY.hero.lede[locale]}</p>
 
+            {/*
+              Three routes off the first screen, in the order a reader wants
+              them: run it now, install it properly, read it first.
+
+              The first is a direct asset link rather than a page, so `download`
+              asks the browser to save it instead of navigating — GitHub already
+              serves the asset as an attachment, so this only makes the intent
+              explicit for the browsers that honour it. It is also the one link
+              here that is not `target="_blank"`: opening a blank tab that
+              immediately downloads and then sits there empty is a worse result
+              than a download starting in the tab the reader is already in.
+            */}
             <div className={styles.actions}>
-              <a className={styles.primary} href={LINKS.releases} target="_blank" rel="noopener">
+              <a
+                className={styles.primary}
+                href={LINKS.noInstall}
+                aria-label={COPY.hero.noInstallAria[locale]}
+                download
+              >
+                {COPY.hero.noInstall[locale]}
+              </a>
+              <a
+                className={styles.secondary}
+                href={LINKS.releasesLatest}
+                aria-label={COPY.hero.installAria[locale]}
+                target="_blank"
+                rel="noopener"
+              >
                 {COPY.hero.install[locale]}
               </a>
               <a className={styles.secondary} href={LINKS.github} target="_blank" rel="noopener">

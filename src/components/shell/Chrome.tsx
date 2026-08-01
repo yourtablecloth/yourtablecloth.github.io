@@ -189,8 +189,11 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <a className={styles.link} href={LINKS.github} target="_blank" rel="noopener">
             GitHub
           </a>
+          {/* The full list, not the hero's "newest one, now" — a reader who has
+              scrolled this far may well be after an older build. Labelled from
+              `support`, since `hero.install` now names one specific download. */}
           <a className={styles.link} href={LINKS.releases} target="_blank" rel="noopener">
-            {COPY.hero.install[locale]}
+            {COPY.support.releasesLink[locale]}
           </a>
           <a className={styles.link} href={LINKS.catalog} target="_blank" rel="noopener">
             {COPY.project.catalogLink[locale]}
