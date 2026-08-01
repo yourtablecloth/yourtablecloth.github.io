@@ -98,7 +98,7 @@ export const ECOSYSTEM: EcosystemEntry[] = [
     kind: { ko: '~5MB 런처', en: '~5MB launcher' },
     body: {
       ko: '설치 없이 파일 하나로 바로 엽니다.',
-      en: 'One file opens it — nothing installed.',
+      en: 'One file opens it. Nothing installed.',
     },
     requires: { ko: 'Windows 샌드박스만', en: 'Just Windows Sandbox' },
     href: LINKS.releases,
@@ -148,7 +148,7 @@ export const PROJECT_FACTS = [
   {
     key: 'since',
     label: { ko: '기간', en: 'Since' },
-    value: { ko: '2021 — 2026', en: '2021 — 2026' },
+    value: { ko: '2021~2026', en: '2021–2026' },
   },
   {
     key: 'platform',
@@ -160,8 +160,8 @@ export const PROJECT_FACTS = [
 export const COPY = {
   meta: {
     title: {
-      ko: '식탁보® — 언제나 안전하고 깨끗하게',
-      en: 'TableCloth — always safe, always clean',
+      ko: '식탁보®: 언제나 안전하고 깨끗하게',
+      en: 'TableCloth: always safe, always clean',
     },
     description: {
       ko: '인터넷뱅킹과 전자정부 서비스가 요구하는 보안 프로그램을 윈도우 샌드박스 안에 가두는 오픈소스.',
@@ -174,7 +174,7 @@ export const COPY = {
     label: { ko: '주요 내비게이션', en: 'Primary navigation' },
     home: { ko: '식탁보 홈', en: 'TableCloth home' },
     sections: {
-      under: { ko: '천 위', en: 'On the cloth' },
+      under: { ko: '현황', en: 'Installs' },
       how: { ko: '작동', en: 'How' },
       ecosystem: { ko: '생태계', en: 'Ecosystem' },
       project: { ko: '프로젝트', en: 'Project' },
@@ -203,8 +203,8 @@ export const COPY = {
      * a running commentary that trails off mid-word reads as a layout bug,
      * not as a voice. These are noun phrases: the state the page is in, named.
      */
-    top: { ko: '천은 아직 덮여 있습니다', en: 'Still covered' },
-    under: { ko: '한 곳당 평균 3.1개', en: '3.1 installs per site' },
+    top: { ko: '아직 덮어둔 상태', en: 'Still covered' },
+    under: { ko: '한 사이트당 평균 3.1개', en: '3.1 installs per site' },
     how: { ko: '샌드박스 안에서만', en: 'Only inside the sandbox' },
     project: { ko: '오픈소스, 무료', en: 'Open source, free' },
   },
@@ -227,12 +227,12 @@ export const COPY = {
       ko: '인터넷뱅킹과 전자정부를 위한 제로 트러스트 컴퓨팅.',
       en: 'Zero-trust computing for Korean internet banking and e-government.',
     },
-    hint: { ko: '천을 들춰보세요', en: 'Lift the cloth' },
-    hintTouch: { ko: '천을 쓸어보세요', en: 'Swipe the cloth' },
+    hint: { ko: '식탁보를 들춰보세요', en: 'Lift the cloth' },
+    hintTouch: { ko: '식탁보를 쓸어보세요', en: 'Swipe the cloth' },
     /** Describes the canvas for screen readers and no-JS readers. */
     alt: {
-      ko: '탁자에 식탁보를 폅니다. 보안 프로그램들은 그 천 위에 놓여 있습니다. 천을 걷으면 탁자는 손대지 않은 그대로입니다.',
-      en: 'A cloth spread over a table. The security programs sit on the cloth. Take the cloth away and the table underneath is untouched.',
+      ko: '탁자에 식탁보를 폅니다. 보안 프로그램은 그 위에 놓입니다. 식탁보를 걷어내면 함께 사라지고, 탁자는 처음 그대로입니다.',
+      en: 'A cloth spread over a table. The security programs sit on top of it. Lift the cloth away and they go with it, leaving the table just as it was.',
     },
     /** Splash line, echoing the app's own startup screen. */
     booting: { ko: '식탁보를 펴는 중', en: 'Spreading the cloth' },
@@ -264,13 +264,13 @@ export const COPY = {
       key: 'on',
       from: 0.1,
       to: 0.35,
-      text: { ko: '보안 프로그램은 천 위에 놓입니다', en: 'The programs sit on the cloth' },
+      text: { ko: '보안 프로그램은 식탁보 위에 놓입니다', en: 'The programs sit on the cloth' },
     },
     {
       key: 'away',
       from: 0.39,
       to: 0.68,
-      text: { ko: '천을 걷으면 함께 걷힙니다', en: 'Take the cloth away and they go with it' },
+      text: { ko: '식탁보를 걷어내면 함께 사라집니다', en: 'Lift the cloth away and they go with it' },
     },
     {
       /* Runs past 1 on purpose: the peel caps at 1 and this line is the one
@@ -278,7 +278,7 @@ export const COPY = {
       key: 'clean',
       from: 0.72,
       to: 1.2,
-      text: { ko: '탁자는 손대지 않은 그대로입니다', en: 'The table underneath is untouched' },
+      text: { ko: '탁자는 처음 그대로입니다', en: 'The table underneath is just as it was' },
     },
   ],
 
@@ -300,8 +300,9 @@ export const COPY = {
       en: 'Getting in costs you 3.1 installs',
     },
     sitesLabel: { ko: '요구하는 사이트', en: 'sites require it' },
-    burdenTitle: { ko: '한 곳이 요구하는 개수', en: 'Programs demanded per site' },
-    sitesUnit: { ko: '곳', en: '' },
+    burdenTitle: { ko: '한 사이트가 요구하는 개수', en: 'Programs required per site' },
+    /** Renders as "269곳. <note>" / "269 sites. <note>" — see Underneath.tsx. */
+    sitesUnit: { ko: '곳', en: ' sites' },
     note: {
       ko: '개별 사이트와 제품 이름은 싣지 않습니다. 종류와 집계만.',
       en: 'No site or product named. Classes and counts only.',
@@ -310,7 +311,7 @@ export const COPY = {
 
   how: {
     eyebrow: { ko: '작동 방식', en: 'How it works' },
-    title: { ko: '격리 · 사용 · 폐기', en: 'Isolate · Use · Discard' },
+    title: { ko: '격리, 사용, 폐기', en: 'Isolate, use, discard' },
     diagram: {
       host: { ko: '호스트', en: 'Host' },
       sandbox: { ko: '샌드박스', en: 'Sandbox' },
@@ -318,7 +319,7 @@ export const COPY = {
     expressTitle: { ko: '설치 없이', en: 'Without installing' },
     expressBody: {
       ko: 'Windows 샌드박스만 켜져 있으면 됩니다. 내려받은 .wsb 파일을 실행하면 설치 과정 없이 바로 열립니다.',
-      en: 'Windows Sandbox just has to be enabled. Run the downloaded .wsb and it opens — no install step.',
+      en: 'Windows Sandbox just has to be enabled. Run the downloaded .wsb and it opens right away, with no install step.',
     },
     expressBadge: { ko: 'NEW', en: 'NEW' },
     expressMac: {
@@ -382,7 +383,7 @@ export const COPY = {
     title: { ko: '문서', en: 'Documentation' },
     description: {
       ko: '식탁보의 설치 안내, FAQ, 문제 해결, 개인정보처리방침, 후원 안내를 한곳에 모았습니다.',
-      en: 'Install guides, FAQ, troubleshooting, privacy policy, and sponsorship info for TableCloth — all in one place.',
+      en: 'Install guides, FAQ, troubleshooting, privacy policy, and sponsorship info for TableCloth, all in one place.',
     },
     pagesLabel: { ko: '문서', en: 'Pages' },
     elsewhereLabel: { ko: '바로가기', en: 'Elsewhere' },
@@ -415,7 +416,7 @@ export const COPY = {
     eyebrow: { ko: '그리고 다시', en: 'And again' },
     title: { ko: '쓰고 나면, 덮어둡니다', en: 'Use it, then cover it back up' },
     body: {
-      ko: '창을 닫으면 그 안의 것은 사라집니다. 다음에 필요하면 천을 다시 펴면 됩니다.',
+      ko: '창을 닫으면 그 안의 것은 사라집니다. 다음에 필요할 때 식탁보를 다시 펴면 됩니다.',
       en: 'Close the window and what was inside is gone. Spread the cloth again the next time you need it.',
     },
   },
@@ -430,7 +431,7 @@ export const COPY = {
     title: { ko: '중요한 일은 실제 PC에서', en: 'Do the important things on the real PC' },
     body: {
       ko: '식탁보 사용 중 발생하는 개인·기업·기관의 금전손실, 세금신고 누락 등 어떠한 장애나 손해에 대해서도 사용자 본인에게 책임이 있습니다.',
-      en: 'Any loss or damage arising from use of TableCloth — financial loss, a missed tax filing, anything — is the user’s own responsibility.',
+      en: 'Any loss or damage arising from use of TableCloth, whether financial loss, a missed tax filing, or anything else, is the user’s own responsibility.',
     },
   },
 
@@ -438,8 +439,8 @@ export const COPY = {
     tagline: { ko: '언제나 안전하고 깨끗하게', en: 'Always safe, always clean' },
     copyright: { ko: '© 2021–2026 rkttu.com', en: '© 2021–2026 rkttu.com' },
     legal: {
-      ko: '저작권 C-2025-051228 · 상표 출원 4020240205929',
-      en: 'Copyright reg. C-2025-051228 · TM app. 4020240205929',
+      ko: '저작권 C-2025-051228, 상표 출원 4020240205929',
+      en: 'Copyright reg. C-2025-051228, TM app. 4020240205929',
     },
     unofficial: {
       ko: '식탁보 프로젝트를 소개하는 비공식 재해석 페이지입니다.',
@@ -460,13 +461,13 @@ export const COPY = {
     eyebrow: { ko: '404', en: '404' },
     title: { ko: '이 자리에는 아무것도 없습니다', en: 'Nothing is set at this place' },
     body: {
-      ko: '주소가 바뀌었거나, 처음부터 없던 페이지입니다. 천은 그대로 있으니 식탁으로 돌아가세요.',
-      en: 'The address moved, or it never existed. The cloth is still where you left it — head back to the table.',
+      ko: '주소가 바뀌었거나, 처음부터 없던 페이지입니다. 식탁보는 그대로 있으니 식탁으로 돌아가세요.',
+      en: 'The address moved, or it never existed. The cloth is still where you left it, so head back to the table.',
     },
     home: { ko: '홈으로', en: 'Back home' },
     docs: { ko: '문서 보기', en: 'Read the docs' },
     /** aria-label for the 404 page's hover/focus corner-lift button (see NotFound.tsx). */
-    peek: { ko: '천 모서리 들어보기', en: 'Lift the corner of the cloth' },
+    peek: { ko: '식탁보 모서리 들어보기', en: 'Lift the corner of the cloth' },
   },
 
   /*

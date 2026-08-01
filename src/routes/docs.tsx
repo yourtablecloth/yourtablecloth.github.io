@@ -11,7 +11,7 @@ export const Route = createFileRoute('/docs')({
     const locale = match.context.locale
     return {
       meta: [
-        { title: `${COPY.docs.title[locale]} — ${locale === 'ko' ? '식탁보®' : 'TableCloth®'}` },
+        { title: `${COPY.docs.title[locale]} | ${locale === 'ko' ? '식탁보®' : 'TableCloth®'}` },
         { name: 'description', content: COPY.docs.description[locale] },
       ],
     }

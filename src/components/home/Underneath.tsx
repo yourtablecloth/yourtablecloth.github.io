@@ -143,7 +143,7 @@ export function Underneath({ locale }: { locale: Locale }) {
           </ul>
           <p className={styles.axis}>
             {totals.sitesWithPrograms}
-            {COPY.under.sitesUnit[locale]} · {COPY.under.note[locale]}
+            {COPY.under.sitesUnit[locale]}. {COPY.under.note[locale]}
           </p>
         </figure>
       </div>

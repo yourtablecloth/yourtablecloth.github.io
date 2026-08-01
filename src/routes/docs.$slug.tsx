@@ -23,7 +23,7 @@ export const Route = createFileRoute('/docs/$slug')({
     const doc = findDoc(params.slug)
     return {
       meta: [
-        { title: `${doc ? doc.title[locale] : COPY.docs.notFoundTitle[locale]} — ${locale === 'ko' ? '식탁보®' : 'TableCloth®'}` },
+        { title: `${doc ? doc.title[locale] : COPY.docs.notFoundTitle[locale]} | ${locale === 'ko' ? '식탁보®' : 'TableCloth®'}` },
         { name: 'description', content: doc ? doc.summary[locale] : COPY.docs.notFoundBody[locale] },
       ],
     }
@@ -290,7 +290,7 @@ function SponsorWall() {
               href={person.profileUrl}
               target="_blank"
               rel="noopener"
-              title={`${person.login} · ${COPY.support.sinceLabel[locale]} ${person.since}`}
+              title={`${person.login} (${COPY.support.sinceLabel[locale]} ${person.since})`}
             >
               <img
                 className={styles.sponsorAvatar}

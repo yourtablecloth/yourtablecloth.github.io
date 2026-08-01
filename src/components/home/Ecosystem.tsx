@@ -123,7 +123,7 @@ export function Ecosystem({ locale }: { locale: Locale }) {
             <h3 className={styles.name}>{entry.name[locale]}</h3>
             <p className={styles.body}>{entry.body[locale]}</p>
             <p className={styles.requires}>
-              {COPY.ecosystem.requiresLabel[locale]} · {entry.requires[locale]}
+              {COPY.ecosystem.requiresLabel[locale]}: {entry.requires[locale]}
             </p>
             {entry.external ? (
               <a className={styles.link} href={entry.href} target="_blank" rel="noopener">
