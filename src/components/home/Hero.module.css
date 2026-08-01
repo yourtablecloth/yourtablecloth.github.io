@@ -103,11 +103,28 @@
   pointer-events: none;
 }
 
+/*
+ * Never a hit target, at any opacity.
+ *
+ * The captions share their grid cell with `.intro` and, being later siblings,
+ * paint over it — which means they also hit-test over it. At the top of the
+ * page all three are at `--tc-on: 0`, but opacity has never had any bearing on
+ * hit-testing, so an invisible caption sat across the Install and Source
+ * buttons and swallowed every click aimed at them. The buttons were reachable
+ * by keyboard the whole time, which is why this survived: it looks fine and
+ * tabs fine, and only a mouse finds it.
+ *
+ * This is the mirror of the `html[data-cloth-reveal] .intro` rule above, and
+ * the reason that one needs a state guard while this one does not: the intro
+ * really is interactive and may only stop taking clicks once it has faded,
+ * whereas nothing in here is ever a control.
+ */
 .reveal {
   display: grid;
   list-style: none;
   margin: 0;
   padding: 0;
+  pointer-events: none;
 }
 
 /*
