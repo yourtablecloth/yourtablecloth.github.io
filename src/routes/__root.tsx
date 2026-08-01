@@ -4,6 +4,7 @@ import appCss from '../styles/app.css?url'
 import { COPY } from '../content/site'
 import { NotFound } from '../components/shell/NotFound'
 import { InAppNotice } from '../components/shell/InAppNotice'
+import { LEGACY_PATH_BOOTSTRAP } from '../lib/legacy-hash'
 import { readLocale } from '../lib/locale'
 import { SITE_ORIGIN } from '../lib/origin'
 import { PrefsProvider, THEME_BOOTSTRAP } from '../lib/prefs'
@@ -70,6 +71,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang={locale}>
       <head>
+        {/* Both run before the bundle: the first decides which route the
+            router is about to boot at, the second what colour it paints. */}
+        <script dangerouslySetInnerHTML={{ __html: LEGACY_PATH_BOOTSTRAP }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
         <HeadContent />
       </head>

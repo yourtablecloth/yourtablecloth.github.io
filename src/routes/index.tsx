@@ -15,7 +15,7 @@ import { Support } from '../components/home/Support'
 import { Tally } from '../components/home/Tally'
 import { Underneath } from '../components/home/Underneath'
 import { COPY } from '../content/site'
-import { LEGACY_ROUTES } from '../lib/legacy-hash'
+import { resolveLegacyHash } from '../lib/legacy-hash'
 import { usePrefs } from '../lib/prefs'
 
 export const Route = createFileRoute('/')({ component: Home })
@@ -52,10 +52,22 @@ function Home() {
    * runs on the client because there is nothing else to run it on: the
    * document is prerendered, and a fragment is never sent to the server
    * anyway. `replace` keeps the dead URL out of the reader's back button.
+   *
+   * `hashchange` as well as mount: the effect body runs once per mount, and a
+   * reader already sitting on this page who follows an old `/#install` link
+   * from somewhere else only changes the fragment — no navigation, no remount,
+   * and without this listener no redirect either. See lib/legacy-hash.ts for
+   * which fragments are legacy and which are this page's own.
    */
   useEffect(() => {
-    const target = LEGACY_ROUTES[window.location.hash.slice(1)]
-    if (target) navigate({ to: target, replace: true })
+    const go = () => {
+      const target = resolveLegacyHash(window.location.hash)
+      if (target) navigate({ to: target, replace: true })
+    }
+
+    go()
+    window.addEventListener('hashchange', go)
+    return () => window.removeEventListener('hashchange', go)
   }, [navigate])
 
   return (
