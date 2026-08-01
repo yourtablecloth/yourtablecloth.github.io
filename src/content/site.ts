@@ -76,6 +76,7 @@ type EcosystemEntry = {
 
 /**
  * The rest of the family, beyond the Windows desktop app above. One clause
+ * per body — this section shows what exists, it does not sell it.
  *
  * Open-ended by design. Nothing downstream counts these entries: the section
  * heading names the idea rather than the tally (see `ecosystem.title` below,
@@ -83,7 +84,6 @@ type EcosystemEntry = {
  * changed), and the grid lays out from the entry count rather than a fixed
  * column template (see Ecosystem.module.css). Adding or dropping a component
  * is an edit to this array and nothing else.
- * per body — this section shows what exists, it does not sell it.
  */
 export const ECOSYSTEM: EcosystemEntry[] = [
   {
@@ -444,9 +444,16 @@ export const COPY = {
       ko: '저작권 C-2025-051228, 상표 출원 4020240205929',
       en: 'Copyright reg. C-2025-051228, TM app. 4020240205929',
     },
-    unofficial: {
-      ko: '식탁보 프로젝트를 소개하는 비공식 재해석 페이지입니다.',
-      en: 'An unofficial reinterpretation of the TableCloth project.',
+    /*
+     * The last line of the page, and the one thing on it that is not about the
+     * software. It used to disclaim the site ("an unofficial reinterpretation")
+     * — which stopped being true once this became the project's own homepage
+     * repo, and spent the final line of the page apologising for itself. It
+     * credits the people who built it instead.
+     */
+    credit: {
+      ko: '이 홈페이지는 커뮤니티 컨트리뷰터의 노력으로 탄생하였습니다. 다시 한번 감사드립니다.',
+      en: 'This site exists through the work of community contributors. Our thanks, once again.',
     },
   },
 

@@ -206,7 +206,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div className={styles.fine}>
           <p>{COPY.footer.copyright[locale]}</p>
           <p>{COPY.footer.legal[locale]}</p>
-          <p>{COPY.footer.unofficial[locale]}</p>
+          <p>{COPY.footer.credit[locale]}</p>
         </div>
       </div>
     </footer>
