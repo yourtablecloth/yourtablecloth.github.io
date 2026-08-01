@@ -105,6 +105,17 @@ export function Underneath({ locale }: { locale: Locale }) {
       solid={false}
     >
       <div ref={root}>
+        {/*
+          The only prose block on this page that is not a caption, and the one
+          thing standing between the figures below and a reading nobody
+          intended — see the comment on `under` in content/site.ts. It reveals
+          on the section's own stagger, ahead of the first row, so a reader
+          meets the trade-off before the first count.
+        */}
+        <p className={styles.lead} data-reveal>
+          {COPY.under.lead[locale]}
+        </p>
+
         <ul className={styles.list}>
           {programTypes.map((type) => (
             <li key={type.key} className={styles.row} data-reveal>

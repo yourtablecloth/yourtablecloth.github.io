@@ -283,21 +283,36 @@ export const COPY = {
   ],
 
   /*
-   * The one section allowed to have a temper.
+   * The one section that argues rather than states.
    *
-   * Everywhere else this page states and lets the reader draw the conclusion.
-   * Here the conclusion IS the measurement — a site you have no choice about
-   * using makes you install software you did not ask for, three times over on
-   * average — and a neutral label under it ("3.1 per site") let the number be
-   * read as trivia. Naming the imposition is not editorialising; it is what
-   * the figure means. Still no institution and no product named: the anger is
-   * at a practice, never at a company (see src/data/catalog.ts).
+   * It is also the one place a bare number is genuinely ambiguous, which is why
+   * `lead` exists at all in a file that otherwise deletes any sentence it can.
+   * Left alone, "3.1 installs per site" reads as an indictment: of the vendors
+   * who wrote the software, and of the banks and agencies that ask for it. That
+   * is not the argument, and it would be an unfair one — the organisations
+   * carrying the liability for a fraud are not being unreasonable when they ask
+   * for more assurance than they can get from the browser alone.
+   *
+   * So the lead puts both costs on the table before the figures arrive: the
+   * risk that motivates the requirement, and the load it settles on the
+   * reader's machine. The duplication is still named — a certificate handler
+   * really does overlap the OS certificate store — because that is the honest
+   * observation this project was founded on, and because a middle ground is
+   * only worth proposing if there is something to reconcile. What is gone is
+   * the sneer.
+   *
+   * Still no institution and no product named: the argument is about a
+   * practice, never about a company (see src/data/catalog.ts).
    */
   under: {
-    eyebrow: { ko: '요구 목록', en: 'The demands' },
+    eyebrow: { ko: '설치 현황', en: 'What gets installed' },
     title: {
-      ko: '들어가려면 평균 3.1개를 깔아야 합니다',
-      en: 'Getting in costs you 3.1 installs',
+      ko: '한 사이트에 평균 3.1개를 설치합니다',
+      en: 'One site takes 3.1 installs on average',
+    },
+    lead: {
+      ko: '이런 요구에는 이유가 있습니다. 사고가 나면 책임지는 쪽은 서비스를 운영하는 기업과 기관이고, 그 부담은 가볍지 않습니다. 다만 대비의 무게는 사용자의 PC에 쌓이고, 그중 일부는 운영체제와 브라우저가 이미 하는 일과 겹칩니다. 어느 한쪽을 탓해서 풀릴 문제가 아니라 절충점이 필요한 문제입니다. 식탁보는 그 절충안 하나입니다. 요구되는 것은 그대로 설치하고, 사용자의 PC에는 남기지 않습니다.',
+      en: 'There are reasons for these requirements. The organisations running these services carry the liability when something goes wrong, and that burden is not a small one. But the weight of the precaution settles on the reader’s own PC, and some of it repeats what the operating system and the browser already do. Neither side is the culprit; what is missing is a middle ground. TableCloth is one: install exactly what is asked for, and keep none of it afterwards.',
     },
     sitesLabel: { ko: '요구하는 사이트', en: 'sites require it' },
     burdenTitle: { ko: '한 사이트가 요구하는 개수', en: 'Programs required per site' },

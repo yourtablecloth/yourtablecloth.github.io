@@ -36,15 +36,20 @@ export interface ProgramType {
   key: string
   label: Bilingual
   /**
-   * What this class of program actually does to the machine, in one phrase.
+   * What this class of program does on the machine, in one phrase.
    *
-   * Not what it is sold as. Several of these duplicate something the
-   * operating system or the browser has done for years, and the reader is
-   * required to install them anyway — so the phrase says the plain thing
-   * ("what HTTPS already does") rather than the brochure thing ("transport
-   * protection"). That is a register, not an accusation: every line is
-   * checkable, none names a vendor, and the complaint stays pointed at a
-   * practice. See the file header.
+   * Descriptive, not evaluative. Several of these overlap something the
+   * operating system or the browser has done for years, and where that is
+   * true the phrase says so plainly ("overlaps what HTTPS provides") — that
+   * observation is the reason this project exists and it stays.
+   *
+   * What these lines must not do is sneer. An earlier pass wrote them as
+   * jabs ("wedges into the driver", "installs the other ones"), and a jab
+   * aimed at a class of software lands on the engineers who wrote it and the
+   * institutions that chose it — neither of whom this page has any quarrel
+   * with. See `under.lead` in src/content/site.ts, which frames the whole
+   * section as a trade-off with legitimate costs on both sides, and the
+   * naming policy in the file header above.
    */
   role: Bilingual
   sites: number
@@ -100,54 +105,54 @@ export const catalog: CatalogSnapshot = {
 
   repo: { stars: 1095, forks: 60 },
 
-  // Ordered by how many sites demand them. These are the tiles the cloth covers.
+  // Ordered by how many sites require them. These are the tiles the cloth covers.
   programTypes: [
     {
       key: 'agent',
       label: { ko: '상주 감시 에이전트', en: 'Resident agent' },
-      role: { ko: '쓰든 안 쓰든 떠 있습니다', en: 'Always on, used or not' },
+      role: { ko: '항상 실행 상태로 남습니다', en: 'Stays running at all times' },
       sites: 197,
     },
     {
       key: 'cert',
       label: { ko: '인증서 처리 모듈', en: 'Certificate handler' },
-      role: { ko: 'OS가 이미 하는 일', en: 'What the OS already does' },
+      role: { ko: '운영체제의 인증서 기능과 겹칩니다', en: 'Overlaps the OS certificate store' },
       sites: 158,
     },
     {
       key: 'installer',
       label: { ko: '통합 설치 관리자', en: 'Install orchestrator' },
-      role: { ko: '나머지를 마저 깝니다', en: 'Installs the other ones' },
+      role: { ko: '나머지 프로그램을 함께 설치합니다', en: 'Installs the remaining programs' },
       sites: 141,
     },
     {
       key: 'keyboard',
       label: { ko: '키 입력 가로채기', en: 'Keystroke interception' },
-      role: { ko: '드라이버에 끼어듭니다', en: 'Wedges into the driver' },
+      role: { ko: '키보드 드라이버 계층에서 동작합니다', en: 'Operates at the keyboard driver layer' },
       sites: 91,
     },
     {
       key: 'bespoke',
       label: { ko: '한 곳 전용 모듈', en: 'One-site module' },
-      role: { ko: '그 한 곳에서만 쓰입니다', en: 'Useful at exactly one site' },
+      role: { ko: '한 사이트에서만 쓰입니다', en: 'Used at a single site' },
       sites: 55,
     },
     {
       key: 'tracker',
       label: { ko: '접속 정보 수집', en: 'Session tracker' },
-      role: { ko: '기기 정보를 보냅니다', en: 'Sends your device details' },
+      role: { ko: '기기 정보를 전송합니다', en: 'Sends device information' },
       sites: 42,
     },
     {
       key: 'drm',
       label: { ko: '화면·출력 제어', en: 'Screen and print control' },
-      role: { ko: '내 화면 캡처를 막습니다', en: 'Blocks capture on your screen' },
+      role: { ko: '화면 캡처와 출력을 제한합니다', en: 'Restricts screen capture and printing' },
       sites: 31,
     },
     {
       key: 'transport',
       label: { ko: '구간 암호화', en: 'Transport encryption' },
-      role: { ko: 'HTTPS가 이미 하는 일', en: 'What HTTPS already does' },
+      role: { ko: 'HTTPS의 역할과 겹칩니다', en: 'Overlaps what HTTPS provides' },
       sites: 23,
     },
   ],

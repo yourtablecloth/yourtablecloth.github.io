@@ -1,3 +1,24 @@
+/*
+ * The section's one paragraph of argument.
+ *
+ * Measure-capped rather than full-bleed: the rows below run the whole column
+ * because a bar chart needs the width, but running text set to that measure
+ * is 120-odd characters a line and reads as a wall. `--tc-ink-soft` sits it
+ * one step under the heading and one step over the `.role` captions, which is
+ * the weight a lead should carry — read before the numbers, not instead of
+ * them.
+ */
+.lead {
+  max-width: 46rem;
+  margin: 0 0 3.5rem;
+  font-size: var(--tc-text-md);
+  line-height: 1.75;
+  color: var(--tc-ink-soft);
+  /* Hangul wraps by 어절; keeping words whole avoids the ragged mid-word
+     breaks the browser would otherwise take at this measure. */
+  word-break: keep-all;
+}
+
 .list {
   list-style: none;
   margin: 0 0 5rem;
