@@ -8,17 +8,20 @@ import { Section } from '../shell/Section'
 import styles from './Ecosystem.module.css'
 
 /**
- * The rest of the family, beside the Windows desktop app covered elsewhere on
- * this page: the no-install launcher, the PWA, and the macOS port. One card
- * each, one clause of body copy — the page still shows rather than tells.
+ * Every way there is to run the thing, one card each, one clause of body copy —
+ * the page still shows rather than tells.
  *
- * The catalog block underneath is a contribution route, not a fifth product,
+ * Nothing here knows how many cards there are: the list comes from ECOSYSTEM,
+ * the heading names the idea rather than a count, and the grid wraps to fit
+ * (see Ecosystem.module.css). A new component is one entry in site.ts.
+ *
+ * The catalog block underneath is a contribution route, not another product,
  * so it is styled distinctly and links out only. Its contents are never
  * reproduced here (see the naming policy at the top of site.ts).
  *
  * The cards land together on one stagger rather than the page's usual
- * one-at-a-time reveal, because they are a set — four equally-weighted
- * options, not a sequence to read in order.
+ * one-at-a-time reveal, because they are a set — equally-weighted options,
+ * not a sequence to read in order.
  */
 export function Ecosystem({ locale }: { locale: Locale }) {
   const root = useRef<HTMLUListElement>(null)

@@ -58,12 +58,6 @@ function DocsLayout() {
           <p className={styles.sidebarTitle}>{COPY.docs.elsewhereLabel[locale]}</p>
           <ul className={styles.sidebarList}>
             <li className={styles.sidebarItem}>
-              <a className={styles.sidebarExternal} href={LINKS.lite} target="_blank" rel="noopener">
-                {COPY.docs.lite[locale]}
-              </a>
-              <span className={styles.sidebarExternalNote}>{COPY.docs.liteDescription[locale]}</span>
-            </li>
-            <li className={styles.sidebarItem}>
               <a className={styles.sidebarExternal} href={LINKS.catalogBrowser} target="_blank" rel="noopener">
                 {COPY.docs.catalogLink[locale]}
               </a>

@@ -26,7 +26,6 @@ export const LINKS = {
   discord: 'https://discord.gg/eT2UnUXyTV',
   sponsor: 'https://github.com/sponsors/yourtablecloth',
   homepage: 'https://yourtablecloth.app',
-  lite: 'https://lite.yourtablecloth.app/',
   /** The project's own published catalog browser — link out only, never mirror its contents (see file header). */
   catalogBrowser: 'https://yourtablecloth.app/TableClothCatalog/',
 } as const
@@ -77,6 +76,13 @@ type EcosystemEntry = {
 
 /**
  * The rest of the family, beyond the Windows desktop app above. One clause
+ *
+ * Open-ended by design. Nothing downstream counts these entries: the section
+ * heading names the idea rather than the tally (see `ecosystem.title` below,
+ * which used to say "four tables" and had to be edited whenever the family
+ * changed), and the grid lays out from the entry count rather than a fixed
+ * column template (see Ecosystem.module.css). Adding or dropping a component
+ * is an edit to this array and nothing else.
  * per body — this section shows what exists, it does not sell it.
  */
 export const ECOSYSTEM: EcosystemEntry[] = [
@@ -102,18 +108,6 @@ export const ECOSYSTEM: EcosystemEntry[] = [
     },
     requires: { ko: 'Windows 샌드박스만', en: 'Just Windows Sandbox' },
     href: LINKS.releases,
-    external: true,
-  },
-  {
-    key: 'lite',
-    name: { ko: '식탁보 라이트', en: 'TableCloth Lite' },
-    kind: { ko: 'PWA', en: 'PWA' },
-    body: {
-      ko: 'AI 챗봇과 샌드박스 설정을 브라우저에서.',
-      en: 'AI chatbot and sandbox settings, in the browser.',
-    },
-    requires: { ko: '브라우저만', en: 'Just a browser' },
-    href: LINKS.lite,
     external: true,
   },
   {
@@ -346,7 +340,7 @@ export const COPY = {
 
   ecosystem: {
     eyebrow: { ko: '패밀리', en: 'The family' },
-    title: { ko: '한 천, 네 개의 탁자', en: 'One cloth, four tables' },
+    title: { ko: '식탁보를 사용하는 다양한 방법', en: 'Ways to use TableCloth' },
     requiresLabel: { ko: '필요 환경', en: 'Requires' },
     openLabel: { ko: '열기', en: 'Open' },
     guideLabel: { ko: '가이드 보기', en: 'View guide' },
@@ -402,13 +396,6 @@ export const COPY = {
     },
     pagesLabel: { ko: '문서', en: 'Pages' },
     elsewhereLabel: { ko: '바로가기', en: 'Elsewhere' },
-    lite: { ko: '식탁보 라이트', en: 'TableCloth Lite' },
-    /** lite.yourtablecloth.app is the "식탁보 AI" PWA — an AI chatbot plus a Windows
-     *  Sandbox settings manager. Named/described distinctly from the desktop app. */
-    liteDescription: {
-      ko: 'AI 챗봇과 Windows 샌드박스 설정 관리를 함께 제공하는 PWA(웹 앱)입니다.',
-      en: 'A PWA — an AI chatbot plus a Windows Sandbox settings manager.',
-    },
     catalogLink: { ko: '카탈로그', en: 'Catalog' },
     backHome: { ko: '식탁보 홈으로', en: 'Back to TableCloth' },
     backToIndex: { ko: '문서 목록으로', en: 'All docs' },

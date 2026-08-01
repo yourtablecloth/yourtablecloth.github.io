@@ -1,5 +1,20 @@
+/*
+ * Flex, not grid, because the number of cards is not fixed.
+ *
+ * This was `repeat(2, 1fr)`, which was right only while ECOSYSTEM held exactly
+ * four entries: at three it left one card stranded at half width on a row of
+ * its own, and any future count that is not even would strand one the same
+ * way. A wrapping flex row has no column template to disagree with the data —
+ * cards fill the row they are on, and whatever lands on the last row grows to
+ * finish it. Adding a component to site.ts needs no edit here.
+ *
+ * `flex-basis` is the width a card wants, not a minimum: below 48rem the basis
+ * exceeds the container so every card takes its own row, which is the same
+ * single-column result the old grid gave.
+ */
 .grid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.25rem;
   margin: 0;
   padding: 0;
@@ -9,6 +24,7 @@
 
 .card {
   position: relative;
+  flex: 1 1 18rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -271,7 +287,6 @@
 
 @media (min-width: 48rem) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 
