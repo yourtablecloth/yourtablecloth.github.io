@@ -21,6 +21,7 @@ export type Localized<T> = Record<Locale, T>
 
 export const LINKS = {
   github: 'https://github.com/yourtablecloth/TableCloth',
+  releases: 'https://github.com/yourtablecloth/TableCloth/releases',
   /**
    * The newest release's own page, not the list of every release.
    *
@@ -40,7 +41,6 @@ export const LINKS = {
    */
   noInstall:
     'https://github.com/yourtablecloth/TableCloth/releases/latest/download/no-install-spork.wsb',
-  releases: 'https://github.com/yourtablecloth/TableCloth/releases',
   catalog: 'https://github.com/yourtablecloth/TableClothCatalog',
   discord: 'https://discord.gg/eT2UnUXyTV',
   sponsor: 'https://github.com/sponsors/yourtablecloth',
@@ -216,7 +216,7 @@ export const COPY = {
      * a running commentary that trails off mid-word reads as a layout bug,
      * not as a voice. These are noun phrases: the state the page is in, named.
      */
-    top: { ko: '아직 덮어둔 상태', en: 'Still covered' },
+    top: { ko: '시작하기', en: 'Getting started' },
     under: { ko: '한 사이트당 평균 3.1개', en: '3.1 installs per site' },
     how: { ko: '샌드박스 안에서만', en: 'Only inside the sandbox' },
     project: { ko: '오픈소스, 무료', en: 'Open source, free' },
