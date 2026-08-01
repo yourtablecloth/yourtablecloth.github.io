@@ -2391,6 +2391,37 @@ export default function ClothScene({
       }
 
       /*
+       * A drag on the cloth must not also drag a text selection.
+       *
+       * The canvas is behind the content and listens on the window, so a grab
+       * is, to the browser, a press on whatever copy happens to be over the
+       * table — and dragging from there does what dragging over text always
+       * does: it selects it. The reader pulls the sheet and takes the headline
+       * with it, highlighted in blue.
+       *
+       * `selectstart` is the one hook that fixes exactly this and nothing else.
+       * The alternatives are both worse: the pointer listeners are `passive`
+       * so they cannot `preventDefault()` at all, and doing it on `mousedown`
+       * instead would suppress focus along with the selection. A global
+       * `user-select: none` would work but takes the ability away permanently,
+       * including from readers who are not dragging anything.
+       *
+       * The guard is `pressing`, which is already precisely "a left-button
+       * press landed on the table rather than on a control, while there is
+       * still cloth to pick up". Event order puts `pointerdown` before
+       * `selectstart`, so the flag is always current by the time this runs.
+       *
+       * The trade this makes: while the cloth is still up, text under the
+       * pointer cannot be selected by dragging. That is the same region whose
+       * entire purpose is to be dragged, and a click-to-place-cursor, a
+       * double-click-to-select-word and every selection below the peel all
+       * still work.
+       */
+      const onSelectStart = (event: Event) => {
+        if (pressing) event.preventDefault()
+      }
+
+      /*
        * One read per frame, not one per event.
        *
        * A phone's touch digitiser outruns the display: several scroll events
@@ -2414,6 +2445,8 @@ export default function ClothScene({
       window.addEventListener('pointerdown', onPointerDown, { passive: true })
       window.addEventListener('pointerup', releasePointer, { passive: true })
       window.addEventListener('pointercancel', releasePointer)
+      // Not passive: preventing the selection is the entire job. See above.
+      document.addEventListener('selectstart', onSelectStart)
       // A drag interrupted by an alt-tab never sends pointerup, and the sheet
       // would stay held open until the next click.
       window.addEventListener('blur', releasePointer)
@@ -2494,6 +2527,7 @@ export default function ClothScene({
         window.removeEventListener('pointercancel', releasePointer)
         window.removeEventListener('blur', releasePointer)
         window.removeEventListener('scroll', onScroll)
+        document.removeEventListener('selectstart', onSelectStart)
 
         scene.traverse((object) => {
           if (object instanceof THREE.Mesh) object.geometry.dispose()
