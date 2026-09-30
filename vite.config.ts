@@ -58,7 +58,7 @@ const config = defineConfig({
      *
      * No sitemap block, so Start's generator stays off. It writes one entry
      * per crawled path, and the crawler counts `/#how` and `/docs/` as pages
-     * of their own; public/sitemap.xml lists the nine real URLs instead.
+     * of their own; public/sitemap.xml lists the ten real URLs instead.
      */
     tanstackStart({
       pages: [{ path: '/' }],

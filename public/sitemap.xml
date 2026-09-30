@@ -5,7 +5,7 @@
   TanStack Start can generate this from the pages it prerendered, and it was
   tried: the crawler counts each in-page anchor (`/#how`, `/#project`) and the
   trailing-slash spelling of a path it already has as separate pages, and lists
-  them all. The route list is nine URLs and changes when a doc is added, which
+  them all. The route list is ten URLs and changes when a doc is added, which
   is exactly when someone is already editing src/content/docs/index.ts.
 
   Doc slugs mirror src/content/docs/index.ts exactly. `/404` is deliberately
@@ -40,6 +40,10 @@
   </url>
   <url>
     <loc>https://yourtablecloth.app/docs/troubleshoot</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://yourtablecloth.app/docs/managed-ai</loc>
     <priority>0.5</priority>
   </url>
   <url>

@@ -432,8 +432,8 @@ export const COPY = {
     eyebrow: { ko: '문서', en: 'Docs' },
     title: { ko: '문서', en: 'Documentation' },
     description: {
-      ko: '식탁보의 설치 안내, FAQ, 문제 해결, 개인정보처리방침, 후원 안내를 한곳에 모았습니다.',
-      en: 'Install guides, FAQ, troubleshooting, privacy policy, and sponsorship info for TableCloth, all in one place.',
+      ko: '식탁보의 설치 안내, 식탁보 AI Preview, 문제 해결, 개인정보 처리방침과 후원 안내를 한곳에 모았습니다.',
+      en: 'Install guides, TableCloth AI Preview, troubleshooting, privacy policy, and sponsorship info in one place.',
     },
     pagesLabel: { ko: '문서', en: 'Pages' },
     elsewhereLabel: { ko: '바로가기', en: 'Elsewhere' },

@@ -2,6 +2,7 @@ import faqSource from './faq.md?raw'
 import installSource from './install.md?raw'
 import installMacosSource from './install-macos.md?raw'
 import installWindowsSource from './install-windows.md?raw'
+import managedAiSource from './managed-ai.md?raw'
 import privacySource from './privacy.md?raw'
 import sponsorSource from './sponsor.md?raw'
 import troubleshootSource from './troubleshoot.md?raw'
@@ -21,6 +22,7 @@ export type DocSlug =
   | 'install-macos'
   | 'faq'
   | 'troubleshoot'
+  | 'managed-ai'
   | 'privacy'
   | 'sponsor'
 
@@ -81,8 +83,18 @@ export const DOCS: DocEntry[] = [
     source: troubleshootSource,
   },
   {
+    slug: 'managed-ai',
+    title: { ko: '식탁보 AI Preview', en: 'TableCloth AI Preview' },
+    summary: {
+      ko: '인증서 만료 건수 조회, 입력 보호와 대화 정보의 처리 범위입니다.',
+      en: 'Certificate expiry counts, input safeguards, and chat data handling.',
+    },
+    source: managedAiSource,
+    badge: { ko: 'Preview', en: 'Preview' },
+  },
+  {
     slug: 'privacy',
-    title: { ko: '개인정보처리방침', en: 'Privacy policy' },
+    title: { ko: '개인정보 처리방침', en: 'Privacy policy' },
     summary: {
       ko: '식탁보가 수집하고 사용하는 정보에 대한 방침입니다.',
       en: 'How TableCloth collects and uses information.',
