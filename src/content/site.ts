@@ -397,6 +397,14 @@ export const COPY = {
     eyebrow: { ko: '프로젝트', en: 'The project' },
     title: { ko: '오픈소스, 무료', en: 'Open source, free' },
     installTitle: { ko: '한 줄로 설치', en: 'One line' },
+    previewTitle: { ko: 'v1.22.0 Preview 화면', en: 'v1.22.0 Preview screens' },
+    previewNote: {
+      ko: 'v1.22.0-preview.5의 UI 테스트에서 예시 데이터로 렌더링한 화면입니다.',
+      en: 'Rendered from v1.22.0-preview.5 UI tests with sample data.',
+    },
+    quickStartScreen: { ko: '빠른 시작과 서비스 제안', en: 'Quick Start and service suggestions' },
+    aiScreen: { ko: '식탁보 AI와 상시 개인정보 주의 문구', en: 'TableCloth AI and its persistent privacy warning' },
+    previewGuide: { ko: '식탁보 AI 사용 안내', en: 'Read the TableCloth AI guide' },
     copy: { ko: '복사', en: 'Copy' },
     copied: { ko: '복사됨', en: 'Copied' },
     /* Shown when the browser refuses the clipboard write; the command has

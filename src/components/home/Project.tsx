@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 
 import { COPY, INSTALL_COMMAND, LINKS, PROJECT_FACTS, type Locale } from '../../content/site'
 import { EASE, MOTION, STAGGER, gsap, useGsap } from '../../lib/motion'
@@ -147,6 +148,42 @@ export function Project({ locale }: { locale: Locale }) {
                 {COPY.project.copyManual[locale]}
               </span>
             </button>
+          </div>
+        </div>
+
+        <div className={styles.preview} data-reveal>
+          <div className={styles.previewIntro}>
+            <div>
+              <h3 className={styles.previewTitle}>{COPY.project.previewTitle[locale]}</h3>
+              <p className={styles.previewNote}>{COPY.project.previewNote[locale]}</p>
+            </div>
+            <Link className={styles.previewLink} to="/docs/$slug" params={{ slug: 'managed-ai' }}>
+              {COPY.project.previewGuide[locale]}
+            </Link>
+          </div>
+          <div className={styles.previewGrid}>
+            <figure className={styles.previewFigure}>
+              <img
+                src="/docs/images/tablecloth-preview5-quick-start.png"
+                alt={COPY.project.quickStartScreen[locale]}
+                width="800"
+                height="600"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{COPY.project.quickStartScreen[locale]}</figcaption>
+            </figure>
+            <figure className={styles.previewFigure}>
+              <img
+                src="/docs/images/tablecloth-preview5-ai-privacy.png"
+                alt={COPY.project.aiScreen[locale]}
+                width="800"
+                height="600"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{COPY.project.aiScreen[locale]}</figcaption>
+            </figure>
           </div>
         </div>
 

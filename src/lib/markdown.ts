@@ -80,7 +80,7 @@ export function mdLinkSlug(href: string): string | null {
 /**
  * Resolves an image source in a doc body against where this site serves it.
  *
- * The markdown is the project's own, and writes `images/Step1.png` relative to
+ * The markdown is the project's own, and writes `images/tablecloth-preview5-quick-start.png` relative to
  * the docs directory it lives in. Those files ship in public/docs/images, so
  * the same relative name resolves to a real file at the same URL the project's
  * docs have always used — which is also what the absolute link to

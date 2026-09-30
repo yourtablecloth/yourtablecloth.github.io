@@ -1,33 +1,21 @@
 # Windows에서 식탁보 설치하기
 
-> 🍎 **Mac을 사용하시나요?** Apple Silicon 기반 맥이라면 [macOS 설치 가이드](install-macos.md)를 확인해주세요.
+식탁보 데스크톱 앱은 Windows 11 Pro, Education 또는 Enterprise와 Windows Sandbox를 사용합니다. Apple Silicon 맥에서는 [macOS 설치 가이드](/docs/install-macos)를 참고할 수 있습니다.
 
-## 1️⃣ 시스템 요구사항 확인
+## Windows Sandbox 활성화
 
-식탁보는 Windows 11 Pro, Enterprise, Education, Pro for Workstation이 필요합니다.
+시작 메뉴에서 `Windows 기능 켜기/끄기`를 열고 `Windows 샌드박스`를 선택합니다. 변경을 적용한 뒤 Windows를 다시 시작합니다. 가상 컴퓨터나 클라우드 PC에서는 중첩 가상화를 제공해야 Windows Sandbox를 켤 수 있습니다. [Microsoft의 Windows Sandbox 요구 사항](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/)에서 지원 환경을 확인할 수 있습니다.
 
-클라우드 PC나 가상 컴퓨터처럼 일반적인 PC가 아닌 환경인 경우 아래의 **더 자세한 내용** 단락을 확인해주세요.
+## 정식 버전과 Preview 내려받기
 
-## 2️⃣ Windows Sandbox 활성화
+일반 사용자는 [최신 정식 릴리스](https://github.com/yourtablecloth/TableCloth/releases/latest)의 Windows 아키텍처에 맞는 TableCloth 설치 관리자 또는 Portable ZIP을 선택할 수 있습니다. 식탁보 AI의 현재 화면과 기능을 확인하려면 [v1.22.0-preview.5](https://github.com/yourtablecloth/TableCloth/releases/tag/v1.22.0-preview.5)의 `TableCloth-Preview` 설치 관리자 또는 Portable ZIP을 선택합니다. Preview는 사전 출시 버전이므로 정식 출시에서 기능과 화면이 달라질 수 있습니다.
 
-식탁보를 설치하기 전, 먼저 윈도우 샌드박스를 활성화해야 합니다.
+## 빠른 시작 화면
 
-- "Windows 기능 켜기/끄기" 어플리케이션을 실행합니다.
+식탁보를 실행한 뒤 기관 이름, 웹 주소 또는 질문을 입력할 수 있습니다. 입력이 비어 있으면 빈 샌드박스를 시작합니다. AI 기능은 `식탁보 AI (베타)`에서 열 수 있으며 별도의 ChatGPT 로그인이 필요합니다.
 
-  ![윈도우 기능 켜기/끄기](images/Step1.png)
+아래 화면은 v1.22.0-preview.5의 UI 테스트에서 예시 카탈로그 데이터로 렌더링했습니다. `bank.example`은 실제 금융기관 주소가 아닙니다.
 
-- "Windows 샌드박스" 기능을 켭니다.
+![v1.22.0-preview.5 빠른 시작 화면과 예시 서비스 제안](images/tablecloth-preview5-quick-start.png)
 
-  ![윈도우 샌드박스 켜기](images/Step2.png)
-
-샌드박스 기능을 켜거나 끄려면 컴퓨터를 다시 시작해야 하므로, 작업 중인 모든 파일을 저장한 후 컴퓨터를 다시 시작합니다.
-
-## 3️⃣ 식탁보 다운로드 및 실행
-
-1. [최신 릴리스](https://github.com/yourtablecloth/TableCloth/releases)에서 다운로드
-2. 압축 해제 후 실행
-3. 원하는 사이트 선택하고 시작!
-
-## 🔎 더 자세한 내용
-
-- 윈도우 365, 혹은 윈도우 가상 데스크톱 (마이크로소프트 애저 기반), 혹은 Hyper-V 같은 가상 컴퓨터 상에서 식탁보를 이용하고자 할 경우, 해당 서비스 또는 가상 컴퓨터 인스턴스 내에서 추가로 가상화 (혹은 Second Level Address Translation, SLAT) 기능을 지원해야만 윈도우 샌드박스를 활성화할 수 있습니다.
+AI 창의 현재 화면과 개인정보 입력 안내는 [식탁보 AI Preview 사용 안내](/docs/managed-ai)에서 확인할 수 있습니다.

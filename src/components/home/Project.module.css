@@ -1,5 +1,74 @@
 .install {
+  margin-bottom: 3rem;
+}
+
+.preview {
   margin-bottom: 4rem;
+}
+
+.previewIntro {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.previewTitle {
+  font-size: var(--tc-text-lg);
+  line-height: var(--tc-leading-snug);
+}
+
+.previewNote,
+.previewFigure figcaption {
+  font-size: var(--tc-text-sm);
+  color: var(--tc-ink-faint);
+}
+
+.previewNote {
+  margin-top: 0.35rem;
+}
+
+.previewLink {
+  color: var(--tc-ink);
+  font-size: var(--tc-text-sm);
+  text-underline-offset: 0.2em;
+}
+
+.previewLink:hover,
+.previewLink:focus-visible {
+  color: var(--tc-accent);
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.previewFigure {
+  min-width: 0;
+}
+
+.previewFigure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: var(--tc-radius);
+  background: var(--tc-surface-raised);
+}
+
+.previewFigure figcaption {
+  margin-top: 0.625rem;
+}
+
+@media (max-width: 47.9375rem) {
+  .previewGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .installTitle {
