@@ -25,8 +25,8 @@ import styles from './Hero.module.css'
  * page happened behind it, unremarked. Now the intro hands over to three
  * captions that are paced by the peel itself (`--tc-peel`, written by
  * ClothScene), so the words and the fabric are the same clock. Both blocks
- * occupy the same grid cell, which is what makes it a crossfade in place
- * rather than two things taking turns in two positions.
+ * occupy the same scroll-track grid cell in separate panes. The introduction
+ * can scroll naturally in a short window while the captions remain pinned.
  *
  * `--tc-peel` used to be written on `<html>` on every scroll frame, which
  * meant the whole document — all 15,000px of it — recomputed style on that
@@ -101,27 +101,24 @@ export function Hero({ locale }: { locale: Locale }) {
               </a>
             </div>
           </div>
-
-          {/*
-            `from`/`to` ride in as custom properties rather than as a class per
-            caption: the timing is data (site.ts), and pushing it through the
-            style attribute keeps the stylesheet down to one rule that works
-            for any number of captions.
-          */}
-          <ol className={styles.reveal}>
-            {COPY.reveal.map((caption) => (
-              <li
-                key={caption.key}
-                className={styles.caption}
-                style={
-                  { '--from': caption.from, '--to': caption.to } as CSSProperties
-                }
-              >
-                {caption.text[locale]}
-              </li>
-            ))}
-          </ol>
         </div>
+      </div>
+
+      <div className={styles.revealCopy}>
+        {/* Timing follows the cloth peel for every viewport size. */}
+        <ol className={styles.reveal}>
+          {COPY.reveal.map((caption) => (
+            <li
+              key={caption.key}
+              className={styles.caption}
+              style={
+                { '--from': caption.from, '--to': caption.to } as CSSProperties
+              }
+            >
+              {caption.text[locale]}
+            </li>
+          ))}
+        </ol>
       </div>
 
       {/* The canvas is decorative to assistive tech; this is the content it

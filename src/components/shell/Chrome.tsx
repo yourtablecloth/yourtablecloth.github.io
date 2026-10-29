@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useLinkProps, useRouterState } from '@tanstack/react-router'
 
 import { COPY, LINKS, type Locale } from '../../content/site'
 import { usePrefs } from '../../lib/prefs'
@@ -32,6 +32,36 @@ const CAPTION_KEYS = ['top', ...NAV_SECTIONS] as const
  */
 const HASH_EXACT = { exact: true, includeHash: true } as const
 
+function SectionNavLink({
+  section,
+  current,
+  locale,
+}: {
+  section: (typeof NAV_SECTIONS)[number]
+  current: boolean
+  locale: Locale
+}) {
+  const linkProps = useLinkProps({
+    to: '/',
+    hash: section,
+    activeOptions: HASH_EXACT,
+    activeProps: {},
+  })
+
+  // Keep router navigation/preloading, but let the scroll position alone mark
+  // a section current. A hash can remain unchanged after manual scrolling.
+  return (
+    <a
+      {...linkProps}
+      data-status={undefined}
+      data-current={current ? 'true' : undefined}
+      aria-current={current ? 'location' : undefined}
+    >
+      {COPY.nav.sections[section][locale]}
+    </a>
+  )
+}
+
 export function SiteHeader({ locale }: { locale: Locale }) {
   const { theme, setLocale, setTheme } = usePrefs()
   const header = useRef<HTMLElement>(null)
@@ -60,20 +90,26 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       }
 
       if (!onHome) return
-      // Last section whose top has passed under the bar wins, so the readout
-      // changes exactly when the heading tucks behind the header rather than
-      // when some arbitrary fraction of the section is on screen.
+      // Use the same inset as native/router hash scrolling. The responsive
+      // scroll-padding includes the gap below the header, so an anchor that
+      // has just landed also becomes current. Allow one pixel for rounding.
+      const inset = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
+      const cutoff = (Number.isFinite(inset) ? inset : element.getBoundingClientRect().bottom) + 1
       let current: string | null = null
       for (const section of NAV_SECTIONS) {
         const node = document.getElementById(section)
-        if (node && node.getBoundingClientRect().top <= element.offsetHeight + 8) current = section
+        if (node && node.getBoundingClientRect().top <= cutoff) current = section
       }
       setActive((previous) => (previous === current ? previous : current))
     }
 
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
   }, [onHome])
 
   return (
@@ -101,15 +137,11 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <ul className={styles.navList}>
             {NAV_SECTIONS.map((section) => (
               <li key={section}>
-                <Link
-                  to="/"
-                  hash={section}
-                  activeOptions={HASH_EXACT}
-                  data-current={onHome && active === section ? 'true' : undefined}
-                  aria-current={onHome && active === section ? 'true' : undefined}
-                >
-                  {COPY.nav.sections[section][locale]}
-                </Link>
+                <SectionNavLink
+                  section={section}
+                  current={onHome && active === section}
+                  locale={locale}
+                />
               </li>
             ))}
             <li>

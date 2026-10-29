@@ -394,3 +394,11 @@
     width: 10rem;
   }
 }
+
+/* Let the steps scroll freely when the header and diagram would fill the window. */
+@media (max-height: 44rem) {
+  .diagram {
+    position: static;
+    top: auto;
+  }
+}
