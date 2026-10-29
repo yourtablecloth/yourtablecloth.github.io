@@ -2,7 +2,7 @@
 
 ## ❓ 모든 은행/기관 사이트를 지원하나요?
 
-대부분의 주요 사이트를 지원하며, [카탈로그](https://yourtablecloth.github.io/TableClothCatalog/Catalog.xml)를 통해 **지속적으로 업데이트**됩니다.
+지원 사이트와 설치 패키지는 [사이트 카탈로그](https://catalog.yourtablecloth.app/)에서 확인할 수 있습니다.
 
 ## ❓ 안전한가요?
 
