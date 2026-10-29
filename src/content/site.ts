@@ -46,7 +46,8 @@ export const LINKS = {
   sponsor: 'https://github.com/sponsors/yourtablecloth',
   homepage: 'https://yourtablecloth.app',
   /** The project's own published catalog browser — link out only, never mirror its contents (see file header). */
-  catalogBrowser: 'https://yourtablecloth.app/TableClothCatalog/',
+  catalogBrowser: 'https://catalog.yourtablecloth.app/',
+  skillMarketplace: 'https://catalog.yourtablecloth.app/skills/',
 } as const
 
 /** The one command that installs it. */
@@ -199,6 +200,10 @@ export const COPY = {
     theme: { ko: '밝은 화면으로', en: 'Light surface' },
     themeDark: { ko: '어두운 화면으로', en: 'Dark surface' },
     docs: { ko: '문서', en: 'Docs' },
+    browse: { ko: '탐색', en: 'Explore' },
+    catalogs: { ko: '카탈로그 탐색', en: 'Browse catalogs' },
+    siteCatalog: { ko: '사이트 카탈로그', en: 'Site catalog' },
+    skillMarketplace: { ko: '스킬 마켓플레이스', en: 'Skill marketplace' },
   },
 
   /*

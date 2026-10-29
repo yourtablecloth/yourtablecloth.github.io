@@ -9,6 +9,8 @@
 - **메인 프로그램**: [TableCloth](https://github.com/yourtablecloth/TableCloth) - 식탁보 메인 애플리케이션
 - **카탈로그**: [TableClothCatalog](https://github.com/yourtablecloth/TableClothCatalog) - 사이트별 소프트웨어 설치 목록 관리
 
+[사이트 카탈로그](https://catalog.yourtablecloth.app/)와 [스킬 마켓플레이스](https://catalog.yourtablecloth.app/skills/)는 홈페이지의 탐색 메뉴와 푸터에서 연결합니다. 두 페이지는 TableClothCatalog 저장소에서 별도로 관리합니다.
+
 ## 프로젝트 개요
 
 식탁보는 윈도우 샌드박스를 활용하여 인터넷 뱅킹과 전자정부 서비스 이용 시 필요한 보안 프로그램들을 격리된 환경에서 안전하게 사용할 수 있도록 도와주는 도구입니다.

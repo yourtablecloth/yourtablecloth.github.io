@@ -145,6 +145,13 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         )}
 
         <div className={styles.controls}>
+          <details className={styles.catalogMenu}>
+            <summary className={styles.control}>{COPY.nav.browse[locale]}</summary>
+            <nav className={styles.catalogLinks} aria-label={COPY.nav.catalogs[locale]}>
+              <a href={LINKS.catalogBrowser}>{COPY.nav.siteCatalog[locale]}</a>
+              <a href={LINKS.skillMarketplace}>{COPY.nav.skillMarketplace[locale]}</a>
+            </nav>
+          </details>
           <button
             type="button"
             className={styles.control}
@@ -186,6 +193,12 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <Link className={styles.link} to="/docs">
             {COPY.nav.docs[locale]}
           </Link>
+          <a className={styles.link} href={LINKS.catalogBrowser}>
+            {COPY.nav.siteCatalog[locale]}
+          </a>
+          <a className={styles.link} href={LINKS.skillMarketplace}>
+            {COPY.nav.skillMarketplace[locale]}
+          </a>
           <a className={styles.link} href={LINKS.github} target="_blank" rel="noopener">
             GitHub
           </a>

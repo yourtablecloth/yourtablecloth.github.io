@@ -159,6 +159,54 @@
   gap: 0.5rem;
 }
 
+.catalogMenu {
+  position: relative;
+}
+
+.catalogMenu summary {
+  list-style: none;
+}
+
+.catalogMenu summary::-webkit-details-marker {
+  display: none;
+}
+
+.catalogMenu[open] summary {
+  border-color: var(--tc-accent);
+  color: var(--tc-accent);
+}
+
+.catalogLinks {
+  position: absolute;
+  top: calc(100% + 0.625rem);
+  right: 0;
+  display: grid;
+  min-width: 13rem;
+  padding: 0.375rem;
+  border: 1px solid var(--tc-ink-hair);
+  border-radius: 0.75rem;
+  background: var(--tc-surface);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.12);
+}
+
+.catalogLinks a {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  color: var(--tc-ink);
+  font-size: var(--tc-text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.catalogLinks a:hover,
+.catalogLinks a:focus-visible {
+  color: var(--tc-accent);
+  background: color-mix(in srgb, var(--tc-accent) 8%, var(--tc-surface));
+}
+
 .control {
   position: relative;
   display: inline-flex;
@@ -199,16 +247,33 @@
   color: var(--tc-accent);
 }
 
-/*
- * A phone header has no room for a fourth thing — the wordmark, the nav
- * links, and the two control pills already fill it. This line only ever
- * shows once the bar has the same width headroom `.navList` needed above.
- */
+/* Keep the logo and all three controls within narrow phone viewports. */
+@media (max-width: 28rem) {
+  .inner {
+    gap: 0.5rem;
+  }
+
+  .home span {
+    display: none;
+  }
+
+  .controls {
+    position: relative;
+  }
+
+  .catalogMenu {
+    position: static;
+  }
+}
+
 @media (min-width: 48rem) {
   .navList {
     display: flex;
   }
+}
 
+/* The caption joins the navigation once the catalog control also fits. */
+@media (min-width: 64rem) {
   .caption {
     display: grid;
     /* Fluid rather than fixed: 16vw gives it real room on a wide desktop
