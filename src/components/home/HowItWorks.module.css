@@ -196,7 +196,7 @@
     position: sticky;
     /* The header's scrolled height, so no strip of section shows between the
        two; unscrolled the band simply tucks under the taller bar. */
-    top: 3rem;
+    top: var(--tc-header-h);
     z-index: 1;
     gap: 0.5rem;
     margin-inline: calc(var(--tc-gutter) * -1);
@@ -374,7 +374,7 @@
    */
   .diagram {
     position: sticky;
-    top: 5rem;
+    top: calc(var(--tc-header-h) + 1.5rem);
   }
 
   .title {
@@ -392,5 +392,13 @@
     margin: 0;
     flex: none;
     width: 10rem;
+  }
+}
+
+/* Let the steps scroll freely when the header and diagram would fill the window. */
+@media (max-height: 44rem) {
+  .diagram {
+    position: static;
+    top: auto;
   }
 }

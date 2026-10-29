@@ -27,6 +27,7 @@
  */
 .root {
   position: relative;
+  display: grid;
   min-height: 400svh;
   max-width: var(--tc-shell);
   margin-inline: auto;
@@ -39,10 +40,13 @@
  * there while the reader plays with the cloth, instead of being pushed to the
  * bottom of a 190svh block where nobody would ever see it.
  */
-.copy {
+.copy,
+.revealCopy {
+  grid-area: 1 / 1;
+  align-self: start;
   position: sticky;
-  top: 0;
-  height: 100svh;
+  top: var(--tc-header-h);
+  height: calc(100svh - var(--tc-header-h));
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -55,25 +59,19 @@
   /* A soft pool of surface behind the words, so display type never has to
      fight the fabric for contrast. */
   text-shadow: 0 2px 32px color-mix(in srgb, var(--tc-surface) 78%, transparent);
+}
+
+.copy {
   opacity: 0;
 }
 
-/*
- * Intro and reveal captions share one grid cell.
- *
- * Stacking them is the whole point: the headline does not slide away and the
- * captions do not arrive somewhere else — one becomes the other in the exact
- * spot the reader is already looking, while the table behind keeps moving.
- * Both are bottom-aligned so the baseline never jumps between them.
- */
-.stack {
-  display: grid;
-  width: 100%;
+/* The caption pane stays pinned even when a short-window intro must scroll. */
+.revealCopy {
+  pointer-events: none;
 }
 
-.stack > * {
-  grid-area: 1 / 1;
-  align-self: end;
+.stack {
+  width: 100%;
 }
 
 .intro {
@@ -121,6 +119,7 @@
  */
 .reveal {
   display: grid;
+  width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -374,5 +373,33 @@
 @media (min-width: 48rem) {
   .lede {
     font-size: var(--tc-text-lg);
+  }
+}
+
+/* Leave room for the complete introduction in short portrait or landscape windows. */
+@media (max-height: 44rem) {
+  .copy,
+  .revealCopy {
+    justify-content: safe flex-end;
+    padding-block: 1rem;
+  }
+
+  .intro {
+    gap: 0.75rem;
+  }
+
+  .actions {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Very short windows scroll the introduction instead of pinning tall copy. */
+@media (max-height: 34rem) {
+  .copy {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: calc(100svh - var(--tc-header-h));
+    justify-content: flex-start;
   }
 }

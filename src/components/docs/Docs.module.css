@@ -173,7 +173,7 @@
 
   .sidebar {
     position: sticky;
-    top: 5rem;
+    top: calc(var(--tc-header-h) + 1.5rem);
   }
 }
 
@@ -197,7 +197,7 @@
   font-size: var(--tc-text-xl);
   font-weight: 700;
   line-height: var(--tc-leading-snug);
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 1rem;
 }
 
 .h3 {
@@ -205,7 +205,7 @@
   font-size: var(--tc-text-lg);
   font-weight: 600;
   line-height: var(--tc-leading-snug);
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 1rem;
 }
 
 .p {
