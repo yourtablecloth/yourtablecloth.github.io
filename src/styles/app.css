@@ -134,6 +134,8 @@
   --tc-measure: 62ch;
   --tc-gutter: 1.25rem;
   --tc-section-y: 5rem;
+  --tc-header-h: 9rem;
+  --tc-header-compact-h: 9rem;
 
   /* ---- radii ---- */
   --tc-radius-sm: 0.375rem;
@@ -337,6 +339,8 @@
   :root {
     --tc-gutter: 2.5rem;
     --tc-section-y: 8rem;
+    --tc-header-h: 6.5rem;
+    --tc-header-compact-h: 6.5rem;
   }
 }
 
@@ -344,6 +348,8 @@
   :root {
     --tc-gutter: 3.5rem;
     --tc-section-y: 10rem;
+    --tc-header-h: 3.5rem;
+    --tc-header-compact-h: 3rem;
   }
 }
 
@@ -359,6 +365,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--tc-header-h) + 1rem);
 }
 
 @media (prefers-reduced-motion: reduce) {

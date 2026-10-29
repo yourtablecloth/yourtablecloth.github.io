@@ -41,8 +41,8 @@
  */
 .copy {
   position: sticky;
-  top: 0;
-  height: 100svh;
+  top: var(--tc-header-h);
+  height: calc(100svh - var(--tc-header-h));
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -374,5 +374,32 @@
 @media (min-width: 48rem) {
   .lede {
     font-size: var(--tc-text-lg);
+  }
+}
+
+/* Leave room for the complete introduction in short portrait or landscape windows. */
+@media (max-height: 44rem) {
+  .copy {
+    justify-content: safe flex-end;
+    padding-block: 1rem;
+  }
+
+  .intro {
+    gap: 0.75rem;
+  }
+
+  .actions {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Very short windows scroll the introduction instead of pinning tall copy. */
+@media (max-height: 34rem) {
+  .copy {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: calc(100svh - var(--tc-header-h));
+    justify-content: flex-start;
   }
 }

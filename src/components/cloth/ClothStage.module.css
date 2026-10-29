@@ -281,11 +281,12 @@
  * The destination is computed once, in CSS, from the same tokens the header
  * lays itself out with — `--tc-shell` for where its content column stops
  * centring and starts hugging the gutter, `--tc-gutter` for the inline
- * padding, its fixed 3.5rem height — rather than measured with
+ * padding, its fixed 3.5rem logo-row height — rather than measured with
  * `getBoundingClientRect`. Both marks paint before any script runs a layout
  * pass, and the header's position is a pure function of viewport width that
  * never depends on content, so a measurement would tell CSS nothing CSS
- * didn't already know. This does assume the header is still at its 3.5rem
+ * didn't already know. The logo row stays 3.5rem tall even when navigation
+ * occupies additional rows on a small screen. This assumes its 3.5rem
  * resting height and not the 3rem `[data-scrolled]` one, which holds for the
  * whole boot sequence — it resolves in the first couple of seconds of a page
  * nobody has scrolled yet. `1.2s` matches `DRAPE_SECONDS` in ClothScene, the
@@ -545,7 +546,7 @@
  */
 @media (max-width: 47.9375rem) {
   .hint {
-    top: calc(3.5rem + 1rem);
+    top: calc(var(--tc-header-h) + 1rem);
     bottom: auto;
   }
 }
@@ -553,5 +554,12 @@
 @media (min-width: 64rem) {
   .hint {
     bottom: 3rem;
+  }
+}
+
+/* Short windows reserve the available space for the introduction and its links. */
+@media (max-height: 44rem) {
+  .hint {
+    display: none;
   }
 }

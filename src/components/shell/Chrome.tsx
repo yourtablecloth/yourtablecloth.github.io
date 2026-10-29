@@ -115,6 +115,12 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             <li>
               <Link to="/docs">{COPY.nav.docs[locale]}</Link>
             </li>
+            <li>
+              <a href={LINKS.catalogBrowser}>{COPY.nav.sites[locale]}</a>
+            </li>
+            <li>
+              <a href={LINKS.skillMarketplace}>{COPY.nav.skills[locale]}</a>
+            </li>
           </ul>
         </nav>
 
@@ -145,13 +151,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         )}
 
         <div className={styles.controls}>
-          <details className={styles.catalogMenu}>
-            <summary className={styles.control}>{COPY.nav.browse[locale]}</summary>
-            <nav className={styles.catalogLinks} aria-label={COPY.nav.catalogs[locale]}>
-              <a href={LINKS.catalogBrowser}>{COPY.nav.siteCatalog[locale]}</a>
-              <a href={LINKS.skillMarketplace}>{COPY.nav.skillMarketplace[locale]}</a>
-            </nav>
-          </details>
           <button
             type="button"
             className={styles.control}
@@ -183,13 +182,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <p className={styles.tagline}>{COPY.footer.tagline[locale]}</p>
 
         <div className={styles.links}>
-          {/*
-           * The header's section nav is display:none below 48rem, and it is
-           * the only other place /docs is linked by name — on a phone the
-           * reference section was reachable only by guessing at a card link
-           * three sections down. It belongs in the one link row that is
-           * always present.
-           */}
+          {/* Keep the reference links available at the end of every page. */}
           <Link className={styles.link} to="/docs">
             {COPY.nav.docs[locale]}
           </Link>
